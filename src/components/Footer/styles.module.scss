@@ -1,0 +1,27 @@
+.footer {
+  background-color: #f5821fe5;
+  color: white;
+  font-weight: 800;
+  height: fit-content;
+  grid-row: -1;
+
+  ul {
+    max-width: 1280px;
+    padding: .5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+    place-items: center;
+  }
+}
+
+.socialNetwork {
+  display: flex;
+  gap: 1.5rem;
+  place-items: center;
+  height: fit-content;
+
+  .email {
+    font-size: 20px;
+  }
+}

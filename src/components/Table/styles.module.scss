@@ -1,0 +1,37 @@
+.tableContainer {
+  max-width: 1280px;
+  overflow: auto;
+  border-radius: 1rem;
+
+  table {
+    border-spacing: 0;
+  }
+
+  thead {
+    background-color: orange;
+    color: white;
+    height: 55px;
+    th {
+      font-weight: 400;
+    }
+  }
+
+  tbody {
+    tr {
+      border: 1px solid pink;
+      border-color: pink;
+      td {
+        text-align: center;
+        padding: 1.5rem 0;
+        place-self: center;
+      }
+    }
+  }
+}
+
+.buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  place-content: end;
+}

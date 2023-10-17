@@ -1,0 +1,28 @@
+.link {
+  border-radius: 10px;
+  padding: clamp(0.2rem, 6vw, 0.5rem) clamp(2rem, 6vw, 3.5rem);
+  border: none;
+  cursor: pointer;
+  font-size: clamp(0.75rem, 6vw, 0.875rem);
+  text-decoration: none;
+}
+
+.link[data-type='transparent'] {
+  border: 1px solid #868686;
+  color: #868686;
+  background-color: transparent;
+
+  &:hover {
+    background-color: #86868625;
+  }
+}
+
+.link[data-type='filled'] {
+  border: 1px solid transparent;
+  color: #fff5f6;
+  background-color: #037021;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
