@@ -1,0 +1,47 @@
+.main {
+  width: 100%;
+  place-self: center;
+  grid-row: span 3;
+}
+
+.menuList {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  margin: 0 auto;
+  gap: 4rem;
+  max-width: 1280px;
+  padding: 1.5rem 1rem;
+}
+
+.menuOption {
+  display: flex;
+  flex-direction: column;
+  a {
+    text-align: center;
+    text-decoration: none;
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0px 0px 13px 0px rgba(0, 0, 0, 0.1);
+    padding: 0px 30px;
+    min-width: 200px;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    place-content: center;
+    place-items: center;
+    border: none;
+    color: #f5821fe5;
+    font-weight: 800;
+    font-size: 1.1rem;
+    gap: 1rem;
+    cursor: pointer;
+    
+    svg {
+        font-size: 2rem;
+    }
+
+    &:hover {
+        border: 1px solid #f5821fe5;
+    }
+  }
+}
