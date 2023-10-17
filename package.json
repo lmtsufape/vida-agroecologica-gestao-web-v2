@@ -10,9 +10,18 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.14.12",
+    "@tanstack/react-table": "^8.10.3",
+    "add": "^2.0.6",
+    "axios": "^1.5.1",
     "next": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "react-icons": "^4.11.0",
+    "shadcn-ui": "^0.4.0",
+    "table": "^6.8.1"
   },
   "devDependencies": {
     "@types/node": "latest",
@@ -30,6 +39,7 @@
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
     "prettier": "^3.0.3",
+    "sass": "^1.68.0",
     "typescript": "latest"
   },
   "lint-staged": {
