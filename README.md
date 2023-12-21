@@ -1,6 +1,6 @@
 ## FrontEnd Gestão - Vida Agroecológica 🌱
 
-### ○ Feito com
+### ○ Tecnologias
 `React.js`, `TypeScript`, `Next.js`, `SASS`, `Jest`.
 
 ```bash
