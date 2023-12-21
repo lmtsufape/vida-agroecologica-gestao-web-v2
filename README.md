@@ -1,7 +1,7 @@
 ## FrontEnd Gestão - Vida Agroecológica 🌱
 
 ### ○ Tecnologias
-`React.js`, `TypeScript`, `Next.js`, `SASS`, `Jest`.
+`React.js`, `TypeScript`, `Next.js`, `SASS`.
 
 ```bash
 # Clone o repositório
