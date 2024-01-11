@@ -1,24 +1,43 @@
-import { Presidente, User } from '@/types/api';
+import { Role } from '../types/api';
 import { api } from './api';
 
-export async function createUser({
-  name,
-  email,
-  password,
-  apelido,
-  telefone,
-  cpf,
-  roles,
-}: User) {
-  const response = await api.post('/api/users', {
+import { Presidente, User } from '@/types/api';
+
+export async function createUser(
+  {
     name,
     email,
     password,
-    apelido,
     telefone,
     cpf,
     roles,
-  });
+    rua,
+    cep,
+    numero,
+    bairro_id,
+  }: User,
+  token: string,
+) {
+  const response = await api.post(
+    '/api/users',
+    {
+      name,
+      email,
+      password,
+      telefone,
+      cpf,
+      roles,
+      rua,
+      cep,
+      numero,
+      bairro_id,
+    },
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    },
+  );
   return response.data;
 }
 
@@ -29,7 +48,7 @@ export async function signIn(email: string, password: string) {
     device_name: 'Ellen', // TODO: Get Device Name
   });
   localStorage.setItem('@token', response.data.token);
-  localStorage.setItem('@roles', response.data.user.roles);
+  localStorage.setItem('@roles', JSON.stringify(response.data.user.roles));
 
   window.location.href = '/menu';
 }
@@ -46,5 +65,96 @@ export async function getPresidents(
     return response.data;
   } catch (error) {
     throw new Error('Failed to fetch presidents');
+  }
+}
+
+export async function getAllUsers(token: string): Promise<{ users: User[] }> {
+  try {
+    const response = await api.get(`/api/users`, {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to fetch users');
+  }
+}
+
+export async function getUser(
+  token: string,
+  id: string,
+): Promise<{ user: User[] }> {
+  try {
+    const response = await api.get(`/api/users/${id}`, {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to fetch user');
+  }
+}
+
+export async function editUser(
+  {
+    name,
+    password,
+    email,
+    telefone,
+    cpf,
+    roles,
+    rua,
+    cep,
+    numero,
+    bairro_id,
+  }: User,
+  token: string,
+  id: string,
+) {
+  const response = await api.patch(
+    `/api/users/${id}`,
+    {
+      name,
+      email,
+      password,
+      telefone,
+      cpf,
+      roles,
+      rua,
+      cep,
+      numero,
+      bairro_id,
+    },
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    },
+  );
+  console.log(response.data);
+  return response.data;
+}
+
+export async function removeUser(token: string, id: number) {
+  const response = await api.delete(`/api/users/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+}
+
+export async function getAllRoles(token: string): Promise<Role[]> {
+  try {
+    const response = await api.get(`/api/roles`, {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to fetch users');
   }
 }

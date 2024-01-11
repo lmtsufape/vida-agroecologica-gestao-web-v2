@@ -1,9 +1,10 @@
-import { Bairro } from '@/types/api';
 import { api } from './api';
+
+import { Bairro } from '@/types/api';
 
 export async function getAllBairros(
   token: string,
-): Promise<{ data: Bairro[] }> {
+): Promise<{ bairros: Bairro[] }> {
   try {
     const response = await api.get('/api/bairros', {
       headers: {

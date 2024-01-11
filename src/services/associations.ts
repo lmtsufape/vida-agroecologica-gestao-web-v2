@@ -1,20 +1,21 @@
-import { Associacao } from '@/types/api';
 import { api } from './api';
 
-export async function getAllAssociacoes(
-  token: string,
-): Promise<{ data: Associacao[] }> {
+import { Associacao } from '@/types/api';
+
+export const getAllAssociacoes = async (
+  token: string | null,
+): Promise<Associacao[]> => {
   try {
     const response = await api.get('/api/associacoes', {
       headers: {
         authorization: `Bearer ${token}`,
       },
     });
-    return response.data;
+    return response.data.associacoes;
   } catch (error) {
-    throw new Error('Failed to fetch associacoes');
+    throw new Error('Erro ao buscar associações.');
   }
-}
+};
 
 export async function getAssociacao(
   token: string,
@@ -28,22 +29,38 @@ export async function getAssociacao(
     });
     return response.data;
   } catch (error) {
-    throw new Error('Failed to fetch associacoes');
+    throw new Error('Erro ao buscar associação.');
   }
 }
 
 export async function createAssociacao(
-  { nome, codigo, email, telefone, presidente }: Associacao,
+  {
+    nome,
+    email,
+    telefone,
+    data_fundacao,
+    rua,
+    cep,
+    numero,
+    bairro_id,
+    secretarios_id,
+    presidentes_id,
+  }: Associacao,
   token: string,
 ) {
   const response = await api.post(
     '/api/associacoes',
     {
       nome,
-      codigo,
       email,
       telefone,
-      presidente,
+      data_fundacao,
+      rua,
+      cep,
+      numero,
+      bairro_id,
+      secretarios_id,
+      presidentes_id,
     },
     {
       headers: {
@@ -55,7 +72,18 @@ export async function createAssociacao(
 }
 
 export async function editAssociacao(
-  { nome, codigo, email, telefone, presidente }: Associacao,
+  {
+    nome,
+    email,
+    telefone,
+    data_fundacao,
+    rua,
+    cep,
+    numero,
+    bairro_id,
+    secretarios_id,
+    presidentes_id,
+  }: Associacao,
   token: string,
   id: string,
 ) {
@@ -63,10 +91,15 @@ export async function editAssociacao(
     `/api/associacoes/${id}`,
     {
       nome,
-      codigo,
       email,
       telefone,
-      presidente,
+      data_fundacao,
+      rua,
+      cep,
+      numero,
+      bairro_id,
+      secretarios_id,
+      presidentes_id,
     },
     {
       headers: {
@@ -78,7 +111,7 @@ export async function editAssociacao(
   return response.data;
 }
 
-export async function removeAssociacao(token: string, id: string) {
+export async function removeAssociacao(token: string, id: number) {
   const response = await api.delete(`/api/associacoes/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
