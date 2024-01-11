@@ -1,7 +1,7 @@
 .footer {
   background-color: #f5821fe5;
   color: white;
-  font-weight: 800;
+  font-weight: 400;
   height: fit-content;
   grid-row: -1;
 
@@ -12,7 +12,19 @@
     justify-content: space-between;
     margin: 0 auto;
     place-items: center;
+    list-style: none;
   }
+
+  li {
+    width: fit-content;
+  }
+}
+
+.logo {
+  display: flex;
+  place-items: center;
+  gap: .45rem;
+  color: white;
 }
 
 .socialNetwork {
@@ -23,5 +35,21 @@
 
   .email {
     font-size: 20px;
+  }
+}
+
+@media (max-width: 400px) {
+  .footer svg {
+    width: 40%;
+  }
+  .ufapelmtsWrapper {
+    width: 60%;
+    place-self: end;
+  }
+  .logoImg {
+    width: 20%;
+  }
+  .ufapeLmts {
+    padding: .6rem;
   }
 }
