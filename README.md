@@ -3,6 +3,13 @@
 ### ○ Tecnologias
 `React.js`, `TypeScript`, `Next.js`, `SASS`.
 
+### ○ Variáveis de Ambiente
+<sample><strong>./env</strong></sample>
+```python
+REACT_API_URL=
+```
+
+### ○ Acesse a Aplicação 
 ```bash
 # Clone o repositório
 $ git clone <https://github.com/lmtsufape/vida-agroecologica-gestao-web-v2.git>
