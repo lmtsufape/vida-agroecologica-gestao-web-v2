@@ -1,39 +1,40 @@
 'use client';
 
-import Loader from '@/components/Loader';
-import { getOCS } from '@/services';
+import Link from 'next/link';
 import { redirect, useRouter } from 'next/navigation';
-import { OCS } from '@/types/api';
+import React from 'react';
 import { BiSolidEditAlt } from 'react-icons/bi';
 
 import S from './styles.module.scss';
 
-import React from 'react';
 import Button from '@/components/Button';
-import Link from 'next/link';
+import Loader from '@/components/Loader';
+
+import { getOCS } from '@/services';
+import { OCS } from '@/types/api';
+
+interface OCSResponse {
+  ocs: OCS;
+}
 
 const Home = ({ params }: { params: { id: string } }) => {
   const [content, setContent] = React.useState<OCS | null>(null);
-
-  console.log(content);
 
   const router = useRouter();
 
   React.useEffect(() => {
     const token = localStorage.getItem('@token');
     if (!token) {
-      redirect('/login');
+      redirect('/');
     }
     getOCS(token, params.id)
-      .then((response: any) => setContent(response.ocs))
-      .catch((error: any) => console.log(error));
-  }, []);
+      .then((response: OCSResponse) => setContent(response.ocs))
+      .catch((error: unknown) => console.log(error));
+  }, [params.id]);
 
   if (!content) {
     return <Loader />;
   }
-
-  console.log(content);
 
   return (
     <main className={S.main}>
@@ -51,12 +52,12 @@ const Home = ({ params }: { params: { id: string } }) => {
         <div className={S.content}>
           <h3>CNPJ</h3>
           <p>{content.cnpj}</p>
-          <h3>Data Fundação</h3>
-          <p>{content.data_fundacao}</p>
           <h3 className={S.section}>Associação</h3>
           <Link href={'/associacoes/' + content.associacao_id}>
             {content?.associacao?.nome}
           </Link>
+          <br />
+          <br />
           <h3 className={S.section}>Endereço</h3>
           <h3>Rua</h3>
           <p>{content?.endereco?.rua}</p>
@@ -64,8 +65,6 @@ const Home = ({ params }: { params: { id: string } }) => {
           <p>{content?.endereco?.cep}</p>
           <h3>Número</h3>
           <p>{content?.endereco?.numero}</p>
-          {/* <h3>Complemento</h3>
-                    <p>{content.endereco.complemento}</p> */}
           <h3>Bairro</h3>
           <p>{content?.endereco?.bairro?.nome}</p>
         </div>

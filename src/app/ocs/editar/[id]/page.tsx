@@ -1,99 +1,132 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import { redirect, useRouter } from 'next/navigation';
 import React from 'react';
+
 import S from './styles.module.scss';
+
 import Button from '@/components/Button';
 import Input from '@/components/Input';
-import { redirect, useRouter } from 'next/navigation';
 import Loader from '@/components/Loader';
-import { Alert, AlertTitle, Snackbar } from '@mui/material';
 import { StyledSelect } from '@/components/Multiselect/style';
 import MuiSelect from '@/components/Select';
-import { editOCS, getAllBairros, getOCS, getAllAssociacoes } from '@/services';
-import { OCS } from '@/types/api';
+
+import {
+  editOCS,
+  getAllBairros,
+  getOCS,
+  getAllAssociacoes,
+  getAllUsers,
+} from '@/services';
+import { OCS, User, Bairro } from '@/types/api';
+import { Alert, AlertTitle, Snackbar } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 const Home = ({ params }: { params: { id: string } }) => {
   const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [cnpj, setCNPJ] = React.useState('');
-  const [date, setDate] = React.useState('');
   const [telefone, setTelefone] = React.useState('');
   const [street, setStreet] = React.useState('');
   const [cep, setCEP] = React.useState('');
   const [number, setNumber] = React.useState('');
   const [complement, setComplement] = React.useState('');
 
-  const [associacoes, setAssociacoes] = React.useState([]);
-  const [selectedAssociacoes, setSelectedAssociacoes] = React.useState<any>();
+  const [selectedAssociacoes, setSelectedAssociacoes] = React.useState(1);
 
-  const [bairro, setBairro] = React.useState([]);
-  const [selectedBairro, setSelectedBairro] = React.useState<any>();
+  const [bairro, setBairro] = React.useState<Bairro[]>([]);
+  const [selectedBairro, setSelectedBairro] = React.useState(0);
+
+  const [selectedAgricultores, setSelectedAgricultores] = React.useState(4);
 
   const [content, setContent] = React.useState<OCS | null>(null);
   const [error, setError] = React.useState('');
 
   const router = useRouter();
 
+  interface OCSResponse {
+    ocs: OCS;
+  }
+
+  const { data: agricultores } = useQuery({
+    queryKey: ['users'],
+    queryFn: () => {
+      const token = localStorage.getItem('@token');
+      if (token) {
+        return getAllUsers(token);
+      }
+      return null;
+    },
+  });
+
+  const { data: associacoes } = useQuery({
+    queryKey: ['associacoes'],
+    queryFn: () => {
+      const token = localStorage.getItem('@token');
+      if (token) {
+        return getAllAssociacoes(token);
+      }
+      return null;
+    },
+  });
+
   React.useEffect(() => {
     const token = localStorage.getItem('@token');
     if (!token) {
-      redirect('/login');
+      redirect('/');
     }
     getOCS(token, params.id)
-      .then((response: any) => setContent(response.ocs))
-      .catch((error: any) => console.log(error));
-    getAllAssociacoes(token)
-      .then((response: any) => setAssociacoes(response.associacoes))
+      .then((response: OCSResponse) => setContent(response.ocs))
       .catch((error: any) => console.log(error));
     getAllBairros(token)
-      .then((response: any) => setBairro(response.bairros))
+      .then((response: { bairros: Bairro[] }) => setBairro(response.bairros))
       .catch((error: any) => console.log(error));
-  }, []);
+  }, [params.id]);
 
   if (!content) {
     return <Loader />;
   }
 
-  console.log(content);
+  const associacaoDefault = content?.associacao_id;
+  const bairrosDefault = content?.endereco?.bairro_id;
+  const agricultoresDefault = content?.agricultores_id;
 
-  let associacaoDefault = content?.associacao.id;
-  let bairrosDefault = content?.endereco.bairro_id;
+  const filterAgricultores = agricultores?.users?.filter((user: User) => {
+    return user?.roles?.some(
+      (role) =>
+        typeof role !== 'number' &&
+        typeof role !== 'string' &&
+        role.nome === 'agricultor',
+    );
+  });
 
-  console.log(associacaoDefault);
-  console.log(bairrosDefault);
-
-  const handleEditRegister = async (e: any) => {
+  const handleEditRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('@token');
       if (!token) {
-        redirect('/login');
+        redirect('/');
       }
 
       const requestData = {
-        cep: cep ? cep : content?.endereco?.cep,
-        nome: name ? name : content.nome,
-        cnpj: cnpj ? cnpj : content.cnpj,
-        data_fundacao: date ? date : content.data_fundacao,
-        email: email ? email : content?.contato?.email,
-        telefone: telefone ? telefone : content?.contato?.telefone,
-        rua: street ? street : content?.endereco?.rua,
-        numero: street ? parseInt(street) : parseInt(content?.endereco?.numero),
-        bairro_id: selectedAssociacoes ? selectedAssociacoes : bairrosDefault,
-        associacao_id: selectedAssociacoes
-          ? selectedAssociacoes
-          : associacaoDefault,
+        cep: cep || content?.endereco?.cep,
+        nome: name || content.nome,
+        cnpj: cnpj || content.cnpj,
+        email: email || content?.contato?.email,
+        telefone: telefone || content?.contato?.telefone,
+        rua: street || content?.endereco?.rua,
+        numero: number || content?.endereco?.numero,
+        bairro_id: selectedBairro ?? bairrosDefault,
+        agricultores_id: [selectedAgricultores] || agricultoresDefault,
+        associacao_id: selectedAssociacoes || associacaoDefault,
       };
       await editOCS(requestData, token, params.id);
       router.back();
     } catch (error: any) {
       console.log(error);
-      console.log(error.response?.data?.message);
-
       const errors = error.response?.data?.errors;
-      // Check if the `errors` object is defined and not null.
       if (errors !== undefined && errors !== null) {
-        // Iterate over the `errors` object and display the error message for each key.
         for (const key of Object.keys(errors)) {
           const errorMessage = errors[key][0];
           setError(`${errorMessage}`);
@@ -103,11 +136,12 @@ const Home = ({ params }: { params: { id: string } }) => {
   };
 
   return (
-    <main>
+    <main style={{ marginTop: '5rem' }}>
       <div className={S.container}>
-        <h1>
-          Editar: <strong>{content.nome}</strong>
-        </h1>
+        <h1>Editar</h1>
+        <p>
+          <strong>{content.nome}</strong>
+        </p>
         <form onSubmit={handleEditRegister} className={S.form}>
           <h3>Dados OCS</h3>
           <section>
@@ -130,7 +164,7 @@ const Home = ({ params }: { params: { id: string } }) => {
               <Input
                 name="email"
                 type="email"
-                placeholder={content.contato.email}
+                placeholder={content.contato?.email ?? ''}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -142,21 +176,9 @@ const Home = ({ params }: { params: { id: string } }) => {
               <Input
                 name="cnpj"
                 type="text"
-                placeholder={content.cnpj}
+                placeholder={content?.cnpj ?? ''}
                 value={cnpj}
                 onChange={(e) => setCNPJ(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="date">
-                Data de Fundação<span>*</span>
-              </label>
-              <Input
-                name="date"
-                type="date"
-                placeholder={content.data_fundacao}
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
               />
             </div>
             <div>
@@ -166,23 +188,41 @@ const Home = ({ params }: { params: { id: string } }) => {
               <Input
                 name="telefone"
                 type="text"
-                placeholder={content.contato.telefone}
+                placeholder={content.contato?.telefone ?? ''}
                 value={telefone}
                 onChange={(e) => setTelefone(e.target.value)}
+                mask="phone"
               />
             </div>
+            <div>
+              <MuiSelect
+                label="Associação"
+                selectedNames={selectedAssociacoes}
+                setSelectedNames={setSelectedAssociacoes}
+              >
+                {associacoes?.map((item) => (
+                  <StyledSelect
+                    key={item.id}
+                    value={item.id}
+                    sx={{ justifyContent: 'space-between' }}
+                  >
+                    {item.nome}
+                  </StyledSelect>
+                ))}
+              </MuiSelect>
+            </div>
             <MuiSelect
-              label="Associação"
-              selectedNames={selectedAssociacoes}
-              setSelectedNames={setSelectedAssociacoes}
+              label="Agricultores"
+              selectedNames={selectedAgricultores}
+              setSelectedNames={setSelectedAgricultores}
             >
-              {associacoes?.map((item: { id: number; nome: string }) => (
+              {filterAgricultores?.map((item) => (
                 <StyledSelect
                   key={item.id}
                   value={item.id}
                   sx={{ justifyContent: 'space-between' }}
                 >
-                  {item.nome}
+                  {item.name}
                 </StyledSelect>
               ))}
             </MuiSelect>
@@ -197,7 +237,7 @@ const Home = ({ params }: { params: { id: string } }) => {
               <Input
                 name="street"
                 type="text"
-                placeholder={content.endereco.rua}
+                placeholder={content.endereco?.rua ?? ''}
                 value={street}
                 onChange={(e) => setStreet(e.target.value)}
               />
@@ -209,9 +249,10 @@ const Home = ({ params }: { params: { id: string } }) => {
               <Input
                 name="cep"
                 type="text"
-                placeholder={content.endereco.cep}
+                placeholder={content.endereco?.cep ?? ''}
                 value={cep}
                 onChange={(e) => setCEP(e.target.value)}
+                mask="zipCode"
               />
             </div>
             <MuiSelect
@@ -236,7 +277,7 @@ const Home = ({ params }: { params: { id: string } }) => {
               <Input
                 name="number"
                 type="number"
-                placeholder={content.endereco.numero}
+                placeholder={content.endereco?.numero ?? ''}
                 value={number}
                 onChange={(e) => setNumber(e.target.value)}
               />
@@ -246,7 +287,7 @@ const Home = ({ params }: { params: { id: string } }) => {
               <Input
                 name="complement"
                 type="text"
-                placeholder={content.complemento}
+                placeholder={content.endereco?.complemento ?? ''}
                 value={complement}
                 onChange={(e) => setComplement(e.target.value)}
               />
@@ -261,7 +302,7 @@ const Home = ({ params }: { params: { id: string } }) => {
               Voltar
             </Button>{' '}
             <Button dataType="filled" type="submit">
-              Cadastrar
+              Editar
             </Button>
           </div>
         </form>

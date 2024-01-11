@@ -1,60 +1,94 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import { redirect, useRouter } from 'next/navigation';
 import React from 'react';
+
 import S from './styles.module.scss';
-import StyledLink from '@/components/Link';
+
 import Button from '@/components/Button';
 import Input from '@/components/Input';
-import { createOCS, getAllAssociacoes, getAllBairros } from '@/services';
-import { redirect, useRouter } from 'next/navigation';
-import MultiSelect from '@/components/Multiselect';
 import { StyledSelect } from '@/components/Multiselect/style';
-import { BsCheck2 as CheckIcon } from 'react-icons/bs';
 import MuiSelect from '@/components/Select';
+
+import {
+  createOCS,
+  getAllAssociacoes,
+  getAllBairros,
+  getAllUsers,
+} from '@/services';
+import { Bairro, User } from '@/types/api';
+import { Alert, AlertTitle, Snackbar } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 
 export default function Home() {
   const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [cnpj, setCNPJ] = React.useState('');
-  const [date, setDate] = React.useState('');
   const [telefone, setTelefone] = React.useState('');
   const [street, setStreet] = React.useState('');
   const [cep, setCEP] = React.useState('');
   const [number, setNumber] = React.useState('');
   const [complement, setComplement] = React.useState('');
 
-  const [associacoes, setAssociacoes] = React.useState([]);
-  const [selectedAssociacoes, setSelectedAssociacoes] = React.useState<any>();
+  const [selectedAssociacoes, setSelectedAssociacoes] = React.useState(0);
+  const [selectedAgricultores, setSelectedAgricultores] = React.useState(0);
 
-  const [bairro, setBairro] = React.useState([]);
-  const [selectedBairro, setSelectedBairro] = React.useState<any>();
-  console.log(selectedAssociacoes);
-  console.log(selectedBairro);
+  const [bairro, setBairro] = React.useState<Bairro[]>([]);
+  const [selectedBairro, setSelectedBairro] = React.useState(0);
 
-  console.log(bairro);
+  const [error, setError] = React.useState('');
 
   const router = useRouter();
 
   React.useEffect(() => {
     const token = localStorage.getItem('@token');
     if (!token) {
-      redirect('/login');
+      redirect('/');
     }
 
-    getAllAssociacoes(token)
-      .then((response: any) => setAssociacoes(response.associacoes))
-      .catch((error: any) => console.log(error));
     getAllBairros(token)
-      .then((response: any) => setBairro(response.bairros))
+      .then((response: { bairros: Bairro[] }) => setBairro(response.bairros))
       .catch((error: any) => console.log(error));
   }, []);
+
+  const { data: associacoes } = useQuery({
+    queryKey: ['associacoes'],
+    queryFn: () => {
+      const token = localStorage.getItem('@token');
+      if (token) {
+        return getAllAssociacoes(token);
+      }
+      return null;
+    },
+  });
+
+  const { data: agricultores } = useQuery({
+    queryKey: ['users'],
+    queryFn: () => {
+      const token = localStorage.getItem('@token');
+      if (token) {
+        return getAllUsers(token);
+      }
+      return null;
+    },
+  });
+
+  const filterAgricultores = agricultores?.users?.filter((user: User) => {
+    return user?.roles?.some(
+      (role) =>
+        typeof role !== 'number' &&
+        typeof role !== 'string' &&
+        role.nome === 'agricultor',
+    );
+  });
 
   const handleRegister: (e: React.FormEvent) => Promise<void> = async (e) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('@token');
       if (!token) {
-        redirect('/login');
+        redirect('/');
       }
 
       await createOCS(
@@ -66,23 +100,33 @@ export default function Home() {
           rua: street,
           cep: cep,
           numero: number,
-          data_fundacao: date,
           associacao_id: selectedAssociacoes,
           bairro_id: selectedBairro,
+          agricultores_id: [selectedAgricultores],
           complemento: complement,
         },
         token,
       );
       router.back();
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
+      const errors = error.response?.data?.errors;
+      if (errors !== undefined && errors !== null) {
+        for (const key of Object.keys(errors)) {
+          const errorMessage = errors[key][0];
+          setError(`${errorMessage}`);
+        }
+      }
     }
   };
 
   return (
-    <main>
+    <main style={{ marginTop: '5rem' }}>
       <div className={S.container}>
-        <h1>Cadastrar Organização Controle Social</h1>
+        <h1>Cadastrar</h1>
+        <p>
+          <strong>Organização Controle Social</strong>
+        </p>
         <form onSubmit={handleRegister} className={S.form}>
           <h3>Dados OCS</h3>
           <section>
@@ -93,7 +137,7 @@ export default function Home() {
               <Input
                 name="nome"
                 type="text"
-                placeholder="nome"
+                placeholder="Insira o nome"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
@@ -105,7 +149,7 @@ export default function Home() {
               <Input
                 name="email"
                 type="email"
-                placeholder="email"
+                placeholder="contato@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -117,21 +161,9 @@ export default function Home() {
               <Input
                 name="cnpj"
                 type="text"
-                placeholder="CNPJ"
+                placeholder="00.000.000/0000-00."
                 value={cnpj}
                 onChange={(e) => setCNPJ(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="telefone">
-                Data de Fundação<span>*</span>
-              </label>
-              <Input
-                name="telefone"
-                type="date"
-                placeholder="Data"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
               />
             </div>
             <div>
@@ -144,6 +176,7 @@ export default function Home() {
                 placeholder="(99) 99999-9999"
                 value={telefone}
                 onChange={(e) => setTelefone(e.target.value)}
+                mask="phone"
               />
             </div>
             <MuiSelect
@@ -151,13 +184,28 @@ export default function Home() {
               selectedNames={selectedAssociacoes}
               setSelectedNames={setSelectedAssociacoes}
             >
-              {associacoes?.map((item: { id: number; nome: string }) => (
+              {associacoes?.map((item) => (
                 <StyledSelect
                   key={item.id}
                   value={item.id}
                   sx={{ justifyContent: 'space-between' }}
                 >
                   {item.nome}
+                </StyledSelect>
+              ))}
+            </MuiSelect>
+            <MuiSelect
+              label="Agricultores"
+              selectedNames={selectedAgricultores}
+              setSelectedNames={setSelectedAgricultores}
+            >
+              {filterAgricultores?.map((item) => (
+                <StyledSelect
+                  key={item.id}
+                  value={item.id}
+                  sx={{ justifyContent: 'space-between' }}
+                >
+                  {item.name}
                 </StyledSelect>
               ))}
             </MuiSelect>
@@ -187,6 +235,7 @@ export default function Home() {
                 placeholder="Cep"
                 value={cep}
                 onChange={(e) => setCEP(e.target.value)}
+                mask="zipCode"
               />
             </div>
             <MuiSelect
@@ -241,6 +290,12 @@ export default function Home() {
           </div>
         </form>
       </div>
+      <Snackbar open={error.length > 0} autoHideDuration={6000}>
+        <Alert variant="filled" severity="error">
+          <AlertTitle>Erro!</AlertTitle>
+          {error}
+        </Alert>
+      </Snackbar>
     </main>
   );
 }

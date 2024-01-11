@@ -5,13 +5,17 @@
 
   h1 {
     padding-top: 1rem;
-    padding-bottom: 2rem;
     color: #037021;
-    font-size: 1.5rem;
+    white-space: nowrap;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+  }
 
+  p {
+    color: #037021;
+    padding-bottom: 2rem;
     strong {
       background-color: #bae4c6;
-      padding: .2rem .5rem;
+      padding: 0.2rem 0.5rem;
       border-radius: 50px;
     }
   }
@@ -29,9 +33,11 @@
 }
 
 .form {
-  background-color: white;
-  box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.1);
-  padding: 0.5rem 1.5rem;
+  @media (min-width: 340px) {
+    background-color: white;
+    box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 1.5rem;
+  }
   border-radius: 1rem;
 
   label {
@@ -40,6 +46,13 @@
 
   section {
     padding-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    column-gap: 3rem;
+
+    @media (max-width: 500px) {
+      grid-template-columns: 1fr;
+    }
   }
 
   h3 {
@@ -48,5 +61,9 @@
     text-transform: uppercase;
     font-size: 1rem;
     letter-spacing: 2px;
+  }
+
+  span {
+    color: red;
   }
 }

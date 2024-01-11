@@ -1,20 +1,26 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import StyledLink from '@/components/Link';
-import React from 'react';
-import TableView from '@/components/Table/Table';
-import { removeAssociacao } from '@/services/associations';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import S from './styles.module.scss';
+import React from 'react';
 import { BiSolidTrashAlt, BiSolidEditAlt } from 'react-icons/bi';
 import { BsFillEyeFill } from 'react-icons/bs';
-import Link from 'next/link';
-import { Box, IconButton, Tooltip, Modal, Typography } from '@mui/material';
+
+import S from './styles.module.scss';
+
 import Button from '@/components/Button';
+import StyledLink from '@/components/Link';
+import Loader from '@/components/Loader';
+import TableView from '@/components/Table/Table';
+
 import { getAllOCS, removeOCS } from '@/services';
+import { formatCNPJ } from '@/utils/convertNumbers';
+import { Box, IconButton, Tooltip, Modal, Typography } from '@mui/material';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 const style = {
-  position: 'absolute' as 'absolute',
+  position: 'absolute' as const,
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
@@ -27,11 +33,25 @@ const style = {
 };
 
 export default function Home() {
-  const [value, setValue] = React.useState('');
-  const handleClose = () => setValue('');
-  const [content, setContent] = React.useState([]);
+  const [value, setValue] = React.useState(0);
+  const [token, setToken] = React.useState('');
+  const handleClose = () => setValue(0);
 
-  const columns: any = [
+  React.useEffect(() => {
+    const token = localStorage.getItem('@token');
+    if (!token) {
+      redirect('/');
+    }
+    setToken(token);
+  }, []);
+
+  interface Column {
+    header: string;
+    accessorKey: string;
+    cell?: (info: any) => JSX.Element;
+  }
+
+  const columns: Column[] = [
     {
       header: 'Nome',
       accessorKey: 'nome',
@@ -39,10 +59,10 @@ export default function Home() {
     {
       header: 'CNPJ',
       accessorKey: 'cnpj',
-    },
-    {
-      header: 'Data Fundação',
-      accessorKey: 'data_fundacao',
+      cell: (info: any) => {
+        const value = info.getValue();
+        return <p>{formatCNPJ(value)}</p>;
+      },
     },
     {
       header: 'Ações',
@@ -86,32 +106,32 @@ export default function Home() {
     },
   ];
 
-  React.useEffect(() => {
-    const token = localStorage.getItem('@token');
-    if (!token) {
-      redirect('/login');
-    }
-    getAllOCS(token)
-      .then((response: any) => setContent(response.ocs))
-      .catch((error: any) => console.log(error));
-  }, []);
+  const { data, isLoading, refetch, isError, error } = useQuery({
+    queryKey: ['ocs'],
+    queryFn: () => {
+      const token = localStorage.getItem('@token');
+      if (token) {
+        return getAllOCS(token);
+      }
+      return null;
+    },
+  });
 
-  const handleDelete = () => {
-    const token = localStorage.getItem('@token');
-    if (!token) {
-      redirect('/login');
-    }
+  const mutation = useMutation({
+    mutationFn: ({ token, value }: { token: string; value: number }) => {
+      return removeOCS(token, value);
+    },
+    onSuccess: () => {
+      refetch();
+      handleClose();
+    },
+  });
 
-    removeOCS(token, value)
-      .then((response: any) => {
-        handleClose();
-        redirect('/ocs');
-      })
-      .catch((error: any) => console.log(error));
-  };
+  if (isLoading) return <Loader />;
+  if (isError) return `Error: ${error.message}`;
 
   return (
-    <div>
+    <div style={{ marginTop: '5rem' }}>
       <section className={S.dashboard}>
         <div className={S.header}>
           <h1>Organização de Controle Social</h1>
@@ -121,11 +141,11 @@ export default function Home() {
             text="+ Adicionar Nova OCS"
           />
         </div>
-        <TableView columns={columns} data={content} />
+        <TableView columns={columns} data={data?.ocs} />
       </section>
       <div>
         <Modal
-          open={value > 0 ? true : false}
+          open={value > 0}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
@@ -144,7 +164,7 @@ export default function Home() {
               </Button>
               <Button
                 type="button"
-                onClick={handleDelete}
+                onClick={() => mutation.mutate({ token: token, value: value })}
                 style={{ backgroundColor: '#f76c6c', color: '#ffffff' }}
               >
                 Excluir
