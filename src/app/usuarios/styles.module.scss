@@ -1,0 +1,64 @@
+.dashboard {
+  max-width: 1280px;
+  padding: 1.5rem 1rem;
+  margin: 0 auto;
+}
+
+.section {
+  input {
+    margin-bottom: 2rem;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-block: 2rem;
+}
+
+.action {
+  display: flex;
+  gap: 1rem;
+  place-content: center;
+}
+
+.buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  place-content: end;
+}
+
+.roles {
+  background-color: rgba(148, 148, 148, 0.097);
+  border-radius: 50px;
+  width: fit-content;
+  margin: 0 auto;
+  padding: .2rem .8rem;
+  text-transform: uppercase;
+  font-size: .75rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+.roles[data-type='consumidor'] {
+  color: lightcoral;
+}
+
+.roles[data-type='agricultor'] {
+  color: rgb(94, 177, 94);
+}
+
+.roles[data-type='secretario'] {
+  color: cadetblue;
+}
+
+.roles[data-type='presidente'] {
+  color: rgb(135, 82, 184);
+}
