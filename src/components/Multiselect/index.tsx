@@ -1,19 +1,20 @@
 import React from 'react';
+
+import { StyledInputBase } from './style';
+
 import {
   Select,
   FormControl,
-  Stack,
   Chip,
   FormControlProps,
+  Box,
+  SelectChangeEvent,
 } from '@mui/material';
-
-import { IoCloseOutline as CancelIcon } from 'react-icons/io5';
-import { StyledInputBase } from './style';
 
 export type Props = FormControlProps & {
   children: React.ReactNode;
-  selectedNames: string[];
-  setSelectedNames: React.Dispatch<React.SetStateAction<any[]>>;
+  selectedNames: string[] | string;
+  setSelectedNames: React.Dispatch<React.SetStateAction<string | string[]>>;
   label: string;
 };
 
@@ -25,33 +26,21 @@ export default function MultiSelect({
 }: Props) {
   return (
     <FormControl sx={{ width: '100%' }}>
-      <label>
-        {label}
-        <span>*</span>
-      </label>
+      <label>{label}*</label>
       <Select
+        labelId="demo-multiple-chip-label"
+        id="demo-multiple-chip"
+        multiple
         value={selectedNames}
-        onChange={(e: any) => setSelectedNames(e.target.value)}
-        input={<StyledInputBase placeholder="Presidentes" />}
+        onChange={(e: SelectChangeEvent<typeof selectedNames>) =>
+          setSelectedNames(e.target.value)
+        }
+        input={<StyledInputBase id="select-multiple-chip" />}
         renderValue={(selected) => (
-          <Stack gap={1} direction="row" flexWrap="wrap">
-            {selected.map((value: any) => (
-              <Chip
-                key={value}
-                label={value}
-                onDelete={() =>
-                  setSelectedNames(
-                    selectedNames.filter((item: number) => item !== value),
-                  )
-                }
-                deleteIcon={
-                  <CancelIcon
-                    onMouseDown={(event: any) => event.stopPropagation()}
-                  />
-                }
-              />
-            ))}
-          </Stack>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+            {Array.isArray(selected) &&
+              selected.map((value) => <Chip key={value} label={value} />)}
+          </Box>
         )}
       >
         {children}
