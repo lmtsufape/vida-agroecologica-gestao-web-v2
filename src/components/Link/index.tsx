@@ -1,6 +1,7 @@
-import React from 'react';
-import S from './styles.module.scss';
 import Link from 'next/link';
+import React from 'react';
+
+import S from './styles.module.scss';
 
 const StyledLink: React.FC<{ text: string; href: string }> = ({
   text,
