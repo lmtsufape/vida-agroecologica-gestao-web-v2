@@ -26,7 +26,7 @@
     "react",
     "@typescript-eslint",
     "react-hooks",
-    " eslint-plugin-import-helpers"
+    "eslint-plugin-import-helpers"
   ],
   "rules": {
     "react/react-in-jsx-scope": "off",

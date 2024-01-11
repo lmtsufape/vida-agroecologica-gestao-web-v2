@@ -1,10 +1,12 @@
-import Navbar from '@/components/Navbar';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+
 import '@/styles/global.css';
 import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
+
+import ReactQueryProvider from '@/providers/TanstackProvider';
 import ThemeRegistry from '@/styles/theme/ThemeRegistry';
-import ResponsiveAppBar from '@/components/Header';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -20,13 +22,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-br">
-      <ThemeRegistry>
-        <body className={inter.className}>
-          <Navbar />
-          {children}
-          <Footer />
-        </body>
-      </ThemeRegistry>
+      <ReactQueryProvider>
+        <ThemeRegistry>
+          <body className={inter.className}>
+            <Navbar />
+            {children}
+            <Footer />
+          </body>
+        </ThemeRegistry>
+      </ReactQueryProvider>
     </html>
   );
 }
