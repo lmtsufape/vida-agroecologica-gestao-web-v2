@@ -1,0 +1,11 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 66px);
+  place-content: center;
+  place-items: center;
+
+  h1 {
+    color: #037021;
+  }
+}
