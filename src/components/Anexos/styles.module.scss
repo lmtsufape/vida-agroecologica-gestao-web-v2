@@ -1,0 +1,22 @@
+.anexos {
+    display: grid;
+    grid-template-columns: 1fr;
+
+    label {
+        margin-top: 1rem;
+    }
+
+    input {
+        margin-bottom: 1rem;
+        font-size: .875rem;
+    }
+
+    button {
+        width: fit-content;
+    }
+
+    .error {
+        font-size: .75rem;
+        color: red;
+    }
+}
