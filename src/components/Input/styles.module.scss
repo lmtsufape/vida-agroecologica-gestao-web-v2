@@ -1,11 +1,10 @@
-.input {
+.input [class~="MuiInputBase-root"] {
   display: block;
   width: 100%;
   border-radius: 8px;
-  border: 1px solid #d8d8d8;
-  padding: 0.7rem 0.5rem;
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
+  padding-right: 1.5rem;
   color: #272727;
   font-size: 0.875rem;
 
