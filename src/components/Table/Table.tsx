@@ -1,6 +1,12 @@
 'use client';
 
 import React from 'react';
+
+import S from './styles.module.scss';
+
+import Button from '@/components/Button';
+import Input from '@/components/Input';
+
 import {
   useReactTable,
   getCoreRowModel,
@@ -8,12 +14,21 @@ import {
   getPaginationRowModel,
   getFilteredRowModel,
 } from '@tanstack/react-table';
-import Input from '@/components/Input';
-import S from './styles.module.scss';
-import Button from '@/components/Button';
-import Loader from '@/components/Loader';
 
-const TableView = ({ data, columns }: Record<any, any>) => {
+type Column = {
+  header: string;
+  accessorKey: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  cell?: (info: any) => JSX.Element;
+};
+
+type TableViewProps = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: any;
+  columns: Column[];
+};
+
+const TableView = ({ data, columns }: TableViewProps) => {
   const [query, setQuery] = React.useState('');
 
   const table = useReactTable({
@@ -28,10 +43,6 @@ const TableView = ({ data, columns }: Record<any, any>) => {
     onGlobalFilterChange: setQuery,
   });
 
-  if (data.length === 0) {
-    return <Loader />;
-  }
-
   return (
     <div>
       <Input
@@ -39,36 +50,43 @@ const TableView = ({ data, columns }: Record<any, any>) => {
         placeholder="Buscar"
         type="text"
         value={query}
-        onChange={(e: any) => setQuery(e.target.value)}
+        onChange={(
+          e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+        ) => setQuery(e.target.value)}
       />
       <div className={S.tableContainer}>
-        <table style={{ minWidth: '1300px' }}>
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <th key={header.id}>
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext(),
-                    )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className={S.tableWrapper}>
+          <table>
+            <thead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <th key={header.id}>
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map((row) => (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
       <div className={S.buttons}>
         <Button
