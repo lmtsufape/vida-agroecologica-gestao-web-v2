@@ -2,11 +2,12 @@
   width: 100%;
   place-self: center;
   grid-row: span 3;
+  margin: 0 auto;
 }
 
 .menuList {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  display: flex;
+  flex-wrap: wrap;
   margin: 0 auto;
   gap: 4rem;
   max-width: 1280px;
@@ -16,6 +17,9 @@
 .menuOption {
   display: flex;
   flex-direction: column;
+  p {
+    font-weight: 600;
+  }
   a {
     text-align: center;
     text-decoration: none;
@@ -38,6 +42,12 @@
     
     svg {
         font-size: 2rem;
+    }
+
+    svg:not(.associationIcon) {
+      path {
+        stroke: #f5821fe5;
+      }
     }
 
     &:hover {

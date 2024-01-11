@@ -1,12 +1,14 @@
 'use client';
 
-import Authentication from '@/utils/session';
-import MenuOptions from './components/menuButtons';
 import S from './components/styles.module.scss';
+
+import MenuOptions from './components/menuButtons';
+
+import Authentication from '@/utils/session';
 
 const Home = () => {
   return (
-    <main className={S.main}>
+    <main className={S.main} style={{ marginTop: '5rem' }}>
       <MenuOptions />
     </main>
   );
