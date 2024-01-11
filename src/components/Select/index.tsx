@@ -1,16 +1,18 @@
 import React from 'react';
+
+import { StyledInputBase } from './style';
+
 import {
   Select,
   FormControl,
   SelectChangeEvent,
   FormControlProps,
 } from '@mui/material';
-import { StyledInputBase } from './style';
 
 export type Props = FormControlProps & {
   children: React.ReactNode;
-  selectedNames: any;
-  setSelectedNames: React.Dispatch<React.SetStateAction<any>>;
+  selectedNames: number | string;
+  setSelectedNames: React.Dispatch<React.SetStateAction<number>>;
   label: string;
 };
 
@@ -19,17 +21,19 @@ export default function MuiSelect({
   label,
   selectedNames,
   setSelectedNames,
-}: any) {
+}: Props) {
   return (
-    <FormControl>
+    <FormControl fullWidth>
       <label>
         {label}
         <span>*</span>
       </label>
 
       <Select
-        value={selectedNames}
-        onChange={(e: any) => setSelectedNames(e.target.value)}
+        value={selectedNames.toString()}
+        onChange={(e: SelectChangeEvent) =>
+          setSelectedNames(Number(e.target.value))
+        }
         displayEmpty
         input={<StyledInputBase />}
       >
