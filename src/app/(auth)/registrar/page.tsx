@@ -1,5 +1,6 @@
-import RegisterForm from './components/registerForm';
 import S from './components/styles.module.scss';
+
+import RegisterForm from './components/registerForm';
 
 export default function Home() {
   return (
