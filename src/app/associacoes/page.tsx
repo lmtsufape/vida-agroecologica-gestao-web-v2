@@ -1,19 +1,26 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import StyledLink from '@/components/Link';
-import React from 'react';
-import { getAllAssociacoes, removeAssociacao } from '@/services/associations';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import S from './styles.module.scss';
+import React from 'react';
 import { BiSolidTrashAlt, BiSolidEditAlt } from 'react-icons/bi';
 import { BsFillEyeFill } from 'react-icons/bs';
-import Link from 'next/link';
-import { Box, IconButton, Tooltip, Modal, Typography } from '@mui/material';
+
+import S from './styles.module.scss';
+
 import Button from '@/components/Button';
+import StyledLink from '@/components/Link';
+import Loader from '@/components/Loader';
 import TableView from '@/components/Table/Table';
 
+import { getAllAssociacoes, removeAssociacao } from '@/services/associations';
+import { formatDate } from '@/utils/convertNumbers';
+import { Box, IconButton, Tooltip, Modal, Typography } from '@mui/material';
+import { useMutation, useQuery } from '@tanstack/react-query';
+
 const style = {
-  position: 'absolute' as 'absolute',
+  position: 'absolute' as const,
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
@@ -26,9 +33,48 @@ const style = {
 };
 
 export default function Home() {
-  const [value, setValue] = React.useState('');
-  const handleClose = () => setValue('');
-  const [content, setContent] = React.useState([]);
+  const [value, setValue] = React.useState(0);
+  const handleClose = () => setValue(0);
+
+  const [token, setToken] = React.useState('');
+
+  React.useEffect(() => {
+    const token = localStorage.getItem('@token');
+    const rolesString = localStorage.getItem('@roles');
+    const roles = rolesString ? JSON.parse(rolesString) : '';
+    const filter = roles.map((item: { id: number }) => item.id);
+    if (!token) {
+      redirect('/');
+    }
+    if (filter.includes(5) || filter.includes(4)) {
+      redirect('/default');
+    }
+    setToken(token);
+  }, []);
+
+  const mutation = useMutation({
+    mutationFn: ({ token, value }: { token: string; value: number }) => {
+      return removeAssociacao(token, value);
+    },
+    onSuccess: () => {
+      refetch();
+      handleClose();
+    },
+  });
+
+  const { data, isLoading, isError, error, refetch } = useQuery({
+    queryKey: ['associacoes'],
+    queryFn: () => {
+      const token = localStorage.getItem('@token');
+      if (token) {
+        return getAllAssociacoes(token);
+      }
+      return null;
+    },
+  });
+
+  if (isLoading) return <Loader />;
+  if (isError) return `Error: ${error.message}`;
 
   const columns: any = [
     {
@@ -36,8 +82,12 @@ export default function Home() {
       accessorKey: 'nome',
     },
     {
-      header: 'Código',
-      accessorKey: 'codigo',
+      header: 'Data de Fundação',
+      accessorKey: 'data_fundacao',
+      cell: (info: any) => {
+        const value = info.getValue();
+        return <p>{formatDate(value)}</p>;
+      },
     },
     {
       header: 'Presidente',
@@ -95,32 +145,8 @@ export default function Home() {
     },
   ];
 
-  React.useEffect(() => {
-    const token = localStorage.getItem('@token');
-    if (!token) {
-      redirect('/login');
-    }
-    getAllAssociacoes(token)
-      .then((response: any) => setContent(response.associacoes))
-      .catch((error: any) => console.log(error));
-  }, []);
-
-  const handleDelete = () => {
-    const token = localStorage.getItem('@token');
-    if (!token) {
-      redirect('/login');
-    }
-
-    removeAssociacao(token, value)
-      .then((response: any) => {
-        handleClose();
-        redirect('/associacoes');
-      })
-      .catch((error: any) => console.log(error));
-  };
-
   return (
-    <div>
+    <div style={{ marginTop: '5rem' }}>
       <section className={S.dashboard}>
         <div className={S.header}>
           <h1>Associações</h1>
@@ -130,11 +156,11 @@ export default function Home() {
             text="+ Adicionar Nova Associação"
           />
         </div>
-        <TableView columns={columns} data={content} />
+        <TableView columns={columns} data={data} />
       </section>
       <div>
         <Modal
-          open={value > 0 ? true : false}
+          open={value > 0}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
@@ -153,7 +179,7 @@ export default function Home() {
               </Button>
               <Button
                 type="button"
-                onClick={handleDelete}
+                onClick={() => mutation.mutate({ token: token, value: value })}
                 style={{ backgroundColor: '#f76c6c', color: '#ffffff' }}
               >
                 Excluir

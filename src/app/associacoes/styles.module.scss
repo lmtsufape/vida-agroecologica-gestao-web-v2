@@ -14,6 +14,8 @@
   display: flex;
   justify-content: space-between;
   margin-block: 2rem;
+  row-gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .action {

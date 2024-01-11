@@ -1,36 +1,51 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import { redirect, useRouter } from 'next/navigation';
 import React from 'react';
+
 import S from './styles.module.scss';
+
 import Button from '@/components/Button';
 import Input from '@/components/Input';
-import { createAssociacao } from '@/services/associations';
-import { redirect, useRouter } from 'next/navigation';
-import MultiSelect from '@/components/Multiselect';
-import { getPresidents } from '@/services/user';
 import { StyledSelect } from '@/components/Multiselect/style';
-import { Presidente } from '@/types/api';
-import { BsCheck2 as CheckIcon } from 'react-icons/bs';
+import MuiSelect from '@/components/Select';
+
+import { getAllBairros } from '@/services';
+import { createAssociacao } from '@/services/associations';
+import { getPresidents } from '@/services/user';
+import { Bairro } from '@/types/api';
 
 export default function Home() {
   const [name, setName] = React.useState('associacao nova');
   const [email, setEmail] = React.useState('associacaonova@gmail.com');
-  const [codigo, setCodigo] = React.useState('2423142');
-  const [phone, setPhone] = React.useState('(99) 99739-8509');
+  const [date, setDate] = React.useState('');
+  const [telefone, setTelefone] = React.useState('');
+  const [street, setStreet] = React.useState('');
+  const [cep, setCEP] = React.useState('');
+  const [number, setNumber] = React.useState('');
+  const [complement, setComplement] = React.useState('');
+
+  const [bairro, setBairro] = React.useState<Bairro[]>([]);
+  const [selectedBairro, setSelectedBairro] = React.useState(1);
 
   const [presidents, setPresidents] = React.useState<[]>([]);
-  const [selectedPresidents, setSelectedPresidents] = React.useState<any[]>([]);
+  const [selectedPresidents, setSelectedPresidents] = React.useState(2);
 
+  const secretarioId = [3];
   const router = useRouter();
 
   React.useEffect(() => {
     const token = localStorage.getItem('@token');
     if (!token) {
-      redirect('/login');
+      redirect('/');
     }
 
     getPresidents(token)
       .then((response: any) => setPresidents(response.users))
+      .catch((error: any) => console.log(error));
+    getAllBairros(token)
+      .then((response: { bairros: Bairro[] }) => setBairro(response.bairros))
       .catch((error: any) => console.log(error));
   }, []);
 
@@ -39,16 +54,21 @@ export default function Home() {
     try {
       const token = localStorage.getItem('@token');
       if (!token) {
-        redirect('/login');
+        redirect('/');
       }
 
       await createAssociacao(
         {
           nome: name,
-          codigo,
           email,
-          telefone: phone,
-          presidente: selectedPresidents,
+          telefone: telefone,
+          data_fundacao: date,
+          rua: street,
+          cep: cep,
+          numero: number,
+          bairro_id: selectedBairro,
+          secretarios_id: secretarioId,
+          presidentes_id: [selectedPresidents],
         },
         token,
       );
@@ -59,12 +79,14 @@ export default function Home() {
   };
 
   return (
-    <main>
+    <main style={{ marginTop: '5rem' }}>
       <div className={S.container}>
-        <h1>
-          Cadastrar: <strong>Associação</strong>
-        </h1>
+        <h1>Cadastrar</h1>
+        <p>
+          <strong>Associação</strong>
+        </p>
         <form className={S.form} onSubmit={handleRegister}>
+          <h3>Dados</h3>
           <section>
             <div>
               <label htmlFor="nome">
@@ -98,40 +120,103 @@ export default function Home() {
                 name="telefone"
                 type="text"
                 placeholder="(99) 99999-9999"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                value={telefone}
+                onChange={(e) => setTelefone(e.target.value)}
+                mask="phone"
               />
             </div>
             <div>
-              <label htmlFor="codigo">
-                Código<span>*</span>
+              <label htmlFor="date">
+                Data de Fundação<span>*</span>
               </label>
               <Input
-                name="codigo"
+                name="date"
                 type="text"
-                placeholder="(99) 99999-9999"
-                value={codigo}
-                onChange={(e) => setCodigo(e.target.value)}
+                placeholder="YYYY-MM-DD"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
               />
             </div>
-            <MultiSelect
+            <MuiSelect
               label="Presidentes"
               selectedNames={selectedPresidents}
               setSelectedNames={setSelectedPresidents}
             >
-              {presidents?.map((item: Presidente) => (
+              {presidents?.map((item: { id: number; name: string }) => (
                 <StyledSelect
                   key={item.id}
                   value={item.id}
                   sx={{ justifyContent: 'space-between' }}
                 >
                   {item.name}
-                  {selectedPresidents.includes(item.name) ? (
-                    <CheckIcon color="info" />
-                  ) : null}
                 </StyledSelect>
               ))}
-            </MultiSelect>
+            </MuiSelect>
+          </section>
+          <h3>Endereço</h3>
+          <section>
+            <div>
+              <label htmlFor="street">
+                Rua<span>*</span>
+              </label>
+              <Input
+                name="street"
+                type="text"
+                placeholder="Rua"
+                value={street}
+                onChange={(e) => setStreet(e.target.value)}
+              />
+            </div>
+            <div>
+              <label htmlFor="cep">
+                Cep<span>*</span>
+              </label>
+              <Input
+                name="cep"
+                type="text"
+                placeholder="00000-000"
+                value={cep}
+                onChange={(e) => setCEP(e.target.value)}
+                mask="zipCode"
+              />
+            </div>
+            <MuiSelect
+              label="Bairro"
+              selectedNames={selectedBairro}
+              setSelectedNames={setSelectedBairro}
+            >
+              {bairro?.map((item: { id: number; nome: string }) => (
+                <StyledSelect
+                  key={item.id}
+                  value={item.id}
+                  sx={{ justifyContent: 'space-between' }}
+                >
+                  {item.nome}
+                </StyledSelect>
+              ))}
+            </MuiSelect>
+            <div>
+              <label htmlFor="number">
+                Número<span>*</span>
+              </label>
+              <Input
+                name="number"
+                type="number"
+                placeholder="Número"
+                value={number}
+                onChange={(e) => setNumber(e.target.value)}
+              />
+            </div>
+            <div>
+              <label htmlFor="complement">Complemento</label>
+              <Input
+                name="complement"
+                type="text"
+                placeholder="Complemento"
+                value={complement}
+                onChange={(e) => setComplement(e.target.value)}
+              />
+            </div>
           </section>
           <div className={S.wrapperButtons}>
             <Button

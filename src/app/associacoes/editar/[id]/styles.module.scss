@@ -5,13 +5,16 @@
 
   h1 {
     padding-top: 1rem;
-    padding-bottom: 2rem;
     color: #037021;
-    font-size: 1.5rem;
+    white-space: nowrap;
+  }
 
+  p {
+    color: #037021;
+    padding-bottom: 2rem;
     strong {
       background-color: #bae4c6;
-      padding: .2rem .5rem;
+      padding: 0.2rem 0.5rem;
       border-radius: 50px;
     }
   }

@@ -1,15 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import Loader from '@/components/Loader';
-import { getAssociacao } from '@/services';
 import { redirect, useRouter } from 'next/navigation';
-import { Associacao } from '@/types/api';
+import React from 'react';
 import { BiSolidEditAlt } from 'react-icons/bi';
 
 import S from './styles.module.scss';
 
-import React from 'react';
 import Button from '@/components/Button';
+import Loader from '@/components/Loader';
+
+import { getAssociacao } from '@/services';
+import { Associacao } from '@/types/api';
 
 const Home = ({ params }: { params: { id: string } }) => {
   const [content, setContent] = React.useState<Associacao | null>(null);
@@ -19,12 +21,12 @@ const Home = ({ params }: { params: { id: string } }) => {
   React.useEffect(() => {
     const token = localStorage.getItem('@token');
     if (!token) {
-      redirect('/login');
+      redirect('/');
     }
     getAssociacao(token, params.id)
       .then((response: any) => setContent(response.associacao))
       .catch((error: any) => console.log(error));
-  }, []);
+  }, [params.id]);
 
   if (!content) {
     return <Loader />;
@@ -44,8 +46,6 @@ const Home = ({ params }: { params: { id: string } }) => {
           </Button>
         </div>
         <div className={S.content}>
-          <h3>Código</h3>
-          <p>{content.codigo}</p>
           <h3>E-mail</h3>
           <p>{content?.contato?.email}</p>
           <h3>Telefone</h3>
