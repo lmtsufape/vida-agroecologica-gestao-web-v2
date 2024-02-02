@@ -10,6 +10,8 @@ import Input from '@/components/Input';
 import MultiSelect from '@/components/Multiselect';
 import { StyledSelect } from '@/components/Multiselect/style';
 import MuiSelect from '@/components/Select';
+import { Select, FormControl, MenuItem } from '@mui/material';
+import { Snackbar, Alert, AlertTitle } from '@mui/material';
 
 import {
   createReuniao,
@@ -31,6 +33,8 @@ export default function Home() {
   const [selectedParticipantes, setSelectedParticipantes] = React.useState<
     string | string[]
   >([]);
+
+  const [errorMessage, setErrorMessage] = React.useState('');
 
   const { data: associacoes, isLoading } = useQuery({
     queryKey: ['associacoes'],
@@ -73,6 +77,11 @@ export default function Home() {
       const token = localStorage.getItem('@token');
       if (!token) {
         redirect('/');
+      }
+
+      if (selectedParticipantes.length < 2) {
+        setErrorMessage('Selecione pelo menos duas pessoas para a reunião.');
+        return;
       }
 
       await createReuniao(
@@ -129,13 +138,18 @@ export default function Home() {
               <label htmlFor="tipo">
                 Tipo<span>*</span>
               </label>
-              <Input
-                name="tipo"
-                type="text"
-                placeholder=""
-                value={tipo}
-                onChange={(e) => setTipo(e.target.value)}
-              />
+              <FormControl fullWidth>
+                <Select
+                  labelId="label"
+                  id="tipo"
+                  value={tipo}
+                  onChange={(e) => setTipo(e.target.value as string)}
+                >
+                  <MenuItem value="ordinaria">Ordinária</MenuItem>
+                  <MenuItem value="extraordinaria">Extraordinária</MenuItem>
+                  <MenuItem value="multirao">Mutirão</MenuItem>
+                </Select>
+              </FormControl>
             </div>
             <div>
               <label htmlFor="data">
@@ -228,6 +242,12 @@ export default function Home() {
           </div>
         </form>
       </div>
+      <Snackbar open={errorMessage.length > 0}>
+        <Alert variant="filled" severity="error">
+          <AlertTitle>Erro!</AlertTitle>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </main>
   );
 }

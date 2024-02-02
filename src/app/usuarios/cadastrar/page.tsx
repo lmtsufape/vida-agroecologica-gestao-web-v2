@@ -33,6 +33,8 @@ export default function Home() {
 
   const [selectedRole, setSelectedRole] = React.useState<string | string[]>([]);
 
+  const [confirmationMessage, setConfirmationMessage] = React.useState('');
+
   const router = useRouter();
 
   React.useEffect(() => {
@@ -79,6 +81,11 @@ export default function Home() {
         },
         token,
       );
+      setConfirmationMessage('Usuário cadastrado com sucesso');
+      setTimeout(() => {
+        setConfirmationMessage('');
+      }, 3000);
+
       router.back();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -255,6 +262,16 @@ export default function Home() {
           {error}
         </Alert>
       </Snackbar>
+
+      {/* Mensagem de confirmação */}
+      {confirmationMessage && (
+        <Snackbar open={confirmationMessage.length > 0} autoHideDuration={6000}>
+          <Alert variant="filled" severity="success">
+            <AlertTitle>Sucesso!</AlertTitle>
+            {confirmationMessage}
+          </Alert>
+        </Snackbar>
+      )}
     </main>
   );
 }

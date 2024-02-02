@@ -44,7 +44,7 @@ export async function createOCS(
   token: string,
 ) {
   const response = await api.post(
-    '/api/ocs/store',
+    '/api/ocs',
     {
       nome,
       cnpj,

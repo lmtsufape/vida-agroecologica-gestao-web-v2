@@ -128,6 +128,10 @@ export default function Home() {
     setToken(token);
   }, []);
 
+  const handleDeleteConfirmation = (userId: number) => {
+    setValue(userId);
+  };
+
   const mutation = useMutation({
     mutationFn: ({ token, value }: { token: string; value: number }) => {
       return removeUser(token, value);
