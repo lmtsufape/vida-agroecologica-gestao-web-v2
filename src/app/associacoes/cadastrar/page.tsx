@@ -10,6 +10,7 @@ import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { StyledSelect } from '@/components/Multiselect/style';
 import MuiSelect from '@/components/Select';
+import { Snackbar, Alert, AlertTitle } from '@mui/material';
 
 import { getAllBairros } from '@/services';
 import { createAssociacao } from '@/services/associations';
@@ -33,7 +34,20 @@ export default function Home() {
   const [selectedPresidents, setSelectedPresidents] = React.useState(2);
 
   const secretarioId = [3];
+
   const router = useRouter();
+
+  const [errorMessage, setErrorMessage] = React.useState('');
+
+  React.useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage('');
+      }, 4000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
 
   React.useEffect(() => {
     const token = localStorage.getItem('@token');
@@ -75,6 +89,9 @@ export default function Home() {
       router.back();
     } catch (error) {
       console.log(error);
+      setErrorMessage(
+        'Erro ao cadastrar associação. Por favor, verifique os dados e tente novamente.',
+      );
     }
   };
 
@@ -232,6 +249,12 @@ export default function Home() {
           </div>
         </form>
       </div>
+      <Snackbar open={errorMessage.length > 0}>
+        <Alert variant="filled" severity="error">
+          <AlertTitle>Erro!</AlertTitle>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </main>
   );
 }
