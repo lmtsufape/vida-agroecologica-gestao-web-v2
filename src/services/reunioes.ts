@@ -45,6 +45,7 @@ export async function createReuniao(
   }: Reunioes,
   token: string,
 ) {
+  const participantesIds = participantes.map((participante) => participante.id);
   const response = await api.post(
     '/api/reunioes',
     {
@@ -52,7 +53,7 @@ export async function createReuniao(
       pauta,
       data,
       tipo,
-      participantes,
+      participantes: participantesIds,
       associacao_id,
       organizacao_id,
     },
