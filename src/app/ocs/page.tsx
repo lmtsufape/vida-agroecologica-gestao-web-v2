@@ -18,6 +18,7 @@ import { getAllOCS, removeOCS } from '@/services';
 import { formatCNPJ } from '@/utils/convertNumbers';
 import { Box, IconButton, Tooltip, Modal, Typography } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { Snackbar, Alert, AlertTitle } from '@mui/material';
 
 const style = {
   position: 'absolute' as const,
@@ -36,6 +37,7 @@ export default function Home() {
   const [value, setValue] = React.useState(0);
   const [token, setToken] = React.useState('');
   const handleClose = () => setValue(0);
+  const [errorMessage, setErrorMessage] = React.useState('');
 
   React.useEffect(() => {
     const token = localStorage.getItem('@token');
@@ -121,6 +123,15 @@ export default function Home() {
     mutationFn: ({ token, value }: { token: string; value: number }) => {
       return removeOCS(token, value);
     },
+    onError: (error) => {
+      if ((error as any).response.status === 500) {
+        setErrorMessage(
+          'Existem reuniões marcadas para esta OCS. Não é possível excluí-la.',
+        );
+      } else {
+        setErrorMessage('Erro ao excluir a OCS.');
+      }
+    },
     onSuccess: () => {
       refetch();
       handleClose();
@@ -172,6 +183,12 @@ export default function Home() {
             </div>
           </Box>
         </Modal>
+        <Snackbar open={errorMessage.length > 0}>
+          <Alert variant="filled" severity="error">
+            <AlertTitle>Erro!</AlertTitle>
+            {errorMessage}
+          </Alert>
+        </Snackbar>
       </div>
     </div>
   );
