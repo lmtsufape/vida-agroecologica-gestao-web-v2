@@ -30,7 +30,7 @@ export default function MuiSelect({
       </label>
 
       <Select
-        value={selectedNames.toString()}
+        value={selectedNames ? selectedNames.toString() : ''}
         onChange={(e: SelectChangeEvent) =>
           setSelectedNames(Number(e.target.value))
         }
