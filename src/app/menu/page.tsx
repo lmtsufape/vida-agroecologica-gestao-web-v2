@@ -1,8 +1,8 @@
 'use client';
 
-import S from './components/styles.module.scss';
+import S from './styles.module.scss';
 
-import MenuOptions from './components/menuButtons';
+import MenuOptions from '../../components/Menubuttons';
 
 import Authentication from '@/utils/session';
 
