@@ -45,16 +45,35 @@ const Home = ({ params }: { params: { id: string } }) => {
   const selectedRoleDefault = content?.roles?.map((item) =>
     typeof item !== 'number' && typeof item !== 'string' ? item.id : [],
   );
-
   React.useEffect(() => {
     const token = localStorage.getItem('@token');
     if (!token) {
       redirect('/');
     }
     getUser(token, params.id)
-      .then((response: { user: User[] }) => setContent(response.user[0]))
+      .then((response: { user: User[] }) => {
+        console.log('Dados do usuário:', response.user[0]);
+        setContent(response.user[0]);
+      })
       .catch((error: unknown) => console.log(error));
   }, [params.id]);
+
+  React.useEffect(() => {
+    if (content) {
+      setName(content.name ?? '');
+      setEmail(content.contato?.email ?? '');
+      setCpf(content.cpf ?? '');
+      setTelefone(content.contato?.telefone ?? '');
+      setPassword(content.password ?? '');
+      setSelectedRole(
+        content.roles?.map((item) =>
+          typeof item !== 'number' && typeof item !== 'string'
+            ? String(item.id)
+            : '',
+        ) ?? ['2'],
+      );
+    }
+  }, [content]);
 
   const handleEditRegister = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -84,6 +84,21 @@ const Home = ({ params }: { params: { id: number } }) => {
       .catch((error: any) => console.log(error));
   }, [params.id]);
 
+  React.useEffect(() => {
+    if (content) {
+      setDate(content.data ?? '');
+      setTipo(content.tipo ?? '');
+      setTitulo(content.titulo ?? '');
+      setPauta(content.pauta ?? '');
+      setSelectedAssociacoes(content.associacao_id ?? 0);
+      setSelectedOcs(content.organizacao_id ?? 0);
+      setSelectedParticipantes(
+        content.participantes?.map((participante) => String(participante.id)) ??
+          [],
+      );
+    }
+  }, [content]);
+
   if (!content) {
     return <Loader />;
   }
@@ -120,9 +135,7 @@ const Home = ({ params }: { params: { id: number } }) => {
       console.log(error.response?.data?.message);
 
       const errors = error.response?.data?.errors;
-      // Check if the `errors` object is defined and not null.
       if (errors !== undefined && errors !== null) {
-        // Iterate over the `errors` object and display the error message for each key.
         for (const key of Object.keys(errors)) {
           const errorMessage = errors[key][0];
           setError(`${errorMessage}`);

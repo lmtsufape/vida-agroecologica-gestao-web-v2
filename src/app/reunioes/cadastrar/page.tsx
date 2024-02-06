@@ -12,6 +12,7 @@ import { StyledSelect } from '@/components/Multiselect/style';
 import MuiSelect from '@/components/Select';
 import { Select, FormControl, MenuItem } from '@mui/material';
 import { Snackbar, Alert, AlertTitle } from '@mui/material';
+import { TextareaAutosize } from '@mui/material';
 
 import {
   createReuniao,
@@ -126,12 +127,14 @@ export default function Home() {
               <label htmlFor="pauta">
                 Pauta<span>*</span>
               </label>
-              <Input
-                name="pauta"
-                type="pauta"
-                placeholder=""
+              <TextareaAutosize
+                className={S['custom-textarea']}
+                id="pauta"
+                placeholder="Digite a pauta"
                 value={pauta}
                 onChange={(e) => setPauta(e.target.value)}
+                aria-label="Pauta"
+                minRows={2}
               />
             </div>
             <div>

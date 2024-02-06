@@ -84,6 +84,21 @@ const Home = ({ params }: { params: { id: string } }) => {
       .catch((error: any) => console.log(error));
   }, [params.id]);
 
+  React.useEffect(() => {
+    if (content) {
+      setName(content.nome ?? '');
+      setEmail(content.contato?.email ?? '');
+      setCNPJ(content.cnpj ?? '');
+      setTelefone(content.contato?.telefone ?? '');
+      setStreet(content.endereco?.rua ?? '');
+      setCEP(content.endereco?.cep ?? '');
+      setNumber(content.endereco?.numero ?? '');
+      setComplement(content.endereco?.complemento ?? '');
+      setSelectedBairro(content.endereco?.bairro_id ?? 0);
+      setSelectedAssociacoes(content.associacao_id ?? 1);
+    }
+  }, [content]);
+
   if (!content) {
     return <Loader />;
   }

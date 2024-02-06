@@ -55,6 +55,25 @@ const Home = ({ params }: { params: { id: string } }) => {
       .catch((error: any) => console.log(error));
   }, [params.id]);
 
+  React.useEffect(() => {
+    if (content) {
+      setName(content.nome ?? '');
+      setEmail(content.contato?.email ?? '');
+      setPhone(content.contato?.telefone ?? '');
+      setDate(content.data_fundacao ?? '');
+      setStreet(content.endereco?.rua ?? '');
+      setCEP(content.endereco?.cep ?? '');
+      setNumber(content.endereco?.numero ?? '');
+      setComplement(content.endereco?.complemento ?? '');
+    }
+  }, [content]);
+
+  React.useEffect(() => {
+    if (content && content.endereco?.bairro_id) {
+      setSelectedBairro(content.endereco.bairro_id);
+    }
+  }, [content]);
+
   if (!content) {
     return <Loader />;
   }
