@@ -205,9 +205,9 @@ export default function Home() {
                 ?.filter((user: User) => {
                   return user?.roles?.some(
                     (role) =>
-                      typeof role !== 'number' &&
-                      typeof role !== 'string' &&
-                      role.nome === 'consumidor',
+                      (typeof role === 'object' &&
+                        (role as { nome: string }).nome === 'consumidor') ||
+                      (role as { nome: string }).nome === 'agricultor',
                   );
                 })
                 .map((user: User) => (

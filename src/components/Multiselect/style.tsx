@@ -9,7 +9,6 @@ export const StyledInputBase = styled(InputBase)`
   padding: 0.5rem;
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
-  color: #272727;
   font-size: 0.875rem;
   font-family: inherit;
 
@@ -19,7 +18,7 @@ export const StyledInputBase = styled(InputBase)`
   }
 
   .MuiChip-root {
-    background-color: rgb(186 228 198);
+    background-color: #dcdcdc;
   }
 `;
 

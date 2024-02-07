@@ -173,9 +173,7 @@ const Home = ({ params }: { params: { id: string } }) => {
               />
             </div>
             <div>
-              <label htmlFor="email">
-                E-mail<span>*</span>
-              </label>
+              <label htmlFor="email">E-mail</label>
               <Input
                 name="email"
                 type="email"
@@ -197,9 +195,7 @@ const Home = ({ params }: { params: { id: string } }) => {
               />
             </div>
             <div>
-              <label htmlFor="telefone">
-                Telefone<span>*</span>
-              </label>
+              <label htmlFor="telefone">Telefone</label>
               <Input
                 name="telefone"
                 type="text"

@@ -70,11 +70,10 @@ export default function Home() {
       if (!token) {
         redirect('/');
       }
-
       await createAssociacao(
         {
           nome: name,
-          email,
+          email: email,
           telefone: telefone,
           data_fundacao: date,
           rua: street,
@@ -118,9 +117,7 @@ export default function Home() {
               />
             </div>
             <div>
-              <label htmlFor="email">
-                E-mail<span>*</span>
-              </label>
+              <label htmlFor="email">E-mail</label>
               <Input
                 name="email"
                 type="email"
@@ -130,9 +127,7 @@ export default function Home() {
               />
             </div>
             <div>
-              <label htmlFor="telefone">
-                Telefone<span>*</span>
-              </label>
+              <label htmlFor="telefone">Telefone</label>
               <Input
                 name="telefone"
                 type="text"

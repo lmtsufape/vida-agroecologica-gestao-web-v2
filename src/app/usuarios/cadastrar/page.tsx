@@ -58,6 +58,11 @@ export default function Home() {
     },
   });
 
+  const getRoleIdByName = (roleName: string): number | undefined => {
+    const selectedRoleObject = roles?.find((role) => role.nome === roleName);
+    return selectedRoleObject?.id;
+  };
+
   const handleRegister: (e: React.FormEvent) => Promise<void> = async (e) => {
     e.preventDefault();
     try {
@@ -66,6 +71,12 @@ export default function Home() {
         redirect('/');
       }
 
+      const selectedRoleIds = Array.isArray(selectedRole)
+        ? (selectedRole
+            .map((role) => getRoleIdByName(role as string))
+            .filter(Boolean) as number[])
+        : [getRoleIdByName(selectedRole as string) as number];
+
       await createUser(
         {
           name: name,
@@ -73,7 +84,7 @@ export default function Home() {
           cpf,
           password: password,
           telefone: telefone,
-          roles: Array.isArray(selectedRole) ? selectedRole : [selectedRole],
+          roles: selectedRoleIds,
           rua: street,
           cep: cep,
           numero: number,
@@ -179,7 +190,7 @@ export default function Home() {
               {roles?.map((item: { id: number; nome: string }) => (
                 <StyledSelect
                   key={item.id}
-                  value={item.id}
+                  value={item.nome}
                   sx={{ justifyContent: 'space-between' }}
                 >
                   {item.nome}
