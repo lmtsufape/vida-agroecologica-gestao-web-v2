@@ -104,7 +104,10 @@ export default function Home() {
       if (errors !== undefined && errors !== null) {
         for (const key of Object.keys(errors)) {
           const errorMessage = errors[key][0];
-          setError(`${errorMessage}`);
+          setTimeout(() => {
+            setError(`${errorMessage}`);
+            window.location.reload();
+          }, 3000);
         }
       }
     }
@@ -183,7 +186,7 @@ export default function Home() {
               />
             </div>
             <MultiSelect
-              label="Cargo"
+              label="Função"
               selectedNames={selectedRole}
               setSelectedNames={setSelectedRole}
             >

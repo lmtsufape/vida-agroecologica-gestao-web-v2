@@ -81,7 +81,10 @@ export default function Home() {
       }
 
       if (selectedParticipantes.length < 2) {
-        setErrorMessage('Selecione pelo menos duas pessoas para a reunião.');
+        setTimeout(() => {
+          setErrorMessage('Selecione pelo menos duas pessoas para a reunião.');
+          window.location.reload();
+        }, 3000);
         return;
       }
 
@@ -102,6 +105,10 @@ export default function Home() {
       router.back();
     } catch (error) {
       console.log(error);
+      setTimeout(() => {
+        setErrorMessage('Erro ao criar reunião.');
+        window.location.reload();
+      }, 3000);
     }
   };
 

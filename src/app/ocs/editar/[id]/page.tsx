@@ -144,7 +144,10 @@ const Home = ({ params }: { params: { id: string } }) => {
       if (errors !== undefined && errors !== null) {
         for (const key of Object.keys(errors)) {
           const errorMessage = errors[key][0];
-          setError(`${errorMessage}`);
+          setTimeout(() => {
+            setError(`${errorMessage}`);
+            window.location.reload();
+          }, 3000);
         }
       }
     }

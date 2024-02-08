@@ -18,8 +18,8 @@ import { getPresidents } from '@/services/user';
 import { Bairro } from '@/types/api';
 
 export default function Home() {
-  const [name, setName] = React.useState('associacao nova');
-  const [email, setEmail] = React.useState('associacaonova@gmail.com');
+  const [name, setName] = React.useState('');
+  const [email, setEmail] = React.useState('');
   const [date, setDate] = React.useState('');
   const [telefone, setTelefone] = React.useState('');
   const [street, setStreet] = React.useState('');
@@ -43,7 +43,8 @@ export default function Home() {
     if (errorMessage) {
       const timer = setTimeout(() => {
         setErrorMessage('');
-      }, 4000);
+        window.location.reload();
+      }, 3000);
 
       return () => clearTimeout(timer);
     }
@@ -86,11 +87,17 @@ export default function Home() {
         token,
       );
       router.back();
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      setErrorMessage(
-        'Erro ao cadastrar associação. Por favor, verifique os dados e tente novamente.',
-      );
+      if (error.response && error.response.status === 500) {
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
+      } else {
+        setErrorMessage(
+          'Erro ao cadastrar associação. Por favor, verifique os dados e tente novamente.',
+        );
+      }
     }
   };
 

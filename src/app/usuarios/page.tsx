@@ -59,7 +59,7 @@ export default function Home() {
       accessorKey: 'name',
     },
     {
-      header: 'Tipo',
+      header: 'Função',
       accessorKey: 'roles',
       cell: (info: any) => {
         const value = info.getValue();

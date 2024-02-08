@@ -125,11 +125,17 @@ export default function Home() {
     },
     onError: (error) => {
       if ((error as any).response.status === 500) {
-        setErrorMessage(
-          'Existem reuniões marcadas para esta OCS. Não é possível excluí-la.',
-        );
+        setTimeout(() => {
+          setErrorMessage(
+            'Existem reuniões marcadas para esta OCS. Não é possível excluí-la.',
+          );
+          window.location.reload();
+        }, 3000);
       } else {
-        setErrorMessage('Erro ao excluir a OCS.');
+        setTimeout(() => {
+          setErrorMessage('Erro ao excluir a OCS.');
+          window.location.reload();
+        }, 3000);
       }
     },
     onSuccess: () => {
