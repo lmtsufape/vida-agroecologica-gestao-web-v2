@@ -100,7 +100,7 @@ export interface Reunioes {
   ata?: string[];
   participantes: { id: number }[];
   associacao_id: number;
-  organizacao_id: number;
+  organizacao_id?: number;
   associacao?: {
     id: number;
     nome: string;

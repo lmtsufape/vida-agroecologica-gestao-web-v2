@@ -104,10 +104,17 @@ const Home = ({ params }: { params: { id: number } }) => {
   }
 
   const organizacaoDefault = content?.organizacao_id;
-  const participantesDefault = content?.participantes?.map(
-    (participante) => participante.id,
-  );
+
   const associacaoDefautl = content?.associacao_id;
+
+  const getParticipantIdByName = (
+    participantName: string,
+  ): number | undefined => {
+    const selectedParticipant = usuarios?.users.find(
+      (participant) => participant.name === participantName,
+    );
+    return selectedParticipant?.id;
+  };
 
   const handleEditRegister = async (e: any) => {
     e.preventDefault();
@@ -117,15 +124,19 @@ const Home = ({ params }: { params: { id: number } }) => {
         redirect('/');
       }
 
+      const selectedParticipantIds = Array.isArray(selectedParticipantes)
+        ? (selectedParticipantes
+            .map((participant) => getParticipantIdByName(participant as string))
+            .filter(Boolean) as number[])
+        : [getParticipantIdByName(selectedParticipantes as string) as number];
+
       const requestData = {
         titulo: titulo ?? content?.titulo,
         pauta: pauta ?? content?.pauta,
         tipo: tipo ?? content?.tipo,
         data: date ?? content?.data,
         organizacao_id: selectedOcs || organizacaoDefault,
-        participantes: Array.isArray(selectedParticipantes)
-          ? selectedParticipantes.map((id) => ({ id: Number(id) }))
-          : [{ id: Number(selectedParticipantes) }] || participantesDefault,
+        participantes: selectedParticipantIds.map((id) => ({ id })),
         associacao_id: selectedAssociacoes || associacaoDefautl,
       };
       await editReuniao(requestData, token, params.id);
@@ -252,7 +263,7 @@ const Home = ({ params }: { params: { id: number } }) => {
                 .map((item) => (
                   <StyledSelect
                     key={item.id}
-                    value={item.id}
+                    value={item.name}
                     sx={{ justifyContent: 'space-between' }}
                   >
                     {isLoading

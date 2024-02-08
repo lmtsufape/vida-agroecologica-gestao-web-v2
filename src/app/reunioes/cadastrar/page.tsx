@@ -4,6 +4,7 @@ import { redirect, useRouter } from 'next/navigation';
 import React from 'react';
 
 import S from './styles.module.scss';
+import InputMask from 'react-input-mask';
 
 import Button from '@/components/Button';
 import Input from '@/components/Input';
@@ -72,6 +73,15 @@ export default function Home() {
 
   const router = useRouter();
 
+  const getParticipantIdByName = (
+    participantName: string,
+  ): number | undefined => {
+    const selectedParticipant = usuarios?.users.find(
+      (participant) => participant.name === participantName,
+    );
+    return selectedParticipant?.id;
+  };
+
   const handleRegister: (e: React.FormEvent) => Promise<void> = async (e) => {
     e.preventDefault();
     try {
@@ -88,6 +98,12 @@ export default function Home() {
         return;
       }
 
+      const selectedParticipantIds = Array.isArray(selectedParticipantes)
+        ? (selectedParticipantes
+            .map((participant) => getParticipantIdByName(participant as string))
+            .filter(Boolean) as number[])
+        : [getParticipantIdByName(selectedParticipantes as string) as number];
+
       await createReuniao(
         {
           titulo,
@@ -95,9 +111,7 @@ export default function Home() {
           data: date,
           tipo,
           organizacao_id: selectedOcs,
-          participantes: Array.isArray(selectedParticipantes)
-            ? selectedParticipantes.map((id) => ({ id: Number(id) }))
-            : [{ id: Number(selectedParticipantes) }],
+          participantes: selectedParticipantIds.map((id) => ({ id })),
           associacao_id: selectedAssociacoes,
         },
         token,
@@ -106,8 +120,7 @@ export default function Home() {
     } catch (error) {
       console.log(error);
       setTimeout(() => {
-        setErrorMessage('Erro ao criar reunião.');
-        window.location.reload();
+        setErrorMessage('Erro ao criar reunião');
       }, 3000);
     }
   };
@@ -220,7 +233,7 @@ export default function Home() {
                 .map((user: User) => (
                   <StyledSelect
                     key={user.id}
-                    value={user.id}
+                    value={user.name}
                     sx={{ justifyContent: 'space-between' }}
                   >
                     {isLoading
