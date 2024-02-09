@@ -4,7 +4,6 @@ import { redirect, useRouter } from 'next/navigation';
 import React from 'react';
 
 import S from './styles.module.scss';
-import InputMask from 'react-input-mask';
 
 import Button from '@/components/Button';
 import Input from '@/components/Input';
@@ -104,13 +103,18 @@ export default function Home() {
             .filter(Boolean) as number[])
         : [getParticipantIdByName(selectedParticipantes as string) as number];
 
+      let organizacaoIdToSend: number | null = selectedOcs;
+      if (selectedOcs === 0) {
+        organizacaoIdToSend = null;
+      }
+
       await createReuniao(
         {
           titulo,
           pauta,
           data: date,
           tipo,
-          organizacao_id: selectedOcs,
+          organizacao_id: organizacaoIdToSend,
           participantes: selectedParticipantIds.map((id) => ({ id })),
           associacao_id: selectedAssociacoes,
         },
@@ -181,6 +185,7 @@ export default function Home() {
               <Input
                 name="data"
                 type="text"
+                mask="date"
                 placeholder="DD-MM-YYYY"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}

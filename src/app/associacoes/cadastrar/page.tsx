@@ -153,6 +153,7 @@ export default function Home() {
                 type="text"
                 placeholder="YYYY-MM-DD"
                 value={date}
+                mask="date"
                 onChange={(e) => setDate(e.target.value)}
               />
             </div>

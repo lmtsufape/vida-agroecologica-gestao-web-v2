@@ -116,6 +116,11 @@ const Home = ({ params }: { params: { id: number } }) => {
     return selectedParticipant?.id;
   };
 
+  let organizacaoIdToSend: number | null = selectedOcs;
+  if (selectedOcs === 0) {
+    organizacaoIdToSend = null;
+  }
+
   const handleEditRegister = async (e: any) => {
     e.preventDefault();
     try {
@@ -135,8 +140,13 @@ const Home = ({ params }: { params: { id: number } }) => {
         pauta: pauta ?? content?.pauta,
         tipo: tipo ?? content?.tipo,
         data: date ?? content?.data,
-        organizacao_id: selectedOcs || organizacaoDefault,
-        participantes: selectedParticipantIds.map((id) => ({ id })),
+        organizacao_id: organizacaoIdToSend || organizacaoDefault,
+        participantes: [
+          ...selectedParticipantIds.map((id) => ({ id })),
+          ...(content?.participantes.map(
+            (participante: any) => participante.id,
+          ) ?? []),
+        ],
         associacao_id: selectedAssociacoes || associacaoDefautl,
       };
       await editReuniao(requestData, token, params.id);
@@ -152,7 +162,7 @@ const Home = ({ params }: { params: { id: number } }) => {
           setTimeout(() => {
             setError(`${errorMessage}`);
             window.location.reload();
-          }, 3000);
+          }, 4000);
         }
       }
     }
@@ -210,6 +220,7 @@ const Home = ({ params }: { params: { id: number } }) => {
               <Input
                 name="data"
                 type="text"
+                mask="date"
                 placeholder={content.data}
                 value={date}
                 onChange={(e) => setDate(e.target.value)}

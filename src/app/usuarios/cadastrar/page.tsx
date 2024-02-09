@@ -107,7 +107,7 @@ export default function Home() {
           setTimeout(() => {
             setError(`${errorMessage}`);
             window.location.reload();
-          }, 3000);
+          }, 4000);
         }
       }
     }

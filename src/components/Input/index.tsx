@@ -44,6 +44,13 @@ const getMaskTypesForText = (maskType: string | null) => {
     };
   }
 
+  if (maskType === 'date') {
+    return {
+      mask: '__-__-____',
+      replacement: { _: /\d/ },
+    };
+  }
+
   return {};
 };
 
