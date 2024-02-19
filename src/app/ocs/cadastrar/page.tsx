@@ -10,6 +10,7 @@ import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { StyledSelect } from '@/components/Multiselect/style';
 import MuiSelect from '@/components/Select';
+import MultiSelect from '@/components/Multiselect';
 
 import {
   createOCS,
@@ -32,7 +33,9 @@ export default function Home() {
   const [complement, setComplement] = React.useState('');
 
   const [selectedAssociacoes, setSelectedAssociacoes] = React.useState(0);
-  const [selectedAgricultores, setSelectedAgricultores] = React.useState(0);
+  const [selectedAgricultores, setSelectedAgricultores] = React.useState<
+    string | string[]
+  >([]);
 
   const [bairro, setBairro] = React.useState<Bairro[]>([]);
   const [selectedBairro, setSelectedBairro] = React.useState(0);
@@ -83,6 +86,22 @@ export default function Home() {
     );
   });
 
+  const mapAgricultoresToIds = (
+    selectedAgricultoresNames: string | string[],
+    filterAgricultores: User[],
+  ): number[] => {
+    const selectedAgricultoresIds: number[] = [];
+    filterAgricultores.forEach((agricultor) => {
+      if (
+        agricultor.id !== undefined &&
+        selectedAgricultoresNames.includes(agricultor.name)
+      ) {
+        selectedAgricultoresIds.push(agricultor.id);
+      }
+    });
+    return selectedAgricultoresIds;
+  };
+
   const handleRegister: (e: React.FormEvent) => Promise<void> = async (e) => {
     e.preventDefault();
     try {
@@ -90,6 +109,11 @@ export default function Home() {
       if (!token) {
         redirect('/');
       }
+
+      const selectedAgricultoresIds = mapAgricultoresToIds(
+        selectedAgricultores,
+        filterAgricultores || [],
+      );
 
       await createOCS(
         {
@@ -102,7 +126,7 @@ export default function Home() {
           numero: number,
           associacao_id: selectedAssociacoes,
           bairro_id: selectedBairro,
-          agricultores_id: [selectedAgricultores],
+          agricultores_id: selectedAgricultoresIds,
           complemento: complement,
         },
         token,
@@ -116,7 +140,6 @@ export default function Home() {
           const errorMessage = errors[key][0];
           setTimeout(() => {
             setError(`${errorMessage}`);
-            window.location.reload();
           }, 3000);
         }
       }
@@ -193,7 +216,7 @@ export default function Home() {
                 </StyledSelect>
               ))}
             </MuiSelect>
-            <MuiSelect
+            <MultiSelect
               label="Agricultores"
               selectedNames={selectedAgricultores}
               setSelectedNames={setSelectedAgricultores}
@@ -201,13 +224,13 @@ export default function Home() {
               {filterAgricultores?.map((item) => (
                 <StyledSelect
                   key={item.id}
-                  value={item.id}
+                  value={item.name}
                   sx={{ justifyContent: 'space-between' }}
                 >
                   {item.name}
                 </StyledSelect>
               ))}
-            </MuiSelect>
+            </MultiSelect>
           </section>
 
           <h3>Endereço</h3>

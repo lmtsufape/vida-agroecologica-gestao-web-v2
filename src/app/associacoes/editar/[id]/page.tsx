@@ -169,6 +169,7 @@ const Home = ({ params }: { params: { id: string } }) => {
               <Input
                 name="date"
                 type="text"
+                mask="date"
                 placeholder={content.data_fundacao}
                 value={date}
                 onChange={(e) => setDate(e.target.value)}

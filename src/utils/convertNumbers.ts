@@ -9,13 +9,14 @@ export function formatCNPJ(cnpj: string): string {
 }
 
 export function formatDate(data: string): string {
-  const parts = data.split('-');
-  if (parts.length === 3) {
-    const dia = parts[2];
-    const mes = parts[1];
-    const ano = parts[0];
-
-    return `${dia}/${mes}/${ano}`;
+  if (!data || typeof data !== 'string' || data.split('-').length !== 3) {
+    return 'Data inválida';
   }
-  return 'Data inválida';
+
+  const parts = data.split('-');
+  const dia = parts[2];
+  const mes = parts[1];
+  const ano = parts[0];
+
+  return `${dia}/${mes}/${ano}`;
 }
