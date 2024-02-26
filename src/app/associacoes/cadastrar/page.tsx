@@ -43,8 +43,7 @@ export default function Home() {
     if (errorMessage) {
       const timer = setTimeout(() => {
         setErrorMessage('');
-        window.location.reload();
-      }, 3000);
+      }, 4000);
 
       return () => clearTimeout(timer);
     }
@@ -90,9 +89,7 @@ export default function Home() {
     } catch (error: any) {
       console.log(error);
       if (error.response && error.response.status === 500) {
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
+        setTimeout(() => {}, 4000);
       } else {
         setErrorMessage(
           'Erro ao cadastrar associação. Por favor, verifique os dados e tente novamente.',
@@ -118,7 +115,7 @@ export default function Home() {
               <Input
                 name="nome"
                 type="text"
-                placeholder="nome"
+                placeholder="Nome"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
@@ -128,7 +125,7 @@ export default function Home() {
               <Input
                 name="email"
                 type="email"
-                placeholder="email"
+                placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -151,7 +148,7 @@ export default function Home() {
               <Input
                 name="date"
                 type="text"
-                placeholder="YYYY-MM-DD"
+                placeholder="DD-MM-YYYY"
                 value={date}
                 mask="date"
                 onChange={(e) => setDate(e.target.value)}

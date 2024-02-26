@@ -95,7 +95,7 @@ export default function Home() {
       setConfirmationMessage('Usuário cadastrado com sucesso');
       setTimeout(() => {
         setConfirmationMessage('');
-      }, 3000);
+      }, 4000);
 
       router.back();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -106,7 +106,6 @@ export default function Home() {
           const errorMessage = errors[key][0];
           setTimeout(() => {
             setError(`${errorMessage}`);
-            window.location.reload();
           }, 4000);
         }
       }
