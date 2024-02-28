@@ -11,6 +11,7 @@ import Input from '@/components/Input';
 import Loader from '@/components/Loader';
 import { StyledSelect } from '@/components/Multiselect/style';
 import MuiSelect from '@/components/Select';
+import MultiSelect from '@/components/Multiselect';
 
 import {
   editOCS,
@@ -38,7 +39,9 @@ const Home = ({ params }: { params: { id: string } }) => {
   const [bairro, setBairro] = React.useState<Bairro[]>([]);
   const [selectedBairro, setSelectedBairro] = React.useState(0);
 
-  const [selectedAgricultores, setSelectedAgricultores] = React.useState(4);
+  const [selectedAgricultores, setSelectedAgricultores] = React.useState<
+    string | string[]
+  >([]);
 
   const [content, setContent] = React.useState<OCS | null>(null);
   const [error, setError] = React.useState('');
@@ -116,6 +119,22 @@ const Home = ({ params }: { params: { id: string } }) => {
     );
   });
 
+  const mapAgricultoresToIds = (
+    selectedAgricultoresNames: string | string[],
+    filterAgricultores: User[],
+  ): number[] => {
+    const selectedAgricultoresIds: number[] = [];
+    filterAgricultores.forEach((agricultor) => {
+      if (
+        agricultor.id !== undefined &&
+        selectedAgricultoresNames.includes(agricultor.name)
+      ) {
+        selectedAgricultoresIds.push(agricultor.id);
+      }
+    });
+    return selectedAgricultoresIds;
+  };
+
   const handleEditRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -123,6 +142,11 @@ const Home = ({ params }: { params: { id: string } }) => {
       if (!token) {
         redirect('/');
       }
+
+      const selectedAgricultoresIds = mapAgricultoresToIds(
+        selectedAgricultores,
+        filterAgricultores || [],
+      );
 
       const requestData = {
         cep: cep || content?.endereco?.cep,
@@ -133,7 +157,7 @@ const Home = ({ params }: { params: { id: string } }) => {
         rua: street || content?.endereco?.rua,
         numero: number || content?.endereco?.numero,
         bairro_id: selectedBairro ?? bairrosDefault,
-        agricultores_id: [selectedAgricultores] || agricultoresDefault,
+        agricultores_id: selectedAgricultoresIds || agricultoresDefault,
         associacao_id: selectedAssociacoes || associacaoDefault,
       };
       await editOCS(requestData, token, params.id);
@@ -225,7 +249,7 @@ const Home = ({ params }: { params: { id: string } }) => {
                 ))}
               </MuiSelect>
             </div>
-            <MuiSelect
+            <MultiSelect
               label="Agricultores"
               selectedNames={selectedAgricultores}
               setSelectedNames={setSelectedAgricultores}
@@ -233,13 +257,13 @@ const Home = ({ params }: { params: { id: string } }) => {
               {filterAgricultores?.map((item) => (
                 <StyledSelect
                   key={item.id}
-                  value={item.id}
+                  value={item.name}
                   sx={{ justifyContent: 'space-between' }}
                 >
                   {item.name}
                 </StyledSelect>
               ))}
-            </MuiSelect>
+            </MultiSelect>
           </section>
 
           <h3>Endereço</h3>

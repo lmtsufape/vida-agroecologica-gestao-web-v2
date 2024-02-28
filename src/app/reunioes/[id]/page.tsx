@@ -7,7 +7,6 @@ import { BiSolidEditAlt } from 'react-icons/bi';
 import S from './styles.module.scss';
 
 import { SeeAta } from './components/Ata';
-import { AnexosForm } from '@/components/Anexos';
 import { AtaForm } from '@/components/Ata';
 import Button from '@/components/Button';
 import Loader from '@/components/Loader';
@@ -65,20 +64,6 @@ const Home = ({ params }: { params: { id: number } }) => {
           </Button>
         </div>
         <div className={S.content}>
-          {data?.reuniao.ata?.length !== 0 && (
-            <div className={S.wrapperAta}>
-              <SeeAta reuniaoId={params.id} />
-              <Button
-                type="button"
-                onClick={() =>
-                  mutation.mutate({ token: token, value: params.id })
-                }
-                style={{ backgroundColor: '#f76c6c', color: '#ffffff' }}
-              >
-                Excluir Ata
-              </Button>
-            </div>
-          )}
           <br />
           <h3>Título</h3>
           <p>{data?.reuniao.titulo}</p>
@@ -88,9 +73,27 @@ const Home = ({ params }: { params: { id: number } }) => {
           <p>{data?.reuniao.tipo}</p>
           <h3>Data</h3>
           <p>{data?.reuniao.data}</p>
+          <br />
+          {data?.reuniao.ata?.length !== 0 && (
+            <div className={S.wrapperAta}>
+              <SeeAta reuniaoId={params.id} />
+              <Button
+                type="button"
+                onClick={() =>
+                  mutation.mutate({ token: token, value: params.id })
+                }
+                style={{
+                  backgroundColor: '#f76c6c',
+                  color: '#ffffff',
+                  marginBottom: '1rem',
+                }}
+              >
+                Excluir Ata
+              </Button>
+            </div>
+          )}
           <h3>ANEXOS</h3>
           <AtaForm reuniaoId={params.id} />
-          <AnexosForm reuniaoId={params.id} />
         </div>
       </div>
     </main>

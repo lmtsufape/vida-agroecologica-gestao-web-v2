@@ -188,7 +188,7 @@ const Home = ({ params }: { params: { id: string } }) => {
               {roles?.map((item: { id: number; nome: string }) => (
                 <StyledSelect
                   key={item.id}
-                  value={item.id}
+                  value={item.nome}
                   sx={{ justifyContent: 'space-between' }}
                 >
                   {item.nome}
