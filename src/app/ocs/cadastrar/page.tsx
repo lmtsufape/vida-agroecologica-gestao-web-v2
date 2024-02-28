@@ -188,6 +188,7 @@ export default function Home() {
                 placeholder="00.000.000/0000-00."
                 value={cnpj}
                 onChange={(e) => setCNPJ(e.target.value)}
+                mask="cnpj"
               />
             </div>
             <div>

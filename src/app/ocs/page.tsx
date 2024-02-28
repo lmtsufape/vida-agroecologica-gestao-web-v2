@@ -15,7 +15,7 @@ import Loader from '@/components/Loader';
 import TableView from '@/components/Table/Table';
 
 import { getAllOCS, removeOCS } from '@/services';
-import { formatCNPJ } from '@/utils/convertNumbers';
+
 import { Box, IconButton, Tooltip, Modal, Typography } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Snackbar, Alert, AlertTitle } from '@mui/material';
@@ -63,7 +63,7 @@ export default function Home() {
       accessorKey: 'cnpj',
       cell: (info: any) => {
         const value = info.getValue();
-        return <p>{formatCNPJ(value)}</p>;
+        return <p>{value}</p>;
       },
     },
     {

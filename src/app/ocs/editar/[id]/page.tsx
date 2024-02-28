@@ -216,9 +216,17 @@ const Home = ({ params }: { params: { id: string } }) => {
               <Input
                 name="cnpj"
                 type="text"
-                placeholder={content?.cnpj ?? ''}
+                placeholder={
+                  content?.cnpj
+                    ? content.cnpj.replace(
+                        /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,
+                        '$1.$2.$3/$4-$5',
+                      )
+                    : ''
+                }
                 value={cnpj}
                 onChange={(e) => setCNPJ(e.target.value)}
+                mask="cnpj"
               />
             </div>
             <div>

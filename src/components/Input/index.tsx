@@ -37,6 +37,13 @@ const getMaskTypesForText = (maskType: string | null) => {
     };
   }
 
+  if (maskType === 'cnpj') {
+    return {
+      mask: '__.___.___/____-__',
+      replacement: { _: /\d/ },
+    };
+  }
+
   if (maskType === 'zipCode') {
     return {
       mask: '_____-___',
