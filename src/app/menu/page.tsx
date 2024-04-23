@@ -8,7 +8,15 @@ import Authentication from '@/utils/session';
 
 const Home = () => {
   return (
-    <main className={S.main} style={{ marginTop: '5rem' }}>
+    <main
+      className={S.main}
+      style={{
+        marginTop: '5rem',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
       <MenuOptions />
     </main>
   );
