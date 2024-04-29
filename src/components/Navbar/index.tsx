@@ -114,7 +114,7 @@ const Navbar = () => {
           <Container maxWidth="xl">
             <Toolbar disableGutters>
               <Link href="/menu">
-                <Image src={Icons.Logo} alt="Logo Gestão" />
+                <Image src={Icons.LogoWhite} alt="Logo Gestão" />
               </Link>
               <Box
                 sx={{

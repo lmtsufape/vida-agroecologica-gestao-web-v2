@@ -1,24 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import React from 'react';
-import { BiSolidTrashAlt, BiSolidEditAlt, BiUser } from 'react-icons/bi';
+import { BiSolidTrashAlt, BiSolidEditAlt } from 'react-icons/bi';
 import { BsFillEyeFill } from 'react-icons/bs';
-
-import S from './styles.module.scss';
-
-import Button from '@/components/Button';
-import StyledLink from '@/components/Link';
-import Loader from '@/components/Loader';
-import TableView from '@/components/Table/Table';
-
-import { getAllOCS, removeOCS } from '@/services';
-
 import { Box, IconButton, Tooltip, Modal, Typography } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Snackbar, Alert, AlertTitle } from '@mui/material';
+import Loader from '@/components/Loader';
+import TableView from '@/components/Table/Table';
+import { removeUser, getUsersByOCS } from '@/services';
+import S from './styles.module.scss';
+import Button from '@/components/Button';
+import StyledLink from '@/components/Link';
 
 const style = {
   position: 'absolute' as const,
@@ -33,13 +28,48 @@ const style = {
   p: 4,
 };
 
-export default function Home() {
-  const [value, setValue] = React.useState(0);
-  const [token, setToken] = React.useState('');
+const Home = ({ params }: { params: { id: string } }) => {
+  const [token, setToken] = useState('');
+  const [value, setValue] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const handleClose = () => setValue(0);
-  const [errorMessage, setErrorMessage] = React.useState('');
 
-  React.useEffect(() => {
+  const { data, refetch } = useQuery({
+    queryKey: ['users'],
+    queryFn: async () => {
+      const token = localStorage.getItem('@token');
+      if (token && params.id) {
+        try {
+          const response = await getUsersByOCS(token, params.id);
+          setIsLoading(false);
+          return response.users;
+        } catch (error) {
+          setIsError(true);
+          setErrorMessage('Failed to fetch users');
+          setIsLoading(false);
+          return [];
+        }
+      }
+      return [];
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: async ({ token, value }: { token: string; value: number }) => {
+      try {
+        await removeUser(token, value);
+        refetch();
+        handleClose();
+      } catch (error) {
+        setIsError(true);
+        setErrorMessage('Error while removing user');
+      }
+    },
+  });
+
+  useEffect(() => {
     const token = localStorage.getItem('@token');
     if (!token) {
       redirect('/');
@@ -47,24 +77,30 @@ export default function Home() {
     setToken(token);
   }, []);
 
-  interface Column {
-    header: string;
-    accessorKey: string;
-    cell?: (info: any) => JSX.Element;
-  }
-
-  const columns: Column[] = [
+  const columns = [
     {
       header: 'Nome',
-      accessorKey: 'nome',
+      accessorKey: 'name',
     },
     {
-      header: 'CNPJ',
-      accessorKey: 'cnpj',
+      header: 'Função',
+      accessorKey: 'roles',
       cell: (info: any) => {
         const value = info.getValue();
-        return <p>{value}</p>;
+        return (
+          <div className={S.wrapper}>
+            {value?.map((v: any) => (
+              <p className={S.roles} data-type={v.nome} key={v.id}>
+                {v.nome}
+              </p>
+            ))}
+          </div>
+        );
       },
+    },
+    {
+      header: 'E-mail',
+      accessorKey: 'email',
     },
     {
       header: 'Ações',
@@ -74,7 +110,7 @@ export default function Home() {
         return (
           <ul className={S.action} role="list">
             <li>
-              <Link href={'ocs/' + value}>
+              <Link href={'usuarios/' + value}>
                 <Tooltip title="Visualizar">
                   <IconButton aria-label="visualizar" size="small">
                     <BsFillEyeFill />
@@ -83,7 +119,7 @@ export default function Home() {
               </Link>
             </li>
             <li>
-              <Link href={'ocs/editar/' + value}>
+              <Link href={'usuarios/editar/' + value}>
                 <Tooltip title="Editar">
                   <IconButton aria-label="editar" size="small">
                     <BiSolidEditAlt />
@@ -102,72 +138,30 @@ export default function Home() {
                 </IconButton>
               </Tooltip>
             </li>
-            <li>
-              <Link href={`/ocs/participantes/${value}`}>
-                <Tooltip title="Participantes">
-                  <IconButton aria-label="Participantes" size="small">
-                    <BiUser />
-                  </IconButton>
-                </Tooltip>
-              </Link>
-            </li>
           </ul>
         );
       },
     },
   ];
 
-  const { data, isLoading, refetch, isError, error } = useQuery({
-    queryKey: ['ocs'],
-    queryFn: () => {
-      const token = localStorage.getItem('@token');
-      if (token) {
-        return getAllOCS(token);
-      }
-      return null;
-    },
-  });
-
-  const mutation = useMutation({
-    mutationFn: ({ token, value }: { token: string; value: number }) => {
-      return removeOCS(token, value);
-    },
-    onError: (error) => {
-      if ((error as any).response.status === 500) {
-        setTimeout(() => {
-          setErrorMessage(
-            'Existem reuniões marcadas para esta OCS. Não é possível excluí-la.',
-          );
-          window.location.reload();
-        }, 3000);
-      } else {
-        setTimeout(() => {
-          setErrorMessage('Erro ao excluir a OCS.');
-          window.location.reload();
-        }, 3000);
-      }
-    },
-    onSuccess: () => {
-      refetch();
-      handleClose();
-    },
-  });
-
   if (isLoading) return <Loader />;
-  if (isError) return `Error: ${error.message}`;
+  if (isError) return <p>Error: {errorMessage}</p>;
+
+  if (!data || data.length === 0)
+    return <p>Não existem usuários nessa organização de controle social.</p>;
 
   return (
     <div style={{ marginTop: '5rem' }}>
       <section className={S.dashboard}>
         <div className={S.header}>
-          <h1>Organização de Controle Social</h1>
+          <h1>Agricultores da Organização</h1>
           <StyledLink
-            href="ocs/cadastrar"
+            href="usuarios/cadastrar"
             data-type="filled"
-            text="+ Adicionar Nova OCS"
+            text="+ Adicionar Agricultor"
           />
         </div>
-        <TableView columns={columns} data={data?.ocs} />
+        <TableView columns={columns} data={data} />
       </section>
       <div>
         <Modal
@@ -198,13 +192,9 @@ export default function Home() {
             </div>
           </Box>
         </Modal>
-        <Snackbar open={errorMessage.length > 0}>
-          <Alert variant="filled" severity="error">
-            <AlertTitle>Erro!</AlertTitle>
-            {errorMessage}
-          </Alert>
-        </Snackbar>
       </div>
     </div>
   );
-}
+};
+
+export default Home;
