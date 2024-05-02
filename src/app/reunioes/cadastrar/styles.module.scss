@@ -36,9 +36,13 @@
   border-radius: 1rem;
 
   label {
+    color: #272727;
     font-size: 0.875rem;
+    font-weight: bold;
+    span {
+      color: #d23030;
+    }
   }
-
   section {
     padding-top: 1rem;
     display: grid;
