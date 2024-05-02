@@ -2,22 +2,28 @@
   max-width: 1280px;
   padding: 1.5rem 1rem;
   margin: 0 auto;
+}
 
-  h1 {
-    padding-top: 1rem;
-    color: #037021;
-    white-space: nowrap;
-  }
 
-  p {
-    color: #037021;
-    padding-bottom: 2rem;
-    strong {
-      background-color: #bae4c6;
-      padding: 0.2rem 0.5rem;
-      border-radius: 50px;
-    }
-  }
+.headerTitle{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 65%;
+  margin-bottom: 10px;
+}
+
+.title {
+  color: #005247;
+  font-weight: bold; 
+  justify-content: center;
+  padding: 20px;
+}
+
+.back{
+  text-decoration: none;
+  appearance: none;
+  color:#005247
 }
 
 .wrapperButtons {
@@ -36,12 +42,20 @@
     background-color: white;
     box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.1);
     padding: 0.5rem 1.5rem;
+    justify-content: center;
   }
   border-radius: 1rem;
 
   label {
+    color: #272727;
     font-size: 0.875rem;
+    font-weight: bold;
+    span {
+      color: #d23030;
+    }
   }
+
+
 
   section {
     padding-top: 1rem;
@@ -54,12 +68,12 @@
     }
   }
 
-  h3 {
-    margin: 1rem 0;
-    color: #2b2b2b;
-    text-transform: uppercase;
-    font-size: 1rem;
-    letter-spacing: 2px;
+  h2{
+
+    font-size: 20px;
+    padding: 10px;
+    padding-left: 0;
+    color: #f5821fe5;
   }
 
   span {

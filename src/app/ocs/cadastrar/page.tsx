@@ -3,6 +3,7 @@
 
 import { redirect, useRouter } from 'next/navigation';
 import React from 'react';
+import Link from 'next/link';
 
 import S from './styles.module.scss';
 
@@ -149,12 +150,20 @@ export default function Home() {
   return (
     <main style={{ marginTop: '5rem' }}>
       <div className={S.container}>
-        <h1>Cadastrar</h1>
-        <p>
-          <strong>Organização Controle Social</strong>
-        </p>
+        <div className={S.headerTitle}>
+          <div>
+            <Link href="/ocs" className={S.back}>
+              &lt; Voltar
+            </Link>
+          </div>
+          <div>
+            <h2 className={S.title}>
+              Cadastrar Organização Social de Controle
+            </h2>
+          </div>
+        </div>
         <form onSubmit={handleRegister} className={S.form}>
-          <h3>Dados OCS</h3>
+          <h2>Dados da Associação:</h2>
           <section>
             <div>
               <label htmlFor="nome">
@@ -234,20 +243,8 @@ export default function Home() {
             </MultiSelect>
           </section>
 
-          <h3>Endereço</h3>
+          <h2>Endereço:</h2>
           <section>
-            <div>
-              <label htmlFor="street">
-                Rua<span>*</span>
-              </label>
-              <Input
-                name="street"
-                type="text"
-                placeholder="Rua"
-                value={street}
-                onChange={(e) => setStreet(e.target.value)}
-              />
-            </div>
             <div>
               <label htmlFor="cep">
                 Cep<span>*</span>
@@ -261,6 +258,19 @@ export default function Home() {
                 mask="zipCode"
               />
             </div>
+            <div>
+              <label htmlFor="street">
+                Rua<span>*</span>
+              </label>
+              <Input
+                name="street"
+                type="text"
+                placeholder="Rua"
+                value={street}
+                onChange={(e) => setStreet(e.target.value)}
+              />
+            </div>
+
             <MuiSelect
               label="Bairro"
               selectedNames={selectedBairro}
@@ -300,13 +310,6 @@ export default function Home() {
             </div>
           </section>
           <div className={S.wrapperButtons}>
-            <Button
-              onClick={() => router.back()}
-              type="button"
-              dataType="transparent"
-            >
-              Voltar
-            </Button>{' '}
             <Button dataType="filled" type="submit">
               Cadastrar
             </Button>

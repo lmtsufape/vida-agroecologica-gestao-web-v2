@@ -153,7 +153,7 @@ export default function Home() {
           <div className={S.headerContent}>
             <div className={S.headerTitle}>
               <div>
-                <Link href="/menu" className={S.Voltar}>
+                <Link href="/menu" className={S.back}>
                   &lt; Voltar
                 </Link>
               </div>
