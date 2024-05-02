@@ -1,11 +1,12 @@
 .main {
-  margin-top: 5rem;
+  margin-top: 10rem;
+  align-items: center;
 }
 
 .container {
-  max-width: 1280px;
   padding: 1.5rem 1rem;
   margin: 0 auto;
+  align-items: center;
   
   h1 {
       text-align: center;
@@ -13,7 +14,7 @@
     }
 
     hr {
-        margin-bottom: 1rem;
+        margin-bottom: 2rem;
         border-color: rgba(240, 255, 255, 0.623);
     }
 }
@@ -37,7 +38,7 @@
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
   padding: 1.5rem 2rem;
   border-radius: 20px;
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
 
   h3 {
@@ -47,21 +48,27 @@
     font-weight: bold;
   }
 
+  h2{
+    font-size: 20px;
+    padding: 10px;
+    padding-left: 0;
+    color: #f5821fe5;
+    margin-bottom: 10px;
+  }
+
+  .editButton{
+    margin-top: 20px;
+  }
+
   p {
     color: #2b2b2b;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
   }
 }
 
 .presidentes {
-    background-color: #f5831f39;
-    padding: .2rem .5rem;
-    width: fit-content;
-    border-radius: 50px;
-    font-size: .75rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
     font-weight: bold;
     color: #f5821fe5;
     margin-bottom: 1rem;
 }
+

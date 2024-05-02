@@ -1,19 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import React from 'react';
 import { BiSolidTrashAlt, BiSolidEditAlt } from 'react-icons/bi';
 import { BsFillEyeFill } from 'react-icons/bs';
-import { Box, IconButton, Tooltip, Modal, Typography } from '@mui/material';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import Loader from '@/components/Loader';
-import TableView from '@/components/Table/Table';
-import { removeUser, getUsersByOCS } from '@/services';
+
 import S from './styles.module.scss';
+
 import Button from '@/components/Button';
 import StyledLink from '@/components/Link';
+import Loader from '@/components/Loader';
+import TableView from '@/components/Table/Table';
+
+import { getAllUsers, removeUser } from '@/services';
+import { Box, IconButton, Tooltip, Modal, Typography } from '@mui/material';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 const style = {
   position: 'absolute' as const,
@@ -28,56 +31,32 @@ const style = {
   p: 4,
 };
 
-const Home = ({ params }: { params: { id: string } }) => {
-  const [token, setToken] = useState('');
-  const [value, setValue] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+export default function Home() {
+  const [value, setValue] = React.useState(0);
+  const [token, setToken] = React.useState('');
   const handleClose = () => setValue(0);
 
-  const { data, refetch } = useQuery({
+  const { data, refetch, isLoading, isError, error } = useQuery({
     queryKey: ['users'],
-    queryFn: async () => {
+    queryFn: () => {
       const token = localStorage.getItem('@token');
-      if (token && params.id) {
-        try {
-          const response = await getUsersByOCS(token, params.id);
-          setIsLoading(false);
-          return response.users;
-        } catch (error) {
-          setIsError(true);
-          setErrorMessage('Failed to fetch users');
-          setIsLoading(false);
-          return [];
-        }
+      if (token) {
+        return getAllUsers(token);
       }
-      return [];
+      return null;
     },
   });
 
-  const mutation = useMutation({
-    mutationFn: async ({ token, value }: { token: string; value: number }) => {
-      try {
-        await removeUser(token, value);
-        refetch();
-        handleClose();
-      } catch (error) {
-        setIsError(true);
-        setErrorMessage('Error while removing user');
-      }
-    },
+  interface Column {
+    header: string;
+    accessorKey: string;
+    cell?: (info: any) => JSX.Element;
+  }
+  const filteredUsers = data?.users.filter((user: any) => {
+    return user.roles.includes('agricultor') || user.roles.includes('vendedor');
   });
 
-  useEffect(() => {
-    const token = localStorage.getItem('@token');
-    if (!token) {
-      redirect('/');
-    }
-    setToken(token);
-  }, []);
-
-  const columns = [
+  const columns: Column[] = [
     {
       header: 'Nome',
       accessorKey: 'name',
@@ -144,11 +123,26 @@ const Home = ({ params }: { params: { id: string } }) => {
     },
   ];
 
-  if (isLoading) return <Loader />;
-  if (isError) return <p>Error: {errorMessage}</p>;
+  React.useEffect(() => {
+    const token = localStorage.getItem('@token');
+    if (!token) {
+      redirect('/');
+    }
+    setToken(token);
+  }, []);
 
-  if (!data || data.length === 0)
-    return <p>Não existem usuários nessa organização de controle social.</p>;
+  const mutation = useMutation({
+    mutationFn: ({ token, value }: { token: string; value: number }) => {
+      return removeUser(token, value);
+    },
+    onSuccess: () => {
+      refetch();
+      handleClose();
+    },
+  });
+
+  if (isLoading) return <Loader />;
+  if (isError) return `Error: ${error.message}`;
 
   return (
     <div style={{ marginTop: '5rem' }}>
@@ -161,7 +155,7 @@ const Home = ({ params }: { params: { id: string } }) => {
             text="+ Adicionar Agricultor"
           />
         </div>
-        <TableView columns={columns} data={data} />
+        <TableView columns={columns} data={filteredUsers} />
       </section>
       <div>
         <Modal
@@ -195,6 +189,4 @@ const Home = ({ params }: { params: { id: string } }) => {
       </div>
     </div>
   );
-};
-
-export default Home;
+}

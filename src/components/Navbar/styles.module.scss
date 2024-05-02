@@ -1,14 +1,14 @@
 .navbar[class~="MuiPaper-root"] {
-    background-color: #f5821fe5;
-    box-shadow: none;
+    background-color: white;
+    box-shadow: 1px solid rgba(0, 0, 0, 0.12);
     padding-block: 8px;
-}
 
-.pagesList {
-    display: flex;
-    gap: 1rem;
-    list-style: none;
-    color: white;
+    h1{
+        color:  #f5821fe5; 
+        font-size: 1.5rem;
+        margin-left: 10px;
+        
+    }
 }
 
 .menuItem a {
@@ -22,12 +22,8 @@
     }
 }
 
-.menu {
-    color: white;
-}
-
 .active {
-    color: orange;
+    color: white;
     font-weight: bold;
 }
 
@@ -35,7 +31,7 @@
     cursor: pointer;
     border: none;
     background: none;
-    color: white;
+    color: #f5821fe5; 
 }
   
 

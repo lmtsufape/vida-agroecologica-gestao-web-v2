@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import React from 'react';
 import { BiSolidTrashAlt, BiSolidEditAlt } from 'react-icons/bi';
 import { BsFillEyeFill } from 'react-icons/bs';
+import Search from '@/components/Search';
 
 import S from './styles.module.scss';
 
@@ -35,8 +36,8 @@ const style = {
 export default function Home() {
   const [value, setValue] = React.useState(0);
   const handleClose = () => setValue(0);
-
   const [token, setToken] = React.useState('');
+  const [query, setQuery] = React.useState('');
 
   React.useEffect(() => {
     const token = localStorage.getItem('@token');
@@ -149,12 +150,28 @@ export default function Home() {
     <div style={{ marginTop: '5rem' }}>
       <section className={S.dashboard}>
         <div className={S.header}>
-          <h1>Associações</h1>
-          <StyledLink
-            href="associacoes/cadastrar"
-            data-type="filled"
-            text="+ Adicionar Nova Associação"
-          />
+          <div className={S.headerContent}>
+            <div className={S.headerTitle}>
+              <div>
+                <Link href="/menu" className={S.Voltar}>
+                  &lt; Voltar
+                </Link>
+              </div>
+              <div>
+                <h1 className={S.title}>Associações</h1>
+              </div>
+            </div>
+            <div className={S.searchContainer}>
+              <Search value={query} onChange={setQuery} />
+              <div className={S.addButton}>
+                <StyledLink
+                  href="associacoes/cadastrar"
+                  data-type="filled"
+                  text="+ Adicionar Nova Associação"
+                />
+              </div>
+            </div>
+          </div>
         </div>
         <TableView columns={columns} data={data} />
       </section>

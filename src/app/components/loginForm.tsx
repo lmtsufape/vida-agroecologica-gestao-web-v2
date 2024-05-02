@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
+
 import Link from 'next/link';
 import React from 'react';
 
@@ -57,13 +58,13 @@ export const LoginForm = () => {
           />
         </div>
         <div className={S.links}>
-          <div className={S.wrapper}>
-            <input id="checkbox" type="checkbox" className={S.checkbox} />
-            <label htmlFor="checkbox">Lembrar de mim</label>
-          </div>
           <Link href="/">Esqueceu a senha?</Link>
         </div>
-        <Button dataType="filled" type="submit">
+        <Button
+          dataType="filled"
+          type="submit"
+          style={{ backgroundColor: '#f5821fe5', color: '#fff' }}
+        >
           Entrar
         </Button>
       </form>

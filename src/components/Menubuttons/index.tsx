@@ -28,15 +28,9 @@ const MenuOptions = () => {
   }> = [
     {
       icon: <TbHomeSearch className={S.associationIcon} />,
-      name: 'Associação',
+      name: 'Associações',
       route: '/associacoes',
-      roles: ['administrador', 'presidente'],
-    },
-    {
-      icon: <HiUsers />,
-      name: 'Usuários',
-      route: '/usuarios',
-      roles: ['administrador', 'presidente'],
+      roles: ['administrador'],
     },
     {
       icon: <FaBuildingUser />,
@@ -49,6 +43,12 @@ const MenuOptions = () => {
       name: 'Reuniões',
       route: '/reunioes',
       roles: ['administrador', 'secretario', 'presidente'],
+    },
+    {
+      icon: <HiUsers />,
+      name: 'Usuários',
+      route: '/usuarios',
+      roles: ['administrador', 'presidente'],
     },
   ];
 

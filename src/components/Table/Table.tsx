@@ -1,11 +1,8 @@
 'use client';
 
 import React from 'react';
-
 import S from './styles.module.scss';
-
 import Button from '@/components/Button';
-import Input from '@/components/Input';
 
 import {
   useReactTable,
@@ -45,15 +42,6 @@ const TableView = ({ data, columns }: TableViewProps) => {
 
   return (
     <div>
-      <Input
-        name="search"
-        placeholder="Buscar"
-        type="text"
-        value={query}
-        onChange={(
-          e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-        ) => setQuery(e.target.value)}
-      />
       <div className={S.tableContainer}>
         <div className={S.tableWrapper}>
           <table>

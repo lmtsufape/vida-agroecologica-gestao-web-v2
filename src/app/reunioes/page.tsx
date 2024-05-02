@@ -62,6 +62,11 @@ export default function Home() {
     {
       header: 'Tipo',
       accessorKey: 'tipo',
+      cell: (info: any) => {
+        const value = info.getValue();
+        const formattedType = formatType(value);
+        return <span>{formattedType}</span>;
+      },
     },
     {
       header: 'Ações',
@@ -104,6 +109,19 @@ export default function Home() {
       },
     },
   ];
+
+  const formatType = (type: string) => {
+    switch (type) {
+      case 'ordinaria':
+        return 'Ordinária';
+      case 'extraordinaria':
+        return 'Extraordinária';
+      case 'multirao':
+        return 'Mutirão';
+      default:
+        return type;
+    }
+  };
 
   const { data, isLoading, refetch, isError, error } = useQuery({
     queryKey: ['reunioes'],

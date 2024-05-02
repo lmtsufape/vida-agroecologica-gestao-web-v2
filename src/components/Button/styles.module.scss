@@ -7,8 +7,8 @@
 }
 
 .button[data-type='transparent'] {
-  border: 1px solid #868686;
-  color: #868686;
+  border: 1px solid #f5821fe5; 
+  color: #f5821fe5; 
   background-color: transparent;
   &:hover {
     background-color: #86868625;
@@ -25,8 +25,8 @@
 }
 
 .button[data-type='edit'] {
-  border: 1px solid #2b2b2b;
-  color: #2b2b2b;
+  border: 1px solid #f5821fe5; 
+  color: #f5821fe5; 
   background-color: transparent;
   &:hover {
     background-color: #86868614;
