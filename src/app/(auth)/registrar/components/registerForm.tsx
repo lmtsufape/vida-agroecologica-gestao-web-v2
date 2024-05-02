@@ -124,8 +124,9 @@ const RegisterForm = () => {
           <Input
             name="telefone"
             type="text"
-            placeholder="00000-0000"
+            placeholder="(99) 99999-9999"
             value={telefone}
+            mask="phone"
             onChange={(e) => setTelefone(e.target.value)}
           />
         </div>
