@@ -3,14 +3,25 @@ import React from 'react';
 
 import S from './styles.module.scss';
 
-const StyledLink: React.FC<{ text: string; href: string }> = ({
-  text,
-  ...props
-}) => {
+interface StyledLinkProps {
+  text: string;
+  href?: string;
+  onClick?: () => void;
+}
+
+const StyledLink: React.FC<StyledLinkProps> = ({ text, href, onClick }) => {
+  if (href) {
+    return (
+      <Link href={href} className={S.link}>
+        {text}
+      </Link>
+    );
+  }
   return (
-    <Link {...props} className={S.link}>
+    <button className={S.link} onClick={onClick}>
       {text}
-    </Link>
+    </button>
   );
 };
+
 export default StyledLink;
