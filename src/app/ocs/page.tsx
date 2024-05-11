@@ -103,7 +103,7 @@ export default function Home() {
               </Tooltip>
             </li>
             <li>
-              <Link href={`/ocs/participantes/${value}`}>
+              <Link href={'/ocs/participantes/' + value}>
                 <Tooltip title="Participantes">
                   <IconButton aria-label="Participantes" size="small">
                     <BiUser />
@@ -160,12 +160,23 @@ export default function Home() {
     <div style={{ marginTop: '5rem' }}>
       <section className={S.dashboard}>
         <div className={S.header}>
-          <h1>Organização de Controle Social</h1>
-          <StyledLink
-            href="ocs/cadastrar"
-            data-type="filled"
-            text="+ Adicionar Nova OCS"
-          />
+          <div className={S.headerTitle}>
+            <div className={S.back}>
+              <Link href="/menu" className={S.link}>
+                &lt; Voltar
+              </Link>
+            </div>
+            <div>
+              <h1 className={S.title}>Organização de Controle Social </h1>
+            </div>
+            <div className={S.addButton}>
+              <StyledLink
+                href="ocs/cadastrar"
+                data-type="filled"
+                text="Adicionar Nova Organização"
+              />
+            </div>
+          </div>
         </div>
         <TableView columns={columns} data={data?.ocs} />
       </section>

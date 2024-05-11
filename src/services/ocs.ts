@@ -45,6 +45,51 @@ export async function getUsersByOCS(
   }
 }
 
+export async function vincularAgricultorOrganizacao(
+  token: string,
+  id: string,
+  organizacaoId: string,
+) {
+  try {
+    const response = await api.put(
+      `api/agricultores/vincular/${id}`,
+      {
+        organizacao_id: organizacaoId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    if (response.status < 200 || response.status >= 300) {
+      throw new Error(
+        `Failed to link farmer to organization: ${response.statusText}`,
+      );
+    }
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao vincular o agricultor à organização:', error);
+    throw error;
+  }
+}
+
+export async function desvincularAgricultor(token: string, id: string) {
+  try {
+    const response = await api.delete(`api/agricultores/desvincular/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao desvincular o agricultor:', error);
+    throw error;
+  }
+}
+
 export async function createOCS(
   {
     nome,

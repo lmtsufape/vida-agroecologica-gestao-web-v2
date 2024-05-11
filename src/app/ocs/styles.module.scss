@@ -4,6 +4,30 @@
   margin: 0 auto;
 }
 
+.headerTitle{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.title {
+  color: #005247;
+  font-weight: bold; 
+  justify-content: center;
+  padding: 20px;
+}
+
+.link{
+  text-decoration: none;
+  appearance: none;
+  color:#005247;
+}
+
+.back{
+  width: 25%;
+}
+
 .section {
   input {
     margin-bottom: 2rem;
@@ -12,10 +36,10 @@
 
 .header {
   display: flex;
-  justify-content: space-between;
   margin-block: 2rem;
   row-gap: 1rem;
   flex-wrap: wrap;
+  
 }
 
 .action {
@@ -29,4 +53,10 @@
   gap: 1rem;
   margin-top: 1rem;
   place-content: end;
+}
+
+.addButton{
+  width: 25%;
+  display: flex;
+  justify-content: flex-end
 }

@@ -1,24 +1,41 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import React from 'react';
-import { BiSolidTrashAlt, BiSolidEditAlt } from 'react-icons/bi';
-import { BsFillEyeFill } from 'react-icons/bs';
+import React, { useEffect, useState } from 'react';
 
-import S from './styles.module.scss';
-
-import Button from '@/components/Button';
-import StyledLink from '@/components/Link';
+import { BiSolidTrashAlt } from 'react-icons/bi';
 import Loader from '@/components/Loader';
 import TableView from '@/components/Table/Table';
+import S from './styles.module.scss';
+import {
+  getUsersByOCS,
+  vincularAgricultorOrganizacao,
+  desvincularAgricultor,
+} from '@/services/ocs';
+import { getAllUsers } from '@/services';
+import Link from 'next/link';
 
-import { getAllUsers, removeUser } from '@/services';
-import { Box, IconButton, Tooltip, Modal, Typography } from '@mui/material';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  Alert,
+  AlertTitle,
+  Box,
+  Modal,
+  MenuItem,
+  Select,
+  Typography,
+  Tooltip,
+  IconButton,
+  Snackbar,
+} from '@mui/material';
+import StyledLink from '@/components/Link';
+import Button from '@/components/Button';
 
-const style = {
+interface Column {
+  header: string;
+  accessorKey: string;
+  cell?: (info: any) => JSX.Element;
+}
+
+const modalStyle = {
   position: 'absolute' as const,
   top: '50%',
   left: '50%',
@@ -31,30 +48,59 @@ const style = {
   p: 4,
 };
 
-export default function Home() {
-  const [value, setValue] = React.useState(0);
-  const [token, setToken] = React.useState('');
-  const handleClose = () => setValue(0);
+export default function OCSParticipants({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const [participants, setParticipants] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [availableUsers, setAvailableUsers] = useState<any[]>([]);
+  const [selectedUser, setSelectedUser] = useState('');
 
-  const { data, refetch, isLoading, isError, error } = useQuery({
-    queryKey: ['users'],
-    queryFn: () => {
-      const token = localStorage.getItem('@token');
-      if (token) {
-        return getAllUsers(token);
-      }
-      return null;
-    },
-  });
+  useEffect(() => {
+    const token = localStorage.getItem('@token');
+    if (!token) {
+      window.location.href = '/';
+    } else {
+      getUsersByOCS(token, params.id)
+        .then((response) => setParticipants(response.users))
+        .catch(() => setErrorMessage('Erro ao buscar os participantes.'))
+        .finally(() => setIsLoading(false));
+      getAllUsers(token)
+        .then((response) => {
+          const allUsers = response.users;
+          const onlyAgricultores = allUsers.filter(
+            (user: any) =>
+              user.roles?.some((role: any) => role.nome === 'agricultor'),
+          );
+          setAvailableUsers(onlyAgricultores);
+        })
+        .catch(() =>
+          setErrorMessage('Erro ao buscar os usuários disponíveis.'),
+        );
+    }
+  }, [params.id]);
 
-  interface Column {
-    header: string;
-    accessorKey: string;
-    cell?: (info: any) => JSX.Element;
-  }
-  const filteredUsers = data?.users.filter((user: any) => {
-    return user.roles.includes('agricultor') || user.roles.includes('vendedor');
-  });
+  const formatType = (type: string) => {
+    switch (type) {
+      case 'administrador':
+        return 'Administrador(a)';
+      case 'presidente':
+        return 'Presidente(a)';
+      case 'secretario':
+        return 'Secretário(a)';
+      case 'agricultor':
+        return 'Agricultor(a)';
+      case 'consumidor':
+        return 'Consumidor(a)';
+      default:
+        return type;
+    }
+  };
 
   const columns: Column[] = [
     {
@@ -70,7 +116,7 @@ export default function Home() {
           <div className={S.wrapper}>
             {value?.map((v: any) => (
               <p className={S.roles} data-type={v.nome} key={v.id}>
-                {v.nome}
+                {formatType(v.nome)}
               </p>
             ))}
           </div>
@@ -86,107 +132,154 @@ export default function Home() {
       accessorKey: 'id',
       cell: (info: any) => {
         const value = info.getValue();
+        const token = localStorage.getItem('@token');
+
+        const handleDesvincular = () => {
+          if (token) {
+            desvincularAgricultor(token, value)
+              .then(() => {
+                getUsersByOCS(token, params.id).then((response) =>
+                  setParticipants(response.users),
+                );
+                setSuccessMessage('Agricultor desvinculado com sucesso.');
+              })
+              .catch(() =>
+                setErrorMessage(
+                  'Erro ao desvincular o agricultor da organização.',
+                ),
+              );
+          }
+        };
+
         return (
-          <ul className={S.action} role="list">
-            <li>
-              <Link href={'usuarios/' + value}>
-                <Tooltip title="Visualizar">
-                  <IconButton aria-label="visualizar" size="small">
-                    <BsFillEyeFill />
-                  </IconButton>
-                </Tooltip>
-              </Link>
-            </li>
-            <li>
-              <Link href={'usuarios/editar/' + value}>
-                <Tooltip title="Editar">
-                  <IconButton aria-label="editar" size="small">
-                    <BiSolidEditAlt />
-                  </IconButton>
-                </Tooltip>
-              </Link>
-            </li>
-            <li>
-              <Tooltip title="Remover">
-                <IconButton
-                  onClick={() => setValue(value)}
-                  aria-label="Deletar"
-                  size="small"
-                >
-                  <BiSolidTrashAlt />
-                </IconButton>
-              </Tooltip>
-            </li>
-          </ul>
+          <Tooltip title="Desvincular">
+            <IconButton
+              onClick={handleDesvincular}
+              aria-label="Deletar"
+              size="small"
+            >
+              <BiSolidTrashAlt />
+            </IconButton>
+          </Tooltip>
         );
       },
     },
   ];
 
-  React.useEffect(() => {
+  const handleOpenModal = () => setModalOpen(true);
+  const handleCloseModal = () => setModalOpen(false);
+
+  const handleVincularAgricultor = () => {
     const token = localStorage.getItem('@token');
     if (!token) {
-      redirect('/');
+      window.location.href = '/';
+    } else if (selectedUser) {
+      vincularAgricultorOrganizacao(token, selectedUser, params.id)
+        .then((response) => {
+          getUsersByOCS(token, params.id).then((response) =>
+            setParticipants(response.users),
+          );
+          setSuccessMessage('Agricultor vinculado com sucesso.');
+          handleCloseModal();
+        })
+        .catch((error) => {
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.message
+          ) {
+            setErrorMessage(error.response.data.message);
+          } else {
+            setErrorMessage(
+              'Erro desconhecido ao vincular o agricultor à organização.',
+            );
+          }
+        });
     }
-    setToken(token);
-  }, []);
-
-  const mutation = useMutation({
-    mutationFn: ({ token, value }: { token: string; value: number }) => {
-      return removeUser(token, value);
-    },
-    onSuccess: () => {
-      refetch();
-      handleClose();
-    },
-  });
+  };
 
   if (isLoading) return <Loader />;
-  if (isError) return `Error: ${error.message}`;
+  if (errorMessage) {
+    return (
+      <Snackbar open={true}>
+        <Alert variant="filled" severity="error">
+          <AlertTitle>Erro!</AlertTitle>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
+    );
+  }
 
   return (
     <div style={{ marginTop: '5rem' }}>
       <section className={S.dashboard}>
         <div className={S.header}>
-          <h1>Agricultores da Organização</h1>
-          <StyledLink
-            href="usuarios/cadastrar"
-            data-type="filled"
-            text="+ Adicionar Agricultor"
-          />
-        </div>
-        <TableView columns={columns} data={filteredUsers} />
-      </section>
-      <div>
-        <Modal
-          open={value > 0}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Tem certeza que deseja excluir?
-            </Typography>
-            <div className={S.buttons}>
-              <Button
-                type="button"
-                dataType="transparent"
-                onClick={handleClose}
-              >
-                Cancelar
-              </Button>
-              <Button
-                type="button"
-                onClick={() => mutation.mutate({ token: token, value: value })}
-                style={{ backgroundColor: '#f76c6c', color: '#ffffff' }}
-              >
-                Excluir
-              </Button>
+          <div className={S.headerTitle}>
+            <div className={S.back}>
+              <Link href="/ocs" className={S.link}>
+                &lt; Voltar
+              </Link>
             </div>
-          </Box>
-        </Modal>
-      </div>
+            <div>
+              <h1 className={S.title}>Organização de Controle Social </h1>
+            </div>
+            <div className={S.addButton}>
+              <StyledLink
+                text="Adicionar Participante"
+                data-type="filled"
+                onClick={handleOpenModal}
+              />
+            </div>
+          </div>
+        </div>
+        <TableView columns={columns} data={participants} />
+      </section>
+      <Modal
+        open={modalOpen}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+      >
+        <Box sx={modalStyle}>
+          <Typography id="modal-title" variant="h6">
+            Adicionar Participante
+          </Typography>
+          <Select
+            labelId="select-user-label"
+            id="select-user"
+            value={selectedUser}
+            onChange={(e) => setSelectedUser(e.target.value as string)}
+            fullWidth
+          >
+            {availableUsers.map((user) => (
+              <MenuItem key={user.id} value={user.id}>
+                {user.name}
+              </MenuItem>
+            ))}
+          </Select>
+          <Button
+            onClick={handleVincularAgricultor}
+            type="button"
+            style={{
+              marginTop: '1rem',
+              backgroundColor: '005247;',
+              color: 'white',
+            }}
+            dataType="filled"
+          >
+            Adicionar
+          </Button>
+        </Box>
+      </Modal>
+      {successMessage && (
+        <Snackbar
+          open={!!successMessage}
+          autoHideDuration={6000}
+          onClose={() => setSuccessMessage('')}
+        >
+          <Alert severity="success">{successMessage}</Alert>
+        </Snackbar>
+      )}
     </div>
   );
 }
