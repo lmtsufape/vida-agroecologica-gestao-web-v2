@@ -11,6 +11,7 @@ import {
   getPaginationRowModel,
   getFilteredRowModel,
 } from '@tanstack/react-table';
+import Search from '../Search';
 
 type Column = {
   header: string;
@@ -44,6 +45,7 @@ const TableView = ({ data, columns }: TableViewProps) => {
     <div>
       <div className={S.tableContainer}>
         <div className={S.tableWrapper}>
+          <Search value={query} onChange={setQuery} />
           <table>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
