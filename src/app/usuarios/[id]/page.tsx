@@ -16,6 +16,23 @@ import { User } from '@/types/api';
 const Home = ({ params }: { params: { id: string } }) => {
   const [content, setContent] = React.useState<User | null>(null);
 
+  const formatType = (type: string) => {
+    switch (type) {
+      case 'administrador':
+        return 'Administrador(a)';
+      case 'presidente':
+        return 'Presidente(a)';
+      case 'secretario':
+        return 'Secretário(a)';
+      case 'agricultor':
+        return 'Agricultor(a)';
+      case 'consumidor':
+        return 'Consumidor(a)';
+      default:
+        return type;
+    }
+  };
+
   const router = useRouter();
 
   React.useEffect(() => {
@@ -52,7 +69,7 @@ const Home = ({ params }: { params: { id: string } }) => {
             'id' in role &&
             'nome' in role ? (
               <h3 key={role.id} className={S.section}>
-                {role.nome}
+                {formatType(role.nome)}
               </h3>
             ) : null,
           )}
