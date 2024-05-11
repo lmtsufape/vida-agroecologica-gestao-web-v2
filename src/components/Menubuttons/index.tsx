@@ -48,7 +48,7 @@ const MenuOptions = () => {
       icon: <HiUsers />,
       name: 'Usuários',
       route: '/usuarios',
-      roles: ['administrador', 'presidente'],
+      roles: ['administrador', 'secretario', 'presidente'],
     },
   ];
 
