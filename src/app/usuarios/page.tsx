@@ -67,7 +67,7 @@ export default function Home() {
           <div className={S.wrapper}>
             {value?.map((v: any) => (
               <p className={S.roles} data-type={v.nome} key={v.id}>
-                {v.nome}
+                {formatType(v.nome)}
               </p>
             ))}
           </div>
@@ -120,6 +120,23 @@ export default function Home() {
     },
   ];
 
+  const formatType = (type: string) => {
+    switch (type) {
+      case 'administrador':
+        return 'Administrador(a)';
+      case 'presidente':
+        return 'Presidente(a)';
+      case 'secretario':
+        return 'Secretário(a)';
+      case 'agricultor':
+        return 'Agricultor(a)';
+      case 'consumidor':
+        return 'Agricultor(a)';
+      default:
+        return type;
+    }
+  };
+
   React.useEffect(() => {
     const token = localStorage.getItem('@token');
     if (!token) {
@@ -145,12 +162,23 @@ export default function Home() {
     <div style={{ marginTop: '5rem' }}>
       <section className={S.dashboard}>
         <div className={S.header}>
-          <h1>Usuários</h1>
-          <StyledLink
-            href="usuarios/cadastrar"
-            data-type="filled"
-            text="+ Adicionar Novo Usuário"
-          />
+          <div className={S.headerTitle}>
+            <div className={S.back}>
+              <Link href="/menu" className={S.link}>
+                &lt; Voltar
+              </Link>
+            </div>
+            <div>
+              <h1 className={S.title}>Usuários</h1>
+            </div>
+            <div className={S.addButton}>
+              <StyledLink
+                href="reunioes/cadastrar"
+                data-type="filled"
+                text="Criar Usuario"
+              />
+            </div>
+          </div>
         </div>
         <TableView columns={columns} data={data?.users} />
       </section>

@@ -18,12 +18,6 @@
   flex-wrap: wrap;
 }
  
-.back{
-  text-decoration: none;
-  appearance: none;
-  color:#005247
-}
-
 .action {
   display: flex;
   gap: 1rem;
@@ -37,24 +31,32 @@
   place-content: end;
 }
 
-.searchContainer {
-  display: flex;
-  align-items: center;
-}
-
-.addButtons {
-  margin-left: 50px;
-}
-
 .headerTitle{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 50%;
-  margin-bottom: 10px;
+  width: 100%;
 }
 
 .title {
   color: #005247;
   font-weight: bold; 
+  justify-content: center;
+  padding: 20px;
+}
+
+.link{
+  text-decoration: none;
+  appearance: none;
+  color:#005247;
+}
+
+.back{
+  width: 25%;
+}
+
+.addButton{
+  width: 25%;
+  display: flex;
+  justify-content: flex-end
 }
