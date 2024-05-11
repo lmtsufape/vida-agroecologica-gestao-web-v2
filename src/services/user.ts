@@ -49,7 +49,7 @@ export async function signIn(email: string, password: string) {
   });
   localStorage.setItem('@token', response.data.token);
   localStorage.setItem('@roles', JSON.stringify(response.data.user.roles));
-
+  localStorage.setItem('userId', response.data.user.id);
   window.location.href = '/menu';
 }
 

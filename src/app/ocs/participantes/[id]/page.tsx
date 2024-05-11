@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -26,7 +27,7 @@ import {
   IconButton,
   Snackbar,
 } from '@mui/material';
-import StyledLink from '@/components/Link';
+
 import Button from '@/components/Button';
 
 interface Column {
@@ -175,7 +176,7 @@ export default function OCSParticipants({
       window.location.href = '/';
     } else if (selectedUser) {
       vincularAgricultorOrganizacao(token, selectedUser, params.id)
-        .then((response) => {
+        .then(() => {
           getUsersByOCS(token, params.id).then((response) =>
             setParticipants(response.users),
           );
@@ -221,14 +222,16 @@ export default function OCSParticipants({
               </Link>
             </div>
             <div>
-              <h1 className={S.title}>Organização de Controle Social </h1>
+              <h1 className={S.title}> Participantes da Organização </h1>
             </div>
             <div className={S.addButton}>
-              <StyledLink
-                text="Adicionar Participante"
-                data-type="filled"
+              <Button
                 onClick={handleOpenModal}
-              />
+                type={'button'}
+                dataType="filled"
+              >
+                Adicionar Participante
+              </Button>
             </div>
           </div>
         </div>
