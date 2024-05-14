@@ -4,15 +4,16 @@
   font-weight: 400;
   height: fit-content;
   grid-row: -1;
+  width: 100%;
 
   ul {
-    max-width: 1280px;
     padding: .5rem 1rem;
     display: flex;
     justify-content: space-between;
     margin: 0 auto;
     place-items: center;
     list-style: none;
+    width: 90%;
   }
 
   li {
