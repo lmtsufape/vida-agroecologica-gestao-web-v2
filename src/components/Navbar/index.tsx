@@ -9,6 +9,7 @@ import { BiMenu } from 'react-icons/bi';
 import styles from './styles.module.scss';
 
 import { Icons } from '@/assets';
+
 import {
   AppBar,
   Box,
@@ -23,6 +24,15 @@ import {
 
 const Navbar = () => {
   const params = usePathname();
+  const userId = localStorage.getItem('userId');
+
+  const perfil = () => {
+    if (userId) {
+      window.location.href = `/perfil/${userId}`;
+    } else {
+      alert('Usuário não identificado.');
+    }
+  };
 
   const [anchorElProfile, setAnchorElProfile] =
     React.useState<null | HTMLElement>(null);
@@ -36,6 +46,7 @@ const Navbar = () => {
   );
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+    anchorElNav;
     setAnchorElNav(event.currentTarget);
   };
 
@@ -105,6 +116,7 @@ const Navbar = () => {
                   open={Boolean(anchorElProfile)}
                   onClose={() => setAnchorElProfile(null)}
                 >
+                  <MenuItem onClick={perfil}> Perfil</MenuItem>
                   <MenuItem onClick={logout}>Sair</MenuItem>
                 </Menu>
               </Box>
