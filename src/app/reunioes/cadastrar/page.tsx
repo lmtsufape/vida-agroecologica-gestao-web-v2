@@ -188,7 +188,7 @@ export default function Home() {
                 name="data"
                 type="text"
                 mask="date"
-                placeholder="DD-MM-YYYY"
+                placeholder="DD-MM-AAAA"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
               />
