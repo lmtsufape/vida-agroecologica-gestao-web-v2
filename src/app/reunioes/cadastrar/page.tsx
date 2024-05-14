@@ -5,6 +5,7 @@ import React from 'react';
 
 import S from './styles.module.scss';
 
+import { AtaForm } from '@/components/Ata';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import MultiSelect from '@/components/Multiselect';
@@ -22,6 +23,7 @@ import {
 } from '@/services';
 import { User } from '@/types/api';
 import { useQuery } from '@tanstack/react-query';
+import { AnexosForm } from '@/components/Anexos';
 
 export default function Home() {
   const [titulo, setTitulo] = React.useState('');
@@ -29,7 +31,7 @@ export default function Home() {
   const [date, setDate] = React.useState('');
   const [tipo, setTipo] = React.useState('');
 
-  const [selectedAssociacoes, setSelectedAssociacoes] = React.useState(0);
+  const [selectedAssociacoes] = React.useState(0);
   const [selectedOcs, setSelectedOcs] = React.useState(0);
   const [selectedParticipantes, setSelectedParticipantes] = React.useState<
     string | string[]
@@ -37,7 +39,7 @@ export default function Home() {
 
   const [errorMessage, setErrorMessage] = React.useState('');
 
-  const { data: associacoes, isLoading } = useQuery({
+  const { data: isLoading } = useQuery({
     queryKey: ['associacoes'],
     queryFn: () => {
       const token = localStorage.getItem('@token');
@@ -192,21 +194,6 @@ export default function Home() {
               />
             </div>
             <MuiSelect
-              label="Associação"
-              selectedNames={selectedAssociacoes}
-              setSelectedNames={setSelectedAssociacoes}
-            >
-              {associacoes?.map((item) => (
-                <StyledSelect
-                  key={item.id}
-                  value={item.id}
-                  sx={{ justifyContent: 'space-between' }}
-                >
-                  {isLoading ? 'Carregando...' : item.nome}
-                </StyledSelect>
-              ))}
-            </MuiSelect>
-            <MuiSelect
               label="Organizacão de Controle Social"
               selectedNames={selectedOcs}
               setSelectedNames={setSelectedOcs}
@@ -265,7 +252,7 @@ export default function Home() {
               Voltar
             </Button>{' '}
             <Button dataType="filled" type="submit">
-              Cadastrar
+              //Cadastrar
             </Button>
           </div>
         </form>

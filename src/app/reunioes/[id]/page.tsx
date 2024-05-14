@@ -7,12 +7,13 @@ import { BiSolidEditAlt } from 'react-icons/bi';
 import S from './styles.module.scss';
 
 import { SeeAta } from './components/Ata';
-import { AtaForm } from '@/components/Ata';
 import Button from '@/components/Button';
 import Loader from '@/components/Loader';
 
 import { getReuniao, removeAta } from '@/services';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import Link from 'next/link';
+import { SeeAnexos } from './components/Documentos';
 
 const Home = ({ params }: { params: { id: number } }) => {
   const [token, setToken] = React.useState('');
@@ -53,18 +54,15 @@ const Home = ({ params }: { params: { id: number } }) => {
   return (
     <main className={S.main}>
       <div className={S.container}>
-        <div className={S.header}>
-          <h1>{data?.reuniao.titulo}</h1>
-          <Button
-            onClick={() => router.push('/reunioes/editar/' + params.id)}
-            type="button"
-            dataType="edit"
-          >
-            Editar <BiSolidEditAlt />
-          </Button>
+        <div className={S.back}>
+          <Link href="/reunioes" className={S.link}>
+            &lt; Voltar
+          </Link>
         </div>
+        <h1 className={S.title}>{data?.reuniao.titulo}</h1>
         <div className={S.content}>
           <br />
+          <h2> Dados da Reuniâo</h2>
           <h3>Título</h3>
           <p>{data?.reuniao.titulo}</p>
           <h3>Status</h3>
@@ -73,7 +71,8 @@ const Home = ({ params }: { params: { id: number } }) => {
           <p>{data?.reuniao.tipo}</p>
           <h3>Data</h3>
           <p>{data?.reuniao.data}</p>
-          <br />
+          <h2>ANEXOS</h2>
+          <h3> Ata </h3>
           {data?.reuniao.ata?.length !== 0 && (
             <div className={S.wrapperAta}>
               <SeeAta reuniaoId={params.id} />
@@ -82,18 +81,23 @@ const Home = ({ params }: { params: { id: number } }) => {
                 onClick={() =>
                   mutation.mutate({ token: token, value: params.id })
                 }
-                style={{
-                  backgroundColor: '#f76c6c',
-                  color: '#ffffff',
-                  marginBottom: '1rem',
-                }}
+                style={{ backgroundColor: '#f76c6c', color: '#ffffff' }}
               >
                 Excluir Ata
               </Button>
             </div>
           )}
-          <h3>ANEXOS</h3>
-          <AtaForm reuniaoId={params.id} />
+          <h3> Documentos </h3>
+          <SeeAnexos reuniaoId={params.id} />
+          <div className={S.editButton}>
+            <Button
+              onClick={() => router.push('/reunioes/editar/' + params.id)}
+              type="button"
+              dataType="edit"
+            >
+              Editar <BiSolidEditAlt />
+            </Button>
+          </div>
         </div>
       </div>
     </main>

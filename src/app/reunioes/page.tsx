@@ -3,9 +3,14 @@
 
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import React from 'react';
-import { BiSolidTrashAlt, BiSolidEditAlt } from 'react-icons/bi';
-import { BsFillEyeFill } from 'react-icons/bs';
+import React, { useState } from 'react';
+import {
+  BiSolidTrashAlt,
+  BiSolidEditAlt,
+  BiSolidFileImport,
+} from 'react-icons/bi';
+import { BsFillEyeFill, BsInfoCircle } from 'react-icons/bs';
+import { MdAttachFile } from 'react-icons/md';
 
 import S from './styles.module.scss';
 
@@ -17,6 +22,9 @@ import TableView from '@/components/Table/Table';
 import { getAllReunioes, removeReuniao } from '@/services';
 import { Box, IconButton, Tooltip, Modal, Typography } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { AtaForm } from '@/components/Ata';
+import { AnexosForm } from '@/components/Anexos';
+import { Icons } from '@/assets';
 
 const style = {
   position: 'absolute' as const,
@@ -32,6 +40,8 @@ const style = {
 };
 
 export default function Home() {
+  const [modalId, setModalId] = useState<number | null>(null);
+  const [modalType, setModalType] = useState<string>('');
   const [value, setValue] = React.useState(0);
   const [token, setToken] = React.useState('');
   const handleClose = () => setValue(0);
@@ -44,13 +54,17 @@ export default function Home() {
     setToken(token);
   }, []);
 
-  interface Column {
-    header: string;
-    accessorKey: string;
-    cell?: (info: any) => JSX.Element;
-  }
+  const handleOpenModal = (id: number, type: string) => {
+    setModalId(id);
+    setModalType(type);
+  };
 
-  const columns: Column[] = [
+  const handleCloseModal = () => {
+    setModalId(null);
+    setModalType('');
+  };
+
+  const columns: any = [
     {
       header: 'Título',
       accessorKey: 'titulo',
@@ -69,12 +83,46 @@ export default function Home() {
       },
     },
     {
-      header: 'Ações',
+      header: () => (
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          Ações
+          <Tooltip title="Clique nos ícones para visualizar, editar ou remover">
+            <IconButton
+              size="small"
+              style={{ marginLeft: '5px', color: 'white' }}
+            >
+              <BsInfoCircle />
+            </IconButton>
+          </Tooltip>
+        </div>
+      ),
       accessorKey: 'id',
       cell: (info: any) => {
         const value = info.getValue();
         return (
           <ul className={S.action} role="list">
+            <li>
+              <Tooltip title="Adicionar Ata">
+                <IconButton
+                  onClick={() => handleOpenModal(value, 'ata')}
+                  aria-label="Adicionar ata"
+                  size="small"
+                >
+                  <MdAttachFile />
+                </IconButton>
+              </Tooltip>
+            </li>
+            <li>
+              <Tooltip title="Adicionar Anexos">
+                <IconButton
+                  onClick={() => handleOpenModal(value, 'anexos')}
+                  aria-label="Adicionar anexos"
+                  size="small"
+                >
+                  <BiSolidFileImport />
+                </IconButton>
+              </Tooltip>
+            </li>
             <li>
               <Link href={'reunioes/' + value}>
                 <Tooltip title="Visualizar">
@@ -151,12 +199,23 @@ export default function Home() {
     <div style={{ marginTop: '5rem' }}>
       <section className={S.dashboard}>
         <div className={S.header}>
-          <h1>Reuniões</h1>
-          <StyledLink
-            href="reunioes/cadastrar"
-            data-type="filled"
-            text="+ Adicionar Reunião"
-          />
+          <div className={S.headerTitle}>
+            <div className={S.back}>
+              <Link href="/menu" className={S.link}>
+                &lt; Voltar
+              </Link>
+            </div>
+            <div>
+              <h1 className={S.title}>Associações</h1>
+            </div>
+            <div className={S.addButton}>
+              <StyledLink
+                href="reunioes/cadastrar"
+                data-type="filled"
+                text="Criar Reunião"
+              />
+            </div>
+          </div>
         </div>
         <TableView columns={columns} data={data?.reunioes} />
       </section>
@@ -189,6 +248,24 @@ export default function Home() {
             </div>
           </Box>
         </Modal>
+        <div style={{ marginTop: '5rem' }}>
+          <Modal
+            open={modalType === 'ata' && modalId !== null}
+            onClose={handleCloseModal}
+          >
+            <Box sx={style}>
+              {modalId !== null && <AtaForm reuniaoId={modalId} />}
+            </Box>
+          </Modal>
+          <Modal
+            open={modalType === 'anexos' && modalId !== null}
+            onClose={handleCloseModal}
+          >
+            <Box sx={style}>
+              {modalId !== null && <AnexosForm reuniaoId={modalId} />}
+            </Box>
+          </Modal>
+        </div>
       </div>
     </div>
   );
