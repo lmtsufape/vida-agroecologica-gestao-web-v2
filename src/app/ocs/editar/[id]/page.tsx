@@ -23,6 +23,7 @@ import {
 import { OCS, User, Bairro } from '@/types/api';
 import { Alert, AlertTitle, Snackbar } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
+import Link from 'next/link';
 
 const Home = ({ params }: { params: { id: string } }) => {
   const [name, setName] = React.useState('');
@@ -180,10 +181,18 @@ const Home = ({ params }: { params: { id: string } }) => {
   return (
     <main style={{ marginTop: '5rem' }}>
       <div className={S.container}>
-        <h1>Editar</h1>
-        <p>
-          <strong>{content.nome}</strong>
-        </p>
+        <div className={S.headerContent}>
+          <div className={S.headerTitle}>
+            <div>
+              <Link href="/menu" className={S.back}>
+                &lt; Voltar
+              </Link>
+            </div>
+            <div>
+              <h1 className={S.title}>Associações</h1>
+            </div>
+          </div>
+        </div>
         <form onSubmit={handleEditRegister} className={S.form}>
           <h3>Dados OCS</h3>
           <section>

@@ -12,6 +12,7 @@ import Loader from '@/components/Loader';
 
 import { getUser } from '@/services';
 import { User } from '@/types/api';
+import Link from 'next/link';
 
 const Home = ({ params }: { params: { id: string } }) => {
   const [content, setContent] = React.useState<User | null>(null);
@@ -52,17 +53,14 @@ const Home = ({ params }: { params: { id: string } }) => {
   return (
     <main className={S.main}>
       <div className={S.container}>
-        <div className={S.header}>
-          <h1>{content.name}</h1>
-          <Button
-            onClick={() => router.push('/ocs/editar/' + params.id)}
-            type="button"
-            dataType="edit"
-          >
-            Editar <BiSolidEditAlt />
-          </Button>
+        <div className={S.back}>
+          <Link href="/usuarios" className={S.link}>
+            &lt; Voltar
+          </Link>
         </div>
+        <h1 className={S.title}>{content.name}</h1>
         <div className={S.content}>
+          <h2> Dados do usuario</h2>
           {content?.roles?.map((role) =>
             typeof role === 'object' &&
             role !== null &&
@@ -80,6 +78,17 @@ const Home = ({ params }: { params: { id: string } }) => {
           <p>{content.email}</p>
           <h3>CPF</h3>
           <p>{content.cpf}</p>
+          <div className={S.editButton}>
+            <Button
+              onClick={() => router.push('/usuarios/editar/' + params.id)}
+              type="button"
+              dataType="edit"
+            >
+              {' '}
+              Editar
+              <BiSolidEditAlt />
+            </Button>
+          </div>
         </div>
       </div>
     </main>

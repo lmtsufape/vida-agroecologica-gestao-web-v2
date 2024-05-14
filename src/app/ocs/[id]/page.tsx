@@ -39,26 +39,19 @@ const Home = ({ params }: { params: { id: string } }) => {
   return (
     <main className={S.main}>
       <div className={S.container}>
-        <div className={S.header}>
-          <h1>{content.nome}</h1>
-          <Button
-            onClick={() => router.push('/ocs/editar/' + params.id)}
-            type="button"
-            dataType="edit"
-          >
-            Editar <BiSolidEditAlt />
-          </Button>
+        <div className={S.back}>
+          <Link href="/ocs" className={S.link}>
+            &lt; Voltar
+          </Link>
         </div>
+        <h1 className={S.title}>{content.nome}</h1>
         <div className={S.content}>
+          <h2> Dados da Organização </h2>
           <h3>CNPJ</h3>
           <p>{content.cnpj}</p>
-          <h3 className={S.section}>Associação</h3>
-          <Link href={'/associacoes/' + content.associacao_id}>
-            {content?.associacao?.nome}
-          </Link>
-          <br />
-          <br />
-          <h3 className={S.section}>Endereço</h3>
+          <h3> Associação</h3>
+          <p>{content?.associacao?.nome}</p>
+          <h2>Endereço</h2>
           <h3>Rua</h3>
           <p>{content?.endereco?.rua}</p>
           <h3>CEP</h3>
@@ -67,6 +60,17 @@ const Home = ({ params }: { params: { id: string } }) => {
           <p>{content?.endereco?.numero}</p>
           <h3>Bairro</h3>
           <p>{content?.endereco?.bairro?.nome}</p>
+          <div className={S.editButton}>
+            <Button
+              onClick={() => router.push('/associacoes/editar/' + params.id)}
+              type="button"
+              dataType="edit"
+            >
+              {' '}
+              Editar
+              <BiSolidEditAlt />
+            </Button>
+          </div>
         </div>
       </div>
     </main>

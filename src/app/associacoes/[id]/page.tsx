@@ -12,6 +12,7 @@ import Loader from '@/components/Loader';
 
 import { getAssociacao } from '@/services';
 import { Associacao } from '@/types/api';
+import Link from 'next/link';
 
 const Home = ({ params }: { params: { id: string } }) => {
   const [content, setContent] = React.useState<Associacao | null>(null);
@@ -35,16 +36,19 @@ const Home = ({ params }: { params: { id: string } }) => {
   return (
     <main className={S.main}>
       <div className={S.container}>
-        <div className={S.header}>
-          <h1>{content.nome}</h1>
+        <div className={S.back}>
+          <Link href="/associacoes" className={S.link}>
+            &lt; Voltar
+          </Link>
         </div>
+        <h1 className={S.title}>{content.nome}</h1>
         <div className={S.content}>
-          <h2>Dados da Associação:</h2>
+          <h2> Dados da Associação</h2>
           <h3>E-mail</h3>
           <p>{content?.contato?.email}</p>
           <h3>Telefone</h3>
           <p>{content?.contato?.telefone}</p>
-          <h3 className={S.presidentes}>Dados do Presidente</h3>
+          <h3 className={S.presidentes}>Presidentes</h3>
           <div>
             {content?.presidentes?.map((item) => (
               <div key={item.id}>
@@ -54,19 +58,19 @@ const Home = ({ params }: { params: { id: string } }) => {
                 <p>{item.email}</p>
                 <h3>CPF</h3>
                 <p>{item.cpf}</p>
-                <hr />
               </div>
             ))}
-          </div>
-          <div className={S.editButton}>
-            <Button
-              onClick={() => router.push('/associacoes/editar/' + params.id)}
-              type="button"
-              dataType="edit"
-            >
-              Editar
-              <BiSolidEditAlt />
-            </Button>
+            <div className={S.editButton}>
+              <Button
+                onClick={() => router.push('/associacoes/editar/' + params.id)}
+                type="button"
+                dataType="edit"
+              >
+                {' '}
+                Editar
+                <BiSolidEditAlt />
+              </Button>
+            </div>
           </div>
         </div>
       </div>
