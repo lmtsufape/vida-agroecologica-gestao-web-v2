@@ -135,9 +135,9 @@ export default function Home() {
       case 'secretario':
         return 'Secretário(a)';
       case 'agricultor':
-        return 'Agricultor(a)';
+        return 'Vendedor(a)';
       case 'consumidor':
-        return 'Agricultor(a)';
+        return 'Consumidor(a)';
       default:
         return type;
     }
@@ -179,7 +179,7 @@ export default function Home() {
             </div>
             <div className={S.addButton}>
               <StyledLink
-                href="reunioes/cadastrar"
+                href="usuarios/cadastrar"
                 data-type="filled"
                 text="Criar Usuario"
               />

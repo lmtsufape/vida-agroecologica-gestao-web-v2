@@ -26,7 +26,7 @@ const Home = ({ params }: { params: { id: string } }) => {
       case 'secretario':
         return 'Secretário(a)';
       case 'agricultor':
-        return 'Agricultor(a)';
+        return 'Vendedor(a)';
       case 'consumidor':
         return 'Consumidor(a)';
       default:

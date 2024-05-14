@@ -95,7 +95,7 @@ export default function OCSParticipants({
       case 'secretario':
         return 'Secretário(a)';
       case 'agricultor':
-        return 'Agricultor(a)';
+        return 'Vendedor(a)';
       case 'consumidor':
         return 'Consumidor(a)';
       default:

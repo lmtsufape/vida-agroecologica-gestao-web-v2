@@ -275,8 +275,6 @@ export default function Home() {
           {error}
         </Alert>
       </Snackbar>
-
-      {/* Mensagem de confirmação */}
       {confirmationMessage && (
         <Snackbar open={confirmationMessage.length > 0} autoHideDuration={6000}>
           <Alert variant="filled" severity="success">

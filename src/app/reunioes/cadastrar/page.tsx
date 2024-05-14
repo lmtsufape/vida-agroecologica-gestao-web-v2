@@ -4,8 +4,6 @@ import { redirect, useRouter } from 'next/navigation';
 import React from 'react';
 
 import S from './styles.module.scss';
-
-import { AtaForm } from '@/components/Ata';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import MultiSelect from '@/components/Multiselect';
@@ -23,7 +21,6 @@ import {
 } from '@/services';
 import { User } from '@/types/api';
 import { useQuery } from '@tanstack/react-query';
-import { AnexosForm } from '@/components/Anexos';
 
 export default function Home() {
   const [titulo, setTitulo] = React.useState('');
@@ -38,17 +35,6 @@ export default function Home() {
   >([]);
 
   const [errorMessage, setErrorMessage] = React.useState('');
-
-  const { data: isLoading } = useQuery({
-    queryKey: ['associacoes'],
-    queryFn: () => {
-      const token = localStorage.getItem('@token');
-      if (token) {
-        return getAllAssociacoes(token);
-      }
-      return null;
-    },
-  });
 
   const { data: ocs } = useQuery({
     queryKey: ['ocs'],
@@ -188,7 +174,7 @@ export default function Home() {
                 name="data"
                 type="text"
                 mask="date"
-                placeholder="DD-MM-AAAA"
+                placeholder="DD-MM-YYYY"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
               />
@@ -204,7 +190,7 @@ export default function Home() {
                   value={item.id}
                   sx={{ justifyContent: 'space-between' }}
                 >
-                  {isLoading ? 'Carregando...' : item.nome}
+                  {item.nome}
                 </StyledSelect>
               ))}
             </MuiSelect>
@@ -217,8 +203,7 @@ export default function Home() {
                 ?.filter((user: User) => {
                   return user?.roles?.some(
                     (role) =>
-                      (typeof role === 'object' &&
-                        (role as { nome: string }).nome === 'consumidor') ||
+                      typeof role === 'object' &&
                       (role as { nome: string }).nome === 'agricultor',
                   );
                 })
@@ -228,17 +213,15 @@ export default function Home() {
                     value={user.name}
                     sx={{ justifyContent: 'space-between' }}
                   >
-                    {isLoading
-                      ? 'Carregando...'
-                      : user.name +
-                        ' | ' +
-                        user.roles
-                          ?.map((role) =>
-                            typeof role !== 'number' && typeof role !== 'string'
-                              ? role.nome
-                              : '',
-                          )
-                          .join(', ')}
+                    {user.name +
+                      ' | ' +
+                      user.roles
+                        ?.map((role) =>
+                          typeof role !== 'number' && typeof role !== 'string'
+                            ? role.nome
+                            : '',
+                        )
+                        .join(', ')}
                   </StyledSelect>
                 ))}
             </MultiSelect>
@@ -252,7 +235,7 @@ export default function Home() {
               Voltar
             </Button>{' '}
             <Button dataType="filled" type="submit">
-              //Cadastrar
+              Cadastrar
             </Button>
           </div>
         </form>
