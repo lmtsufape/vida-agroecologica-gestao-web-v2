@@ -33,9 +33,11 @@ const RegisterForm = () => {
   const router = useRouter();
 
   React.useEffect(() => {
-    const token = localStorage.getItem('@token');
-    if (token) {
-      router.push('/menu');
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('@token');
+      if (token) {
+        router.push('/menu');
+      }
     }
   }, [router]);
 

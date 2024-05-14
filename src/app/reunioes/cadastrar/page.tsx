@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { redirect, useRouter } from 'next/navigation';
@@ -13,12 +14,7 @@ import { Select, FormControl, MenuItem } from '@mui/material';
 import { Snackbar, Alert, AlertTitle } from '@mui/material';
 import { TextareaAutosize } from '@mui/material';
 
-import {
-  createReuniao,
-  getAllAssociacoes,
-  getAllOCS,
-  getAllUsers,
-} from '@/services';
+import { createReuniao, getAllOCS, getAllUsers } from '@/services';
 import { User } from '@/types/api';
 import { useQuery } from '@tanstack/react-query';
 
@@ -203,7 +199,8 @@ export default function Home() {
                 ?.filter((user: User) => {
                   return user?.roles?.some(
                     (role) =>
-                      typeof role === 'object' &&
+                      (typeof role === 'object' &&
+                        (role as { nome: string }).nome === 'presidente') ||
                       (role as { nome: string }).nome === 'agricultor',
                   );
                 })

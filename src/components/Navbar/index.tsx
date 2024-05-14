@@ -24,7 +24,11 @@ import {
 
 const Navbar = () => {
   const params = usePathname();
-  const userId = localStorage.getItem('userId');
+  const [userId, setUserId] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    setUserId(localStorage.getItem('userId'));
+  }, []);
 
   const perfil = () => {
     if (userId) {

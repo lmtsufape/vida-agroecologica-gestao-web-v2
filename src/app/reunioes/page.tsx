@@ -24,7 +24,6 @@ import { Box, IconButton, Tooltip, Modal, Typography } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { AtaForm } from '@/components/Ata';
 import { AnexosForm } from '@/components/Anexos';
-import { Icons } from '@/assets';
 
 const style = {
   position: 'absolute' as const,

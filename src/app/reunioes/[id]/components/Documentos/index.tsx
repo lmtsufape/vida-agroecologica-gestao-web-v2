@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { redirect } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 
@@ -40,7 +41,6 @@ export const SeeAnexos = ({ reuniaoId }: { reuniaoId: number }) => {
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-    } catch (error) {
     } finally {
       setLoading(false);
     }
