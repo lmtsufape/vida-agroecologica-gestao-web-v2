@@ -45,6 +45,7 @@ export default function Home() {
   const [value, setValue] = React.useState(0);
   const [token, setToken] = React.useState('');
   const handleClose = () => setValue(0);
+  const [infoModalOpen, setInfoModalOpen] = React.useState(false);
 
   React.useEffect(() => {
     const token = localStorage.getItem('@token');
@@ -63,6 +64,9 @@ export default function Home() {
     setModalId(null);
     setModalType('');
   };
+
+  const handleOpenInfoModal = () => setInfoModalOpen(true);
+  const handleCloseInfoModal = () => setInfoModalOpen(false);
 
   const columns: any = [
     {
@@ -90,6 +94,7 @@ export default function Home() {
             <IconButton
               size="small"
               style={{ marginLeft: '5px', color: 'white' }}
+              onClick={handleOpenInfoModal}
             >
               <BsInfoCircle />
             </IconButton>
@@ -266,6 +271,65 @@ export default function Home() {
             </Box>
           </Modal>
         </div>
+        <Modal
+          open={infoModalOpen}
+          onClose={handleCloseInfoModal}
+          aria-labelledby="info-modal-title"
+          aria-describedby="info-modal-description"
+        >
+          <Box sx={style}>
+            <Typography id="info-modal-title" variant="h6" component="h2">
+              Informações dos Ícones de Ação
+            </Typography>
+            <Typography id="info-modal-description" sx={{ mt: 2 }}>
+              <ul>
+                <li>
+                  <BsFillEyeFill
+                    style={{ verticalAlign: 'middle', marginRight: '5px' }}
+                  />
+                  <strong>Visualizar:</strong> Abre uma página de detalhes da
+                  associação.
+                </li>
+                <li>
+                  <BiSolidEditAlt
+                    style={{ verticalAlign: 'middle', marginRight: '5px' }}
+                  />
+                  <strong>Editar:</strong> Permite modificar informações da
+                  associação.
+                </li>
+                <li>
+                  <BiSolidTrashAlt
+                    style={{ verticalAlign: 'middle', marginRight: '5px' }}
+                  />
+                  <strong>Remover:</strong> Exclui a associação após
+                  confirmação.
+                </li>
+                <li>
+                  <MdAttachFile
+                    style={{ verticalAlign: 'middle', marginRight: '5px' }}
+                  />
+                  <strong>Anexar Ata:</strong> Permite enexar um arquivo de ata
+                  a reunião.
+                </li>
+                <li>
+                  <BiSolidFileImport
+                    style={{ verticalAlign: 'middle', marginRight: '5px' }}
+                  />
+                  <strong>Anexar Documentos:</strong> Permite anexar arquivos a
+                  reunião.
+                </li>
+              </ul>
+              <br />
+            </Typography>
+            <Button
+              onClick={handleCloseInfoModal}
+              type={'button'}
+              dataType="filled"
+            >
+              Voltar
+            </Button>
+          </Box>
+        </Modal>
       </div>
     </div>
   );
