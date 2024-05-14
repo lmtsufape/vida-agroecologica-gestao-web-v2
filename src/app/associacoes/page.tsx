@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import React from 'react';
 import { BiSolidTrashAlt, BiSolidEditAlt } from 'react-icons/bi';
-import { BsFillEyeFill } from 'react-icons/bs';
+import { BsFillEyeFill, BsInfoCircle } from 'react-icons/bs';
 
 import S from './styles.module.scss';
 
@@ -103,7 +103,19 @@ export default function Home() {
       },
     },
     {
-      header: 'Ações',
+      header: () => (
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          Ações
+          <Tooltip title="Clique nos ícones para visualizar, editar ou remover">
+            <IconButton
+              size="small"
+              style={{ marginLeft: '5px', color: 'white' }}
+            >
+              <BsInfoCircle />
+            </IconButton>
+          </Tooltip>
+        </div>
+      ),
       accessorKey: 'id',
       cell: (info: any) => {
         const value = info.getValue();

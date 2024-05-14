@@ -14,7 +14,7 @@ import {
 import Search from '../Search';
 
 type Column = {
-  header: string;
+  header: (() => React.ReactNode) | string;
   accessorKey: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   cell?: (info: any) => JSX.Element;
