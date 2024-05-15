@@ -42,7 +42,7 @@ const ProfilePage = () => {
     <main className={S.main}>
       <div className={S.container}>
         <div className={S.back}>
-          <Link href="/menu" className={S.link}>
+          <Link href="/register" className={S.link}>
             &lt; Voltar
           </Link>
         </div>
