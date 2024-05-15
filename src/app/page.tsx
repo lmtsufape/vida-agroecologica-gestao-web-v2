@@ -13,8 +13,14 @@ export default function Home() {
         <div className={S.leftContent}>
           <h1>Gestão</h1>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-            consequat velit non sodales dignissim.
+            O sistema Gestão foi desenvolvido pela Universidade Federal do
+            Agreste de Pernambuco (UFAPE) em resposta à demanda da Associação
+            Vida Agroecológica de Bonito-PE para uma gestão sustentável no setor
+            agrícola. Projetada para facilitar a integração e o controle de
+            processos, a plataforma otimiza o gerenciamento das atividades em
+            associações e organizações sociais e o registro dos agricultores nas
+            demais plataformas da associação, apoiando eficazmente os
+            agricultores na gestão de suas operações.
           </p>
         </div>
         <div className={`${S.rightContent} ${S.loginFormContainer}`}>
