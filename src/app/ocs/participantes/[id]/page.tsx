@@ -260,18 +260,26 @@ export default function OCSParticipants({
               </MenuItem>
             ))}
           </Select>
-          <Button
-            onClick={handleVincularAgricultor}
-            type="button"
+          <div
             style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
               marginTop: '1rem',
-              backgroundColor: '005247;',
-              color: 'white',
             }}
-            dataType="filled"
           >
-            Adicionar
-          </Button>
+            <Button
+              onClick={handleVincularAgricultor}
+              type="button"
+              style={{
+                marginTop: '1rem',
+                backgroundColor: '005247;',
+                color: 'white',
+              }}
+              dataType="filled"
+            >
+              Adicionar
+            </Button>
+          </div>
         </Box>
       </Modal>
       {successMessage && (

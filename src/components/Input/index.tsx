@@ -46,7 +46,7 @@ const getMaskTypesForText = (maskType: string | null) => {
 
   if (maskType === 'zipCode') {
     return {
-      mask: '_____-___',
+      mask: '________',
       replacement: { _: /\d/ },
     };
   }

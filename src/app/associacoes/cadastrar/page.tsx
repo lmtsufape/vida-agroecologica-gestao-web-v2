@@ -1,50 +1,44 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import React, { ChangeEvent, useState } from 'react';
 import { redirect, useRouter } from 'next/navigation';
-import React from 'react';
-
 import S from './styles.module.scss';
-
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { StyledSelect } from '@/components/Multiselect/style';
 import MuiSelect from '@/components/Select';
 import { Snackbar, Alert, AlertTitle } from '@mui/material';
-
 import { getAllBairros } from '@/services';
 import { createAssociacao } from '@/services/associations';
 import { getPresidents } from '@/services/user';
 import { Bairro } from '@/types/api';
 
 export default function Home() {
-  const [name, setName] = React.useState('');
-  const [email, setEmail] = React.useState('');
-  const [date, setDate] = React.useState('');
-  const [telefone, setTelefone] = React.useState('');
-  const [street, setStreet] = React.useState('');
-  const [cep, setCEP] = React.useState('');
-  const [number, setNumber] = React.useState('');
-  const [complement, setComplement] = React.useState('');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [date, setDate] = useState('');
+  const [telefone, setTelefone] = useState('');
+  const [street, setStreet] = useState('');
+  const [cep, setCEP] = useState('');
+  const [number, setNumber] = useState('');
+  const [complement, setComplement] = useState('');
 
-  const [bairro, setBairro] = React.useState<Bairro[]>([]);
-  const [selectedBairro, setSelectedBairro] = React.useState(1);
+  const [bairro, setBairro] = useState<Bairro[]>([]);
+  const [selectedBairro, setSelectedBairro] = useState(1);
 
-  const [presidents, setPresidents] = React.useState<[]>([]);
-  const [selectedPresidents, setSelectedPresidents] = React.useState(2);
+  const [presidents, setPresidents] = useState<[]>([]);
+  const [selectedPresidents, setSelectedPresidents] = useState(2);
 
   const secretarioId = [3];
-
   const router = useRouter();
-
-  const [errorMessage, setErrorMessage] = React.useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   React.useEffect(() => {
     if (errorMessage) {
       const timer = setTimeout(() => {
         setErrorMessage('');
       }, 4000);
-
       return () => clearTimeout(timer);
     }
   }, [errorMessage]);
@@ -62,6 +56,33 @@ export default function Home() {
       .then((response: { bairros: Bairro[] }) => setBairro(response.bairros))
       .catch((error: any) => console.log(error));
   }, []);
+
+  const fetchAddress = async (cep: string) => {
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await response.json();
+      if (!data.erro) {
+        setStreet(data.logradouro || '');
+        setComplement(data.complemento || '');
+      } else {
+        setErrorMessage('CEP não encontrado.');
+      }
+    } catch (error) {
+      console.log(error);
+      setErrorMessage('Erro ao buscar o CEP.');
+    }
+  };
+
+  const handleCEPChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const target = e.target as HTMLInputElement;
+    const cepValue = target.value.replace(/\D/g, '');
+    setCEP(cepValue);
+    if (cepValue.length === 8) {
+      fetchAddress(cepValue);
+    }
+  };
 
   const handleRegister: (e: React.FormEvent) => Promise<void> = async (e) => {
     e.preventDefault();
@@ -173,6 +194,19 @@ export default function Home() {
           <h3>Endereço</h3>
           <section>
             <div>
+              <label htmlFor="cep">
+                Cep<span>*</span>
+              </label>
+              <Input
+                name="cep"
+                type="text"
+                placeholder="00000-000"
+                value={cep}
+                onChange={handleCEPChange}
+                mask="zipCode"
+              />
+            </div>
+            <div>
               <label htmlFor="street">
                 Rua<span>*</span>
               </label>
@@ -184,19 +218,7 @@ export default function Home() {
                 onChange={(e) => setStreet(e.target.value)}
               />
             </div>
-            <div>
-              <label htmlFor="cep">
-                Cep<span>*</span>
-              </label>
-              <Input
-                name="cep"
-                type="text"
-                placeholder="00000-000"
-                value={cep}
-                onChange={(e) => setCEP(e.target.value)}
-                mask="zipCode"
-              />
-            </div>
+
             <MuiSelect
               label="Bairro"
               selectedNames={selectedBairro}
