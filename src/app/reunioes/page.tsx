@@ -210,7 +210,7 @@ export default function Home() {
               </Link>
             </div>
             <div>
-              <h1 className={S.title}>Associações</h1>
+              <h1 className={S.title}>Reuniões</h1>
             </div>
             <div className={S.addButton}>
               <StyledLink
