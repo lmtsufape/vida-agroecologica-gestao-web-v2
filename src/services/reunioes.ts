@@ -67,15 +67,7 @@ export async function createReuniao(
 }
 
 export async function editReuniao(
-  {
-    titulo,
-    pauta,
-    data,
-    tipo,
-    participantes,
-    associacao_id,
-    organizacao_id,
-  }: Reunioes,
+  { titulo, pauta, data, tipo, participantes, organizacao_id }: Reunioes,
   token: string,
   id: number,
 ) {
@@ -87,7 +79,6 @@ export async function editReuniao(
       data,
       tipo,
       participantes,
-      associacao_id,
       organizacao_id,
     },
     {
