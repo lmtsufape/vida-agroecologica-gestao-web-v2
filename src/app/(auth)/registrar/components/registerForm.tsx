@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { MdManageAccounts } from 'react-icons/md';
 
 import S from './styles.module.scss';
@@ -25,12 +25,22 @@ const RegisterForm = () => {
   const [street, setStreet] = React.useState('');
   const [cep, setCEP] = React.useState('');
   const [number, setNumber] = React.useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const selectedBairro = 1;
 
   const [error, setError] = React.useState('');
 
   const router = useRouter();
+
+  React.useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage('');
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
 
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -40,6 +50,37 @@ const RegisterForm = () => {
       }
     }
   }, [router]);
+
+  const handleCEPChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const target = e.target as HTMLInputElement;
+    let cepValue = target.value.replace(/\D/g, '');
+
+    if (cepValue.length > 5) {
+      cepValue = cepValue.slice(0, 5) + '-' + cepValue.slice(5, 8);
+    }
+
+    setCEP(cepValue);
+    if (cepValue.replace('-', '').length === 8) {
+      fetchAddress(cepValue.replace('-', ''));
+    }
+  };
+
+  const fetchAddress = async (cep: string) => {
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await response.json();
+      if (!data.erro) {
+        setStreet(data.logradouro || '');
+      } else {
+        setErrorMessage('CEP não encontrado.');
+      }
+    } catch (error) {
+      console.log(error);
+      setErrorMessage('Erro ao buscar o CEP.');
+    }
+  };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -167,7 +208,7 @@ const RegisterForm = () => {
             type="text"
             placeholder="00000-000"
             value={cep}
-            onChange={(e) => setCEP(e.target.value)}
+            onChange={handleCEPChange}
             mask="zipCode"
           />
         </div>
