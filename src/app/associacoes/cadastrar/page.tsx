@@ -77,10 +77,15 @@ export default function Home() {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const target = e.target as HTMLInputElement;
-    const cepValue = target.value.replace(/\D/g, '');
+    let cepValue = target.value.replace(/\D/g, '');
+
+    if (cepValue.length > 5) {
+      cepValue = cepValue.slice(0, 5) + '-' + cepValue.slice(5, 8);
+    }
+
     setCEP(cepValue);
-    if (cepValue.length === 8) {
-      fetchAddress(cepValue);
+    if (cepValue.replace('-', '').length === 8) {
+      fetchAddress(cepValue.replace('-', ''));
     }
   };
 
@@ -168,7 +173,7 @@ export default function Home() {
               </label>
               <Input
                 name="date"
-                type="text"
+                type="date"
                 placeholder="DD-MM-AAAA"
                 value={date}
                 mask="date"

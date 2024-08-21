@@ -167,7 +167,7 @@ export default function Home() {
               </label>
               <Input
                 name="data"
-                type="text"
+                type="date"
                 mask="date"
                 placeholder="DD-MM-YYYY"
                 value={date}
