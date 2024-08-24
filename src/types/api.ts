@@ -102,3 +102,13 @@ export interface Reunioes {
   associacao_id: number | null;
   organizacao_id?: number | null;
 }
+
+export interface APIErrorResponse {
+  response?: {
+    data?: {
+      errors?: {
+        [key: string]: string[];
+      };
+    };
+  };
+}
