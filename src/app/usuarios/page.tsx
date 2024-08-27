@@ -186,7 +186,7 @@ export default function Home() {
               <StyledLink
                 href="usuarios/cadastrar"
                 data-type="filled"
-                text="Criar Usuario"
+                text="Criar Usuário"
               />
             </div>
           </div>

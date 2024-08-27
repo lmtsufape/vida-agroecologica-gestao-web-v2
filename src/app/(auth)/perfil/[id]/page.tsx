@@ -11,7 +11,6 @@ import Loader from '@/components/Loader';
 
 import { getUser } from '@/services';
 import { User } from '@/types/api';
-import Link from 'next/link';
 
 const ProfilePage = () => {
   const [content, setContent] = useState<User | null>(null);
@@ -42,9 +41,13 @@ const ProfilePage = () => {
     <main className={S.main}>
       <div className={S.container}>
         <div className={S.back}>
-          <Link href="/register" className={S.link}>
+          <a
+            className={S.link}
+            onClick={() => window.history.back()}
+            style={{ cursor: 'pointer' }}
+          >
             &lt; Voltar
-          </Link>
+          </a>
         </div>
         <h1 className={S.title}>{content.name}</h1>
         <div className={S.content}>

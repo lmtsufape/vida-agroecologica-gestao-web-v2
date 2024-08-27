@@ -1,8 +1,12 @@
 'use client';
 
 import React from 'react';
+
 import S from './styles.module.scss';
+
 import Button from '@/components/Button';
+
+import Search from '../Search';
 
 import {
   useReactTable,
@@ -11,7 +15,6 @@ import {
   getPaginationRowModel,
   getFilteredRowModel,
 } from '@tanstack/react-table';
-import Search from '../Search';
 
 type Column = {
   header: (() => React.ReactNode) | string;
@@ -91,7 +94,11 @@ const TableView = ({ data, columns }: TableViewProps) => {
           dataType="filled"
           type="button"
           disabled={!table.getCanNextPage()}
-          onClick={() => table.nextPage()}
+          onClick={() => {
+            if (table.getCanNextPage()) {
+              table.nextPage();
+            }
+          }}
         >
           Próximo
         </Button>
