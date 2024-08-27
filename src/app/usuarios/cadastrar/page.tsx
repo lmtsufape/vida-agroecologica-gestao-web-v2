@@ -2,6 +2,7 @@
 
 import { redirect, useRouter } from 'next/navigation';
 import React, { ChangeEvent, useEffect, useState } from 'react';
+
 import S from './styles.module.scss';
 
 import Button from '@/components/Button';
@@ -107,7 +108,7 @@ export default function Home() {
         {
           name: name,
           email: email,
-          cpf,
+          cpf: cpf,
           password: password,
           telefone: telefone,
           roles: selectedRoleIds,
@@ -124,15 +125,25 @@ export default function Home() {
       }, 4000);
 
       router.back();
-    } catch (error: any) {
-      const errors = error.response?.data?.errors;
-      if (errors !== undefined && errors !== null) {
-        for (const key of Object.keys(errors)) {
-          const errorMessage = errors[key][0];
-          setTimeout(() => {
-            setError(`${errorMessage}`);
-          }, 4000);
+    } catch (error: unknown) {
+      if (error instanceof Error && 'response' in error) {
+        const responseError = (
+          error as {
+            response?: { data?: { errors?: Record<string, string[]> } };
+          }
+        ).response;
+        const errors = responseError?.data?.errors;
+
+        if (errors) {
+          for (const key of Object.keys(errors)) {
+            const errorMessage = errors[key][0];
+            setTimeout(() => {
+              setError(`${errorMessage}`);
+            }, 4000);
+          }
         }
+      } else {
+        setError('Unexpected error');
       }
     }
   };
