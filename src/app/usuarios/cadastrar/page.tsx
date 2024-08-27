@@ -82,10 +82,16 @@ export default function Home() {
   const handleCEPChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const cepValue = e.target.value.replace(/\D/g, '');
+    const target = e.target as HTMLInputElement;
+    let cepValue = target.value.replace(/\D/g, '');
+
+    if (cepValue.length > 5) {
+      cepValue = cepValue.slice(0, 5) + '-' + cepValue.slice(5, 8);
+    }
+
     setCEP(cepValue);
-    if (cepValue.length === 8) {
-      fetchAddress(cepValue);
+    if (cepValue.replace('-', '').length === 8) {
+      fetchAddress(cepValue.replace('-', ''));
     }
   };
 
