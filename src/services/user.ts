@@ -84,7 +84,7 @@ export async function getAllUsers(token: string): Promise<{ users: User[] }> {
 export async function getUser(
   token: string,
   id: string,
-): Promise<{ user: User[] }> {
+): Promise<{ user: User }> {
   try {
     const response = await api.get(`/api/users/${id}`, {
       headers: {
