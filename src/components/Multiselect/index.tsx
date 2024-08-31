@@ -39,7 +39,12 @@ export default function MultiSelect({
         renderValue={(selected) => (
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
             {Array.isArray(selected) &&
-              selected.map((value) => <Chip key={value} label={value} />)}
+              selected.map((value) => (
+                <Chip
+                  key={value}
+                  label={value === 'agricultor' ? 'vendedor' : value}
+                />
+              ))}
           </Box>
         )}
       >

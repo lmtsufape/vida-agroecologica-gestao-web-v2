@@ -203,7 +203,7 @@ const Home = ({ params }: { params: { id: string } }) => {
                   value={item.nome}
                   sx={{ justifyContent: 'space-between' }}
                 >
-                  {item.nome}
+                  {item.nome === 'agricultor' ? 'vendedor' : item.nome}
                 </StyledSelect>
               ))}
             </MultiSelect>
