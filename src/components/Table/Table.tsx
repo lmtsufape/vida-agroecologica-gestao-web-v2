@@ -14,6 +14,7 @@ import {
   flexRender,
   getPaginationRowModel,
   getFilteredRowModel,
+  getSortedRowModel,
 } from '@tanstack/react-table';
 
 type Column = {
@@ -38,10 +39,19 @@ const TableView = ({ data, columns }: TableViewProps) => {
     getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     state: {
       globalFilter: query,
     },
     onGlobalFilterChange: setQuery,
+    initialState: {
+      sorting: [
+        {
+          id: 'id',
+          desc: true,
+        },
+      ],
+    },
   });
 
   return (
