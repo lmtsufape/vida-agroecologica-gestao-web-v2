@@ -98,7 +98,10 @@ export interface Reunioes {
   tipo: string;
   status?: string;
   ata?: string[];
-  participantes: { id: number }[];
+  participantes: {
+    name(name: any): string;
+    id: number;
+  }[];
   associacao_id: number | null;
   organizacao_id?: number | null;
 }

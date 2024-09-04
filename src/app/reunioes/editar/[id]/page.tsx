@@ -93,8 +93,9 @@ const Home = ({ params }: { params: { id: number } }) => {
       setSelectedAssociacoes(content.associacao_id ?? 0);
       setSelectedOcs(content.organizacao_id ?? 0);
       setSelectedParticipantes(
-        content.participantes?.map((participante) => String(participante.id)) ??
-          [],
+        content.participantes?.map((participante) =>
+          String(participante.name),
+        ) ?? [],
       );
     }
   }, [content]);
