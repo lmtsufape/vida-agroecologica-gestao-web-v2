@@ -9,6 +9,7 @@ import S from './styles.module.scss';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import Loader from '@/components/Loader';
+import { Select, FormControl, MenuItem } from '@mui/material';
 import MultiSelect from '@/components/Multiselect';
 import MuiSelect from '@/components/Select';
 import { StyledSelect } from '@/components/Select/style';
@@ -93,8 +94,9 @@ const Home = ({ params }: { params: { id: number } }) => {
       setSelectedAssociacoes(content.associacao_id ?? 0);
       setSelectedOcs(content.organizacao_id ?? 0);
       setSelectedParticipantes(
-        content.participantes?.map((participante) => String(participante.id)) ??
-          [],
+        content.participantes?.map((participante) =>
+          String(participante.name),
+        ) ?? [],
       );
     }
   }, [content]);
@@ -142,7 +144,7 @@ const Home = ({ params }: { params: { id: number } }) => {
         data: date ?? content?.data,
         organizacao_id: organizacaoIdToSend || organizacaoDefault,
         participantes: [
-          ...selectedParticipantIds.map((id) => ({ id })),
+          ...selectedParticipantIds,
           ...(content?.participantes.map(
             (participante: any) => participante.id,
           ) ?? []),
@@ -205,13 +207,18 @@ const Home = ({ params }: { params: { id: number } }) => {
               <label htmlFor="tipo">
                 Tipo<span>*</span>
               </label>
-              <Input
-                name="tipo"
-                type="text"
-                placeholder={content.tipo}
-                value={tipo}
-                onChange={(e) => setTipo(e.target.value)}
-              />
+              <FormControl fullWidth>
+                <Select
+                  labelId="label"
+                  id="tipo"
+                  value={tipo}
+                  onChange={(e) => setTipo(e.target.value as string)}
+                >
+                  <MenuItem value="ordinaria">Ordinária</MenuItem>
+                  <MenuItem value="extraordinaria">Extraordinária</MenuItem>
+                  <MenuItem value="multirao">Mutirão</MenuItem>
+                </Select>
+              </FormControl>
             </div>
             <div>
               <label htmlFor="data">
@@ -219,7 +226,7 @@ const Home = ({ params }: { params: { id: number } }) => {
               </label>
               <Input
                 name="data"
-                type="text"
+                type="date"
                 mask="date"
                 placeholder={content.data}
                 value={date}
