@@ -97,7 +97,7 @@ export default function Home() {
         data: date,
         tipo,
         organizacao_id: organizacaoIdToSend,
-        participantes: selectedParticipantIds.map((id) => ({ id })),
+        participantes: selectedParticipantIds.map((id) => ({ name: '', id })),
         associacao_id: 1,
       };
 
