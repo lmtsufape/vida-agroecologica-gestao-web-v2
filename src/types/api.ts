@@ -99,7 +99,7 @@ export interface Reunioes {
   status?: string;
   ata?: string[];
   participantes: {
-    name(name: any): string;
+    name: string;
     id: number;
   }[];
   associacao_id: number | null;
