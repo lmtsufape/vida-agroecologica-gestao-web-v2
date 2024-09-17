@@ -10,9 +10,10 @@ import Input from '@/components/Input';
 import MultiSelect from '@/components/Multiselect';
 import { StyledSelect } from '@/components/Multiselect/style';
 
-import { getUser, getAllRoles, editUser } from '@/services';
+
+import { editUser, getAllRoles, getUser } from '@/services';
 import { APIErrorResponse, User } from '@/types/api';
-import { Alert, AlertTitle, Snackbar } from '@mui/material';
+import { Alert, AlertTitle, Snackbar, Switch } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
 const Home = ({ params }: { params: { id: string } }) => {
@@ -22,6 +23,7 @@ const Home = ({ params }: { params: { id: string } }) => {
   const [telefone, setTelefone] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [content, setContent] = React.useState<User | null>(null);
+  const [isAtivo, setIsAtivo] = React.useState(false);
 
   const [selectedRole, setSelectedRole] = React.useState<string | string[]>([]);
 
@@ -59,6 +61,7 @@ const Home = ({ params }: { params: { id: string } }) => {
       setCpf(content.cpf ?? '');
       setTelefone(content.contato?.telefone ?? '');
       setPassword(content.password ?? '');
+      setIsAtivo(content.ativo ?? false)
 
       // Mapeando os ids para os nomes das roles
       const roleNames = content.roles
@@ -101,6 +104,7 @@ const Home = ({ params }: { params: { id: string } }) => {
         password: password ?? content?.password,
         telefone: telefone ?? content?.contato?.telefone,
         roles: roleIds,
+        ativo: isAtivo
       };
 
       await editUser(requestData, token, params.id);
@@ -122,6 +126,10 @@ const Home = ({ params }: { params: { id: string } }) => {
       }
     }
   };
+
+  function handleIsAtivo() {
+    setIsAtivo(!isAtivo)
+  }
 
   return (
     <main>
@@ -207,6 +215,11 @@ const Home = ({ params }: { params: { id: string } }) => {
                 </StyledSelect>
               ))}
             </MultiSelect>
+            <label htmlFor="ativo">
+              Ativo
+              <Switch checked={isAtivo} onChange={e => {handleIsAtivo(); console.log(e.target.value)}} />
+            </label>
+            <></>
           </section>
           <div className={S.wrapperButtons}>
             <Button
