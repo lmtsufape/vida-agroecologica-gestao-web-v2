@@ -18,7 +18,6 @@ export interface User {
     | number[]
     | string[];
   contato?: Contato;
-  ativo?: boolean
 }
 
 export interface Role {

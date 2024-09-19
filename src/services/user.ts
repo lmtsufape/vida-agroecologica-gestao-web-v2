@@ -109,7 +109,6 @@ export async function editUser(
     cep,
     numero,
     bairro_id,
-    ativo,
   }: User,
   token: string,
   id: string,
@@ -127,7 +126,6 @@ export async function editUser(
       cep,
       numero,
       bairro_id,
-      ativo
     },
     {
       headers: {
