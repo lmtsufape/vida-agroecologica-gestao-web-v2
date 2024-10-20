@@ -101,6 +101,7 @@ const Home = ({ params }: { params: { id: string } }) => {
         password: password ?? content?.password,
         telefone: telefone ?? content?.contato?.telefone,
         roles: roleIds,
+        ativo: true,
       };
 
       await editUser(requestData, token, params.id);
