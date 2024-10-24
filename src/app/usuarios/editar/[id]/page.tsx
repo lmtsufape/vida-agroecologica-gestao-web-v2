@@ -124,6 +124,16 @@ const Home = ({ params }: { params: { id: string } }) => {
     }
   };
 
+  React.useEffect(() => {
+    if (content) {
+      setName(content.name ?? '');
+      setEmail(content.email ?? '');
+      setCpf(content.cpf ?? '');
+      setTelefone(content.contato?.telefone ?? '');
+      setPassword(content.password ?? '');
+    }
+  }, [content]);
+
   return (
     <main>
       <div className={S.container}>
