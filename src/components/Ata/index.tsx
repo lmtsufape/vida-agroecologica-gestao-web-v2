@@ -58,8 +58,8 @@ export const AtaForm = ({ reuniaoId }: { reuniaoId: number }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className={S.anexos}>
-      <label>
+    <form onSubmit={handleSubmit} className={S.anexos} method="POST" encType="multipart/form-data">
+      <label htmlFor={"ata"}>
         Selecione o arquivo da <strong>ata</strong>:
       </label>
       <input type="file" name="ata" onChange={handleFileChange} />
