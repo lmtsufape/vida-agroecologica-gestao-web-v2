@@ -101,6 +101,7 @@ const Home = ({ params }: { params: { id: string } }) => {
         password: password ?? content?.password,
         telefone: telefone ?? content?.contato?.telefone,
         roles: roleIds,
+        ativo: true,
       };
 
       await editUser(requestData, token, params.id);
@@ -122,6 +123,16 @@ const Home = ({ params }: { params: { id: string } }) => {
       }
     }
   };
+
+  React.useEffect(() => {
+    if (content) {
+      setName(content.name ?? '');
+      setEmail(content.email ?? '');
+      setCpf(content.cpf ?? '');
+      setTelefone(content.contato?.telefone ?? '');
+      setPassword(content.password ?? '');
+    }
+  }, [content]);
 
   return (
     <main>
