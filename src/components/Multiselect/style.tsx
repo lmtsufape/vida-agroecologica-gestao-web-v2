@@ -1,5 +1,4 @@
-import { InputBase, MenuItem } from '@mui/material';
-import { styled } from '@mui/material';
+import { InputBase, MenuItem, styled } from '@mui/material';
 
 export const StyledInputBase = styled(InputBase)`
   display: block;
@@ -24,4 +23,16 @@ export const StyledInputBase = styled(InputBase)`
 
 export const StyledSelect = styled(MenuItem)`
   font-size: 0.875rem;
+
+  &.Mui-selected {
+    background-color: #0000ff40;
+  }
+
+  &.Mui-selected:hover {
+    background-color: #d5d5d5;
+  }
+
+  &.Mui-selected:active {
+    background-color: #0000ff60;
+  }
 `;
