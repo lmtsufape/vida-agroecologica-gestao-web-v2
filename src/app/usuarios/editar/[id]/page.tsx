@@ -10,7 +10,7 @@ import Input from '@/components/Input';
 import MultiSelect from '@/components/Multiselect';
 import { StyledSelect } from '@/components/Multiselect/style';
 
-import { getUser, getAllRoles, editUser } from '@/services';
+import { editUser, getAllRoles, getUser } from '@/services';
 import { APIErrorResponse, User } from '@/types/api';
 import { Alert, AlertTitle, Snackbar } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
@@ -203,21 +203,23 @@ const Home = ({ params }: { params: { id: string } }) => {
                 mask="cpf"
               />
             </div> */}
-            <MultiSelect
-              label="Função"
-              selectedNames={selectedRole}
-              setSelectedNames={setSelectedRole}
-            >
-              {roles?.map((item: { id: number; nome: string }) => (
-                <StyledSelect
-                  key={item.id}
-                  value={item.nome}
-                  sx={{ justifyContent: 'space-between' }}
-                >
-                  {item.nome === 'agricultor' ? 'vendedor' : item.nome}
-                </StyledSelect>
-              ))}
-            </MultiSelect>
+            {roles !== undefined && (
+              <MultiSelect
+                label="Função"
+                selectedNames={selectedRole}
+                setSelectedNames={setSelectedRole}
+              >
+                {roles?.map((item: { id: number; nome: string }) => (
+                  <StyledSelect
+                    key={item.id}
+                    value={item.nome}
+                    sx={{ justifyContent: 'space-between' }}
+                  >
+                    {item.nome === 'agricultor' ? 'vendedor' : item.nome}
+                  </StyledSelect>
+                ))}
+              </MultiSelect>
+            )}
           </section>
           <div className={S.wrapperButtons}>
             <Button
