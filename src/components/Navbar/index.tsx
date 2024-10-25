@@ -76,7 +76,7 @@ const Navbar = () => {
       <AppBar className={styles.navbar} position="absolute">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <Link href="/menu">
+            <Link href={userId ? '/menu' : '/'}>
               <Image src={Icons.Logo} alt="Logo Gestão" />
             </Link>
             <h1>Gestão</h1>
