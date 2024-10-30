@@ -29,6 +29,8 @@ const RegisterForm = () => {
 
   const selectedBairro = 1;
 
+  const minLength = 8;
+
   const [error, setError] = React.useState('');
 
   const router = useRouter();
@@ -159,6 +161,12 @@ const RegisterForm = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          <small style={{ color: password.length < minLength ? 'red' : 'green',
+             display: password.length == 0 ? 'none': 'flex' }}>
+              {password.length < minLength 
+                ? `A senha deve ter pelo menos ${minLength} caracteres.`
+                : 'Senha válida.'}
+          </small>
         </div>
         <div>
           <label htmlFor="telefone">
