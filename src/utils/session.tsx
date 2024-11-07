@@ -19,9 +19,9 @@ export default function Authentication(Component: any) {
       if (!session) {
         redirect('/');
       }
-      if (filter.includes(5) || filter.includes(4)) {
-        redirect('/default');
-      }
+      // if (filter.includes(5) || filter.includes(4)) {
+      //   redirect('/default');
+      // }
     }, []);
 
     if (!session) {
