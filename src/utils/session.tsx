@@ -10,18 +10,18 @@ export default function Authentication(Component: any) {
 
     React.useEffect(() => {
       const session = localStorage.getItem('@token');
-      const rolesString = localStorage.getItem('@roles');
-      const roles = rolesString ? JSON.parse(rolesString) : '';
-      const filter = roles.map((item: { id: number }) => item.id);
+      // const rolesString = localStorage.getItem('@roles');
+      // const roles = rolesString ? JSON.parse(rolesString) : '';
+      // const filter = roles.map((item: { id: number }) => item.id);
 
       setSession(session);
 
       if (!session) {
         redirect('/');
       }
-      if (filter.includes(5) || filter.includes(4)) {
-        redirect('/default');
-      }
+      // if (filter.includes(5) || filter.includes(4)) {
+      //   redirect('/default');
+      // }
     }, []);
 
     if (!session) {

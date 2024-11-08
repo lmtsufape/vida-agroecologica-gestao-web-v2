@@ -40,15 +40,15 @@ export default function Home() {
 
   React.useEffect(() => {
     const token = localStorage.getItem('@token');
-    const rolesString = localStorage.getItem('@roles');
-    const roles = rolesString ? JSON.parse(rolesString) : '';
-    const filter = roles.map((item: { id: number }) => item.id);
+    // const rolesString = localStorage.getItem('@roles');
+    // const roles = rolesString ? JSON.parse(rolesString) : '';
+    // const filter = roles.map((item: { id: number }) => item.id);
     if (!token) {
       redirect('/');
     }
-    if (filter.includes(5) || filter.includes(4)) {
-      redirect('/default');
-    }
+    // if (filter.includes(5) || filter.includes(4)) {
+    //   redirect('/default');
+    // }
     setToken(token);
   }, []);
 

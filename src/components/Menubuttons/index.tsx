@@ -50,6 +50,12 @@ const MenuOptions = () => {
       route: '/usuarios',
       roles: ['administrador', 'secretario', 'presidente'],
     },
+    {
+      icon: <HiUsers />,
+      name: 'Editar Cadastro',
+      route: `/perfil/${localStorage.getItem('userId')}`,
+      roles: ['agricultor', 'consumidor'],
+    },
   ];
 
   const visibleOptions = menuOptions.filter((option) =>
