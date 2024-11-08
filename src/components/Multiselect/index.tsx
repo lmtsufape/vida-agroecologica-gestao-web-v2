@@ -26,7 +26,7 @@ export default function MultiSelect({
 }: Props) {
   return (
     <FormControl sx={{ width: '100%' }}>
-      <label>{label}<span>*</span></label>
+      <label>{label}*</label>
       <Select
         labelId="demo-multiple-chip-label"
         id="demo-multiple-chip"
