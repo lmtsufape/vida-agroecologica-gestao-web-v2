@@ -46,9 +46,9 @@ export default function Home() {
     if (!token) {
       redirect('/');
     }
-    // if (filter.includes(5) || filter.includes(4)) {
-    //   redirect('/default');
-    // }
+    if (filter.includes(5) || filter.includes(4)) {
+      redirect('/default');
+    }
     setToken(token);
   }, []);
 
