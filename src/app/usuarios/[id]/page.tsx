@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import Link from 'next/link';
 import { redirect, useRouter } from 'next/navigation';
 import React from 'react';
 import { BiSolidEditAlt } from 'react-icons/bi';
@@ -12,7 +13,6 @@ import Loader from '@/components/Loader';
 
 import { getUser } from '@/services';
 import { User } from '@/types/api';
-import Link from 'next/link';
 
 const Home = ({ params }: { params: { id: string } }) => {
   const [content, setContent] = React.useState<User | null>(null);

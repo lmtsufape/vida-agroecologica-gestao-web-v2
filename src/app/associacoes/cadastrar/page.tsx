@@ -1,18 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import React, { ChangeEvent, useState } from 'react';
 import { redirect, useRouter } from 'next/navigation';
+import React, { ChangeEvent, useState } from 'react';
+
 import S from './styles.module.scss';
+
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { StyledSelect } from '@/components/Multiselect/style';
 import MuiSelect from '@/components/Select';
-import { Snackbar, Alert, AlertTitle } from '@mui/material';
+
 import { getAllBairros } from '@/services';
 import { createAssociacao } from '@/services/associations';
 import { getPresidents } from '@/services/user';
 import { Bairro } from '@/types/api';
+import { Snackbar, Alert, AlertTitle } from '@mui/material';
 
 export default function Home() {
   const [name, setName] = useState('');

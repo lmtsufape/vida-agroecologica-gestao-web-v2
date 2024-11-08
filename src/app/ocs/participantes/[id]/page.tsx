@@ -1,20 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-
 import { BiSolidTrashAlt } from 'react-icons/bi';
+
+import S from './styles.module.scss';
+
+import Button from '@/components/Button';
 import Loader from '@/components/Loader';
 import TableView from '@/components/Table/Table';
-import S from './styles.module.scss';
+
+
+import { getAllUsers } from '@/services';
 import {
   getUsersByOCS,
   vincularAgricultorOrganizacao,
   desvincularAgricultor,
 } from '@/services/ocs';
-import { getAllUsers } from '@/services';
-import Link from 'next/link';
-
 import {
   Alert,
   AlertTitle,
@@ -28,7 +31,6 @@ import {
   Snackbar,
 } from '@mui/material';
 
-import Button from '@/components/Button';
 
 interface Column {
   header: string;

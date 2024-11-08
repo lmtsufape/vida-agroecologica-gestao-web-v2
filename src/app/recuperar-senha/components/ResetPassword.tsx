@@ -2,10 +2,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { sendResetPasswordEmail } from '@/services';
-import Input from '@/components/Input';
-import Button from '@/components/Button';
+
 import S from './styles.module.scss';
+
+import Button from '@/components/Button';
+import Input from '@/components/Input';
+
+import { sendResetPasswordEmail } from '@/services';
 
 export const ResetPasswordRequest = () => {
   const [email, setEmail] = useState('');

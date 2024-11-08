@@ -9,7 +9,6 @@ import { BiMenu } from 'react-icons/bi';
 import styles from './styles.module.scss';
 
 import { Icons } from '@/assets';
-
 import {
   AppBar,
   Box,

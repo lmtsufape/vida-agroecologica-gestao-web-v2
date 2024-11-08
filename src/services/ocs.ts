@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { api } from './api';
-import { OCS } from '@/types/api';
-import { User } from '@/types/api';
+
+import { OCS , User } from '@/types/api';
 
 export async function getAllOCS(token: string): Promise<{ ocs: OCS[] }> {
   try {

@@ -9,7 +9,6 @@ import S from './styles.module.scss';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import Loader from '@/components/Loader';
-import { Select, FormControl, MenuItem } from '@mui/material';
 import MultiSelect from '@/components/Multiselect';
 import MuiSelect from '@/components/Select';
 import { StyledSelect } from '@/components/Select/style';
@@ -22,6 +21,7 @@ import {
   getAllUsers,
 } from '@/services';
 import { Reunioes } from '@/types/api';
+import { Select, FormControl, MenuItem } from '@mui/material';
 import { Alert, AlertTitle, Snackbar } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 

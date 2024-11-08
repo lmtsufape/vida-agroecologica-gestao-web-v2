@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import Link from 'next/link';
 import { redirect, useRouter } from 'next/navigation';
 import React from 'react';
 
@@ -9,9 +10,9 @@ import S from './styles.module.scss';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import Loader from '@/components/Loader';
+import MultiSelect from '@/components/Multiselect';
 import { StyledSelect } from '@/components/Multiselect/style';
 import MuiSelect from '@/components/Select';
-import MultiSelect from '@/components/Multiselect';
 
 import {
   editOCS,
@@ -23,7 +24,7 @@ import {
 import { OCS, User, Bairro } from '@/types/api';
 import { Alert, AlertTitle, Snackbar } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import Link from 'next/link';
+
 
 const Home = ({ params }: { params: { id: string } }) => {
   const [name, setName] = React.useState('');

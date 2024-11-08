@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import Link from 'next/link';
 import { redirect, useRouter } from 'next/navigation';
 import React from 'react';
-import Link from 'next/link';
 
 import S from './styles.module.scss';
 
 import Button from '@/components/Button';
 import Input from '@/components/Input';
+import MultiSelect from '@/components/Multiselect';
 import { StyledSelect } from '@/components/Multiselect/style';
 import MuiSelect from '@/components/Select';
-import MultiSelect from '@/components/Multiselect';
 
 import {
   createOCS,

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import Link from 'next/link';
 import { redirect, useRouter } from 'next/navigation';
 import React from 'react';
 import { BiSolidEditAlt } from 'react-icons/bi';
@@ -8,13 +9,14 @@ import { BiSolidEditAlt } from 'react-icons/bi';
 import S from './styles.module.scss';
 
 import { SeeAta } from './components/Ata';
+import { SeeAnexos } from './components/Documentos';
 import Button from '@/components/Button';
 import Loader from '@/components/Loader';
 
 import { getReuniao, removeAta } from '@/services';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import Link from 'next/link';
-import { SeeAnexos } from './components/Documentos';
+
+
 
 const Home = ({ params }: { params: { id: number } }) => {
   const [token, setToken] = React.useState('');

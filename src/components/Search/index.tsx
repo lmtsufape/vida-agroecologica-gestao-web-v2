@@ -1,7 +1,9 @@
 import React from 'react';
-import Input from '@/components/Input';
-import S from './styles.module.scss';
 import { FiSearch } from 'react-icons/fi';
+
+import S from './styles.module.scss';
+
+import Input from '@/components/Input';
 
 type SearchProps = {
   value: string;

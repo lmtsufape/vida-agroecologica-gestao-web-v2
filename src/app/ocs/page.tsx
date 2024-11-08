@@ -15,10 +15,8 @@ import Loader from '@/components/Loader';
 import TableView from '@/components/Table/Table';
 
 import { getAllOCS, removeOCS } from '@/services';
-
-import { Box, IconButton, Tooltip, Modal, Typography } from '@mui/material';
+import { Box, IconButton, Tooltip, Modal, Typography , Snackbar, Alert, AlertTitle } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Snackbar, Alert, AlertTitle } from '@mui/material';
 
 const style = {
   position: 'absolute' as const,
