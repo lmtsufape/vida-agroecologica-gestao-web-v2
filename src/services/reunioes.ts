@@ -13,6 +13,7 @@ export async function getAllReunioes(
     });
     return response.data;
   } catch (error) {
+    console.error('Failed to fetch reunião: ', error);
     throw new Error('Failed to fetch reunião');
   }
 }
@@ -29,6 +30,7 @@ export async function getReuniao(
     });
     return response.data;
   } catch (error) {
+    console.error('Failed to fetch reunião: ', error);
     throw new Error('Failed to fetch reunião');
   }
 }

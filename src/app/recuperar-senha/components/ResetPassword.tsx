@@ -20,6 +20,7 @@ export const ResetPasswordRequest = () => {
       await sendResetPasswordEmail(email);
       setMessage('Email de redefinição de senha enviado com sucesso.');
     } catch (error) {
+      console.error('Falha ao enviar o email de redefinição de senha: ', error);
       setMessage('Falha ao enviar o email de redefinição de senha.');
     }
   };

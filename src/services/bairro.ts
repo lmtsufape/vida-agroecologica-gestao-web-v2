@@ -13,6 +13,7 @@ export async function getAllBairros(
     });
     return response.data;
   } catch (error) {
+    console.error('Failed to fetch bairros: ', error);
     throw new Error('Failed to fetch bairros');
   }
 }

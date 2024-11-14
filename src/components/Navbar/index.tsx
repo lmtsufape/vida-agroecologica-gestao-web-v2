@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
-import { BiMenu } from 'react-icons/bi';
+/*import { BiMenu } from 'react-icons/bi';*/
 
 import styles from './styles.module.scss';
 
@@ -44,14 +44,16 @@ const Navbar = () => {
     setAnchorElProfile(event.currentTarget);
   };
 
+  /* ta gerando erro no lint essa parte o codigo
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null,
   );
-
+  
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
-    anchorElNav;
+    anchorElNav; o erro esta aqui pq nao esta atribuindo nada ao anchorElNav
     setAnchorElNav(event.currentTarget);
   };
+  */
 
   const logout = () => {
     localStorage.clear();
@@ -86,6 +88,7 @@ const Navbar = () => {
                 placeContent: 'end',
               }}
             >
+              {/* no momento esse botao na apresenta nenhuma funcao
               <IconButton
                 size="large"
                 aria-label="opções de páginas de navegação"
@@ -95,6 +98,7 @@ const Navbar = () => {
               >
                 <BiMenu className={styles.menu} />
               </IconButton>
+              */}
             </Box>
             {params !== '/' && !params.includes('/registrar') && (
               <Box
