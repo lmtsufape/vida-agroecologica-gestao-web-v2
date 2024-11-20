@@ -47,6 +47,7 @@ export const AtaForm = ({ reuniaoId }: { reuniaoId: number }) => {
       setErrorMessage('');
     } catch (error) {
       setIsLoading(false);
+      console.error('Ocorreu um erro ao anexar o arquivo: ', error);
       setErrorMessage('Ocorreu um erro ao anexar o arquivo.');
     }
   };
@@ -58,8 +59,13 @@ export const AtaForm = ({ reuniaoId }: { reuniaoId: number }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className={S.anexos} method="POST" encType="multipart/form-data">
-      <label htmlFor={"ata"}>
+    <form
+      onSubmit={handleSubmit}
+      className={S.anexos}
+      method="POST"
+      encType="multipart/form-data"
+    >
+      <label htmlFor={'ata'}>
         Selecione o arquivo da <strong>ata</strong>:
       </label>
       <input type="file" name="ata" onChange={handleFileChange} />

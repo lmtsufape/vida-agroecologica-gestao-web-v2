@@ -64,6 +64,7 @@ export async function getPresidents(
     });
     return response.data;
   } catch (error) {
+    console.error('Failed to fetch presidents: ', error);
     throw new Error('Failed to fetch presidents');
   }
 }
@@ -77,6 +78,7 @@ export async function getAllUsers(token: string): Promise<{ users: User[] }> {
     });
     return response.data;
   } catch (error) {
+    console.error('Failed to fetch users: ', error);
     throw new Error('Failed to fetch users');
   }
 }
@@ -93,6 +95,7 @@ export async function getUser(
     });
     return response.data;
   } catch (error) {
+    console.error('Failed to fetch user: ', error);
     throw new Error('Failed to fetch user');
   }
 }
@@ -157,6 +160,7 @@ export async function getAllRoles(token: string): Promise<Role[]> {
     });
     return response.data;
   } catch (error) {
+    console.error('Failed to fetch users: ', error);
     throw new Error('Failed to fetch users');
   }
 }
@@ -166,6 +170,7 @@ export async function sendResetPasswordEmail(email: string) {
     const response = await api.post('api/forgot-password', { email });
     return response.data;
   } catch (error) {
+    console.error('Failed to send reset password email: ', error);
     throw new Error('Failed to send reset password email');
   }
 }
@@ -185,6 +190,7 @@ export async function resetPassword(
     });
     return response.data;
   } catch (error) {
+    console.error('Failed to reset password: ', error);
     throw new Error('Failed to reset password');
   }
 }

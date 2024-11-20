@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { api } from './api';
 
-import { OCS , User } from '@/types/api';
+import { OCS, User } from '@/types/api';
 
 export async function getAllOCS(token: string): Promise<{ ocs: OCS[] }> {
   try {
@@ -12,6 +12,7 @@ export async function getAllOCS(token: string): Promise<{ ocs: OCS[] }> {
     });
     return response.data;
   } catch (error) {
+    console.error('Failed to fetch ocs: ', error);
     throw new Error('Failed to fetch ocs');
   }
 }
@@ -25,6 +26,7 @@ export async function getOCS(token: string, id: string): Promise<{ ocs: OCS }> {
     });
     return response.data;
   } catch (error) {
+    console.error('Failed to fetch ocs: ', error);
     throw new Error('Failed to fetch ocs');
   }
 }
@@ -41,6 +43,7 @@ export async function getUsersByOCS(
     });
     return response.data;
   } catch (error) {
+    console.error('Failed to fetch users by ocs: ', error);
     throw new Error('Failed to fetch users by ocs');
   }
 }
@@ -129,6 +132,7 @@ export async function createOCS(
     console.log(response.data);
     return response.data;
   } catch (error) {
+    console.error('Failed to create ocs:', error);
     throw new Error('Failed to create ocs');
   }
 }
@@ -173,6 +177,7 @@ export async function editOCS(
     console.log(response.data);
     return response.data;
   } catch (error) {
+    console.error('Failed to edit ocs:', error);
     throw new Error('Failed to edit ocs');
   }
 }
@@ -186,6 +191,7 @@ export async function removeOCS(token: string, id: number) {
     });
     return response.data;
   } catch (error) {
+    console.error('Failed to remove ocs:', error);
     throw new Error('Failed to remove ocs');
   }
 }
