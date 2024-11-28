@@ -87,7 +87,6 @@ const Home = ({ params }: { params: { id: number } }) => {
 
   React.useEffect(() => {
     if (content) {
-      setDate(content.data ?? '');
       setTipo(content.tipo ?? '');
       setTitulo(content.titulo ?? '');
       setPauta(content.pauta ?? '');
@@ -98,6 +97,8 @@ const Home = ({ params }: { params: { id: number } }) => {
           String(participante.name),
         ) ?? [],
       );
+      const formattedDate = content?.data.split(' ')[0];
+      setDate(formattedDate);
     }
   }, [content]);
 
