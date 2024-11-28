@@ -168,7 +168,7 @@ const Home = ({ params }: { params: { id: string } }) => {
               </label>
               <Input
                 name="date"
-                type="text"
+                type="date"
                 mask="date"
                 placeholder={content.data_fundacao}
                 value={date}
