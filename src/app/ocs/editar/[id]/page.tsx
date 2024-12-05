@@ -25,7 +25,6 @@ import { OCS, User, Bairro } from '@/types/api';
 import { Alert, AlertTitle, Snackbar } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
-
 const Home = ({ params }: { params: { id: string } }) => {
   const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');
@@ -165,16 +164,13 @@ const Home = ({ params }: { params: { id: string } }) => {
       await editOCS(requestData, token, params.id);
       router.back();
     } catch (error: any) {
-      console.log(error);
-      const errors = error.response?.data?.errors;
-      if (errors !== undefined && errors !== null) {
-        for (const key of Object.keys(errors)) {
-          const errorMessage = errors[key][0];
-          setTimeout(() => {
-            setError(`${errorMessage}`);
-            window.location.reload();
-          }, 3000);
-        }
+      if (error.response && error.response.data) {
+        const apiErrors = error.response.data.errors;
+        console.log('Erro retornado pela API:', apiErrors);
+        setError(Object.values(apiErrors).flat().join(' | '));
+      } else {
+        console.error('Erro inesperado:', error.message);
+        setError('Erro inesperado ao editar OCS.');
       }
     }
   };
@@ -362,8 +358,12 @@ const Home = ({ params }: { params: { id: string } }) => {
             </Button>
           </div>
         </form>
-        <Snackbar open={error.length > 0} autoHideDuration={6000}>
-          <Alert variant="filled" severity="error">
+        <Snackbar
+          open={error.length > 0}
+          autoHideDuration={6000}
+          onClose={() => setError('')}
+        >
+          <Alert onClose={() => setError('')} severity="error" variant="filled">
             <AlertTitle>Erro!</AlertTitle>
             {error}
           </Alert>

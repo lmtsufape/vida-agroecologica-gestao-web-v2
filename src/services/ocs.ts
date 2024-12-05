@@ -131,9 +131,17 @@ export async function createOCS(
     );
     console.log(response.data);
     return response.data;
-  } catch (error) {
-    console.error('Failed to create ocs:', error);
-    throw new Error('Failed to create ocs');
+  } catch (error: any) {
+    if (error.response) {
+      console.error('Erro retornado pela API:', error.response.data);
+      throw error;
+    } else if (error.request) {
+      console.error('Erro na requisição:', error.request);
+      throw new Error('Erro na requisição.');
+    } else {
+      console.error('Ocorreu um erro inesperado:', error.message);
+      throw new Error('Ocorreu um erro inesperado.');
+    }
   }
 }
 
@@ -176,9 +184,17 @@ export async function editOCS(
     );
     console.log(response.data);
     return response.data;
-  } catch (error) {
-    console.error('Failed to edit ocs:', error);
-    throw new Error('Failed to edit ocs');
+  } catch (error: any) {
+    if (error.response) {
+      console.error('Erro retornado pela API:', error.response.data);
+      throw error;
+    } else if (error.request) {
+      console.error('Erro na requisição:', error.request);
+      throw new Error('Erro na requisição.');
+    } else {
+      console.error('Ocorreu um erro inesperado:', error.message);
+      throw new Error('Ocorreu um erro inesperado.');
+    }
   }
 }
 
