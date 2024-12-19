@@ -60,7 +60,7 @@ const Home = ({ params }: { params: { id: string } }) => {
         </div>
         <h1 className={S.title}>{content.name}</h1>
         <div className={S.content}>
-          <h2> Dados do usuario</h2>
+          <h2> Dados do usuário</h2>
           {content?.roles?.map((role) =>
             typeof role === 'object' &&
             role !== null &&

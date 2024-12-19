@@ -25,6 +25,7 @@ const RegisterForm = () => {
   const [street, setStreet] = React.useState('');
   const [cep, setCEP] = React.useState('');
   const [number, setNumber] = React.useState('');
+  const [successMessage, setSuccessMessage] = React.useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
   const selectedBairro = 1;
@@ -103,7 +104,10 @@ const RegisterForm = () => {
         },
         '',
       );
-      router.back();
+      setSuccessMessage('Cadastro realizado com sucesso!');
+      setTimeout(() => {
+        router.back();
+      }, 1000);
     } catch (error: any) {
       console.log(error.response?.data?.message);
       const errors = error.response?.data?.errors;
@@ -161,11 +165,15 @@ const RegisterForm = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <small style={{ color: password.length < minLength ? 'red' : 'green',
-             display: password.length == 0 ? 'none': 'flex' }}>
-              {password.length < minLength 
-                ? `A senha deve ter pelo menos ${minLength} caracteres.`
-                : 'Senha válida.'}
+          <small
+            style={{
+              color: password.length < minLength ? 'red' : 'green',
+              display: password.length == 0 ? 'none' : 'flex',
+            }}
+          >
+            {password.length < minLength
+              ? `A senha deve ter pelo menos ${minLength} caracteres.`
+              : 'Senha válida.'}
           </small>
         </div>
         <div>
@@ -239,6 +247,12 @@ const RegisterForm = () => {
           </Button>
         </div>
       </form>
+      <Snackbar open={successMessage.length > 0} autoHideDuration={6000}>
+        <Alert variant="filled" severity="success">
+          <AlertTitle>Sucesso!</AlertTitle>
+          {successMessage}
+        </Alert>
+      </Snackbar>
       <Snackbar open={error.length > 0} autoHideDuration={6000}>
         <Alert variant="filled" severity="error">
           <AlertTitle>Erro!</AlertTitle>
