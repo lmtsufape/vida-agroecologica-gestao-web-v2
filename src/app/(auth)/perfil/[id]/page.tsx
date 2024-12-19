@@ -51,7 +51,7 @@ const ProfilePage = () => {
         </div>
         <h1 className={S.title}>{content.name}</h1>
         <div className={S.content}>
-          <h2> Dados do usuario</h2>
+          <h2> Dados do usuário</h2>
           <h3>Nome</h3>
           <p>{content.name}</p>
           <h3>E-mail</h3>

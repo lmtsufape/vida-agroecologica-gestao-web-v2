@@ -149,7 +149,6 @@ const Home = ({ params }: { params: { id: string } }) => {
         selectedAgricultores,
         filterAgricultores || [],
       );
-
       const requestData = {
         cep: cep || content?.endereco?.cep,
         nome: name || content.nome,
@@ -158,6 +157,7 @@ const Home = ({ params }: { params: { id: string } }) => {
         telefone: telefone || content?.contato?.telefone,
         rua: street || content?.endereco?.rua,
         numero: number || content?.endereco?.numero,
+        complemento: complement || content?.endereco?.complemento,
         bairro_id: selectedBairro ?? bairrosDefault,
         agricultores_id: selectedAgricultoresIds || agricultoresDefault,
         associacao_id: selectedAssociacoes || associacaoDefault,
