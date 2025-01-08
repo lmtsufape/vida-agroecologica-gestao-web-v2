@@ -13,6 +13,7 @@ import MuiSelect from '@/components/Select';
 
 import { createUser, getAllBairros, getAllRoles } from '@/services';
 import { Bairro } from '@/types/api';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Alert, AlertTitle, Snackbar } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
@@ -23,6 +24,7 @@ export default function Home() {
   const [cpf, setCpf] = useState('');
   const [telefone, setTelefone] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const [street, setStreet] = useState('');
   const [cep, setCEP] = useState('');
@@ -125,12 +127,11 @@ export default function Home() {
         },
         token,
       );
-      setConfirmationMessage('Usuário cadastrado com sucesso');
+      setConfirmationMessage('Usuário cadastrado com sucesso!');
       setTimeout(() => {
         setConfirmationMessage('');
-      }, 4000);
-
-      router.back();
+        router.back();
+      }, 1000);
     } catch (error: unknown) {
       if (error instanceof Error && 'response' in error) {
         const responseError = (
@@ -188,17 +189,30 @@ export default function Home() {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div>
-              <label htmlFor="cnpj">
+            <div style={{ position: 'relative' }}>
+              <label htmlFor="password">
                 Senha<span>*</span>
               </label>
               <Input
                 name="password"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 placeholder="*******"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+              <span
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: 'absolute',
+                  right: '0.5rem',
+                  top: '65%',
+                  transform: 'translateY(-50%)',
+                  cursor: 'pointer',
+                  color: '#666',
+                }}
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </span>
             </div>
             <div>
               <label htmlFor="telefone">
@@ -328,14 +342,12 @@ export default function Home() {
           {error}
         </Alert>
       </Snackbar>
-      {confirmationMessage && (
-        <Snackbar open={confirmationMessage.length > 0} autoHideDuration={6000}>
-          <Alert variant="filled" severity="success">
-            <AlertTitle>Sucesso!</AlertTitle>
-            {confirmationMessage}
-          </Alert>
-        </Snackbar>
-      )}
+      <Snackbar open={confirmationMessage.length > 0} autoHideDuration={6000}>
+        <Alert variant="filled" severity="success">
+          <AlertTitle>Sucesso!</AlertTitle>
+          {confirmationMessage}
+        </Alert>
+      </Snackbar>
     </main>
   );
 }

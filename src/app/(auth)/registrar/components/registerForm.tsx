@@ -13,12 +13,14 @@ import Input from '@/components/Input';
 import StyledLink from '@/components/Link';
 
 import { createUser } from '@/services/user';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Alert, AlertTitle, Snackbar } from '@mui/material';
 
 const RegisterForm = () => {
   const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [telefone, setTelefone] = React.useState('');
   const [cpf, setCpf] = React.useState('');
 
@@ -106,6 +108,7 @@ const RegisterForm = () => {
       );
       setSuccessMessage('Cadastro realizado com sucesso!');
       setTimeout(() => {
+        setSuccessMessage('');
         router.back();
       }, 1000);
     } catch (error: any) {
@@ -154,17 +157,30 @@ const RegisterForm = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-        <div>
+        <div style={{ position: 'relative' }}>
           <label htmlFor="password">
             Senha<span>*</span>
           </label>
           <Input
             name="password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             placeholder="*******"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          <span
+            onClick={() => setShowPassword(!showPassword)}
+            style={{
+              position: 'absolute',
+              right: '0.5rem',
+              top: password.length == 0 ? '65%' : '55%',
+              transform: 'translateY(-50%)',
+              cursor: 'pointer',
+              color: '#666',
+            }}
+          >
+            {showPassword ? <VisibilityOff /> : <Visibility />}
+          </span>
           <small
             style={{
               color: password.length < minLength ? 'red' : 'green',
