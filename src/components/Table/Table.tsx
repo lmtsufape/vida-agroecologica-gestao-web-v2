@@ -51,6 +51,9 @@ const TableView = ({ data, columns }: TableViewProps) => {
           desc: true,
         },
       ],
+      pagination: {
+        pageSize: 50,
+      },
     },
   });
 
