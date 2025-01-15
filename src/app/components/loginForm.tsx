@@ -3,6 +3,7 @@
 
 import Link from 'next/link';
 import React from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 import S from './styles.module.scss';
 
@@ -10,7 +11,6 @@ import Button from '@/components/Button';
 import Input from '@/components/Input';
 
 import { signIn } from '@/services/user';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Alert, AlertTitle, Snackbar } from '@mui/material';
 
 export const LoginForm = () => {
@@ -69,7 +69,7 @@ export const LoginForm = () => {
               color: '#666',
             }}
           >
-            {showPassword ? <VisibilityOff /> : <Visibility />}
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
           </span>
         </div>
         <div className={S.links}>
