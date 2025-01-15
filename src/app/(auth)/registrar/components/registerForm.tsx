@@ -4,6 +4,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { ChangeEvent, useState } from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { MdManageAccounts } from 'react-icons/md';
 
 import S from './styles.module.scss';
@@ -13,7 +14,6 @@ import Input from '@/components/Input';
 import StyledLink from '@/components/Link';
 
 import { createUser } from '@/services/user';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Alert, AlertTitle, Snackbar } from '@mui/material';
 
 const RegisterForm = () => {
@@ -179,7 +179,7 @@ const RegisterForm = () => {
               color: '#666',
             }}
           >
-            {showPassword ? <VisibilityOff /> : <Visibility />}
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
           </span>
           <small
             style={{

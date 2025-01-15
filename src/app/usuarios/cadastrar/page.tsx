@@ -2,6 +2,7 @@
 
 import { redirect, useRouter } from 'next/navigation';
 import React, { ChangeEvent, useEffect, useState } from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 import S from './styles.module.scss';
 
@@ -13,7 +14,6 @@ import MuiSelect from '@/components/Select';
 
 import { createUser, getAllBairros, getAllRoles } from '@/services';
 import { Bairro } from '@/types/api';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Alert, AlertTitle, Snackbar } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
@@ -211,7 +211,7 @@ export default function Home() {
                   color: '#666',
                 }}
               >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
             <div>
