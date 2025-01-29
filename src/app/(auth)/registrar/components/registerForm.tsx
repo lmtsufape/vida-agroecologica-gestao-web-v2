@@ -220,18 +220,6 @@ const RegisterForm = () => {
         </div>
         <h3>Endereço</h3>
         <div>
-          <label htmlFor="street">
-            Rua<span>*</span>
-          </label>
-          <Input
-            name="street"
-            type="text"
-            placeholder="Rua"
-            value={street}
-            onChange={(e) => setStreet(e.target.value)}
-          />
-        </div>
-        <div>
           <label htmlFor="cep">
             Cep<span>*</span>
           </label>
@@ -242,6 +230,18 @@ const RegisterForm = () => {
             value={cep}
             onChange={handleCEPChange}
             mask="zipCode"
+          />
+        </div>
+        <div>
+          <label htmlFor="street">
+            Rua<span>*</span>
+          </label>
+          <Input
+            name="street"
+            type="text"
+            placeholder="Rua"
+            value={street}
+            onChange={(e) => setStreet(e.target.value)}
           />
         </div>
         <div>
