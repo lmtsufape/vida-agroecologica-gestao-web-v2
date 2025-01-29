@@ -1,7 +1,9 @@
 .menuList {
   display: flex;
   flex-wrap: wrap;
-  margin: 135px;
+  justify-content: center;
+  align-items: center;
+  margin: 135px auto;
   gap: 4rem;
   max-width: 1280px;
   padding: 1.5rem 1.5rem;
@@ -10,6 +12,7 @@
 .menuOption {
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
   width: 20%;
   p {
     font-weight: 600;
