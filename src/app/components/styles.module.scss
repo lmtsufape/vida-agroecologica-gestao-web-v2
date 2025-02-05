@@ -107,3 +107,14 @@
     width: 100%;
   }
 }
+
+
+
+@media (max-width: 600px){
+  .leftContent {
+    display: none !important;
+  }
+  .rightContent {
+    margin: 50px 0px !important;
+  }
+}

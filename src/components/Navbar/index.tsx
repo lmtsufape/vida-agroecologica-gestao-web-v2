@@ -103,7 +103,7 @@ const Navbar = () => {
             {params !== '/' && !params.includes('/registrar') && (
               <Box
                 sx={{
-                  display: { xs: 'none', md: 'flex' },
+                  display: { md: 'flex' },
                   alignItems: 'center',
                   marginLeft: 'auto',
                 }}

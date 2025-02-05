@@ -27,3 +27,16 @@
     opacity: 0.7;
   }
 }
+
+@media (max-width: 620px) {
+  .link{
+    padding: 10px;
+  }
+  .link[data-type='filled'] {
+    font-size: 13px !important;
+  }
+}
+
+@media (max-width: 400px) {
+  
+}

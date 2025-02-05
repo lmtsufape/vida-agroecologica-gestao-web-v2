@@ -52,3 +52,15 @@
     }
   }
 }
+
+@media (max-width: 800px) {
+  .menuList {
+    flex-direction: column !important;
+    align-items: center;
+    margin: 30px 0px;
+  }
+
+  .menuOption {
+    align-items: center;
+  }
+}

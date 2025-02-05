@@ -1,6 +1,6 @@
 .tableWrapper {
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: auto;
   border-radius: 1rem;
   height: auto;
   max-height: 600px;
@@ -12,14 +12,14 @@
 
   table {
     border-spacing: 0;
-    min-width: 100%; 
+    min-width: 100%;
+    white-space: no-wrap; 
 
     @media (max-width: 756px) {
-      min-width: 150%;
+      min-width: 100%;
     }
   }
   
-
   thead {
     position: sticky;
     top: 0px;
@@ -31,6 +31,13 @@
     th {
       font-weight: 400;
       font-size: clamp(.75rem, 3vw, 1rem);
+      padding: 1rem;
+      border-bottom: 1px solid #dee2e6;
+      white-space: nowrap;
+      text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 180px;
     }
   }
 
@@ -42,11 +49,22 @@
         text-align: center;
         padding: 1.5rem 0;
         place-self: center;
-        font-size: clamp(.75rem, 3vw, 1rem);
+        font-size: clamp(.6rem, 3vw, 1rem);
+        border-bottom: 1px solid #dee2e6;
+        white-space: nowrap;
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 180px;
+
+        @media (max-width: 500px){
+          max-width: 150px;
+        }
       }
     }
   }
 }
+
 
 .buttons {
   display: flex;
