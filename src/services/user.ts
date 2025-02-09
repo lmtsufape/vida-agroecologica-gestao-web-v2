@@ -1,7 +1,8 @@
-import { Role } from '../types/api';
+import { Role, UserAddressEdit } from '../types/api';
 import { api } from './api';
 
 import { Presidente, User } from '@/types/api';
+import { UserAdressType } from '@/app/usuarios/editar/[id]/page';
 
 export async function createUser(
   {
@@ -100,6 +101,22 @@ export async function getUser(
   }
 }
 
+export async function getUserAddress(
+  token: string,
+): Promise<UserAdressType> {
+  try {
+    const response = await api.get(`api/users/enderecos`, {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data[0] as UserAdressType;
+  } catch (error) {
+    console.error('Failed to fetch user address: ', error);
+    throw new Error('Failed to fetch user address');
+  }
+}
+
 export async function editUser(
   {
     name,
@@ -113,11 +130,13 @@ export async function editUser(
     numero,
     bairro_id,
     ativo,
-  }: User,
+    endereco_id,
+    complemento,
+  }: UserAddressEdit,
   token: string,
   id: string,
 ) {
-  const response = await api.patch(
+  const responseUser = await api.patch(
     `/api/users/${id}`,
     {
       name,
@@ -138,8 +157,26 @@ export async function editUser(
       },
     },
   );
-  console.log(response.data);
-  return response.data;
+  console.log(`Edit User : ${responseUser.data}`);
+
+    const responseAddress = await api.patch(
+    `/api/users/enderecos/${endereco_id}`,
+    {
+      rua,
+      cep,
+      numero,
+      complemento,
+      bairro_id,
+    },
+    {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    },
+  );
+  console.log(`Edit Address: ${responseAddress.data}`);
+
+  return { ...responseUser.data, endereco: responseAddress.data };
 }
 
 export async function removeUser(token: string, id: number) {
@@ -194,3 +231,4 @@ export async function resetPassword(
     throw new Error('Failed to reset password');
   }
 }
+
