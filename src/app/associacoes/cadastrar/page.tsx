@@ -95,6 +95,10 @@ export default function Home() {
   const handleRegister: (e: React.FormEvent) => Promise<void> = async (e) => {
     e.preventDefault();
     try {
+        if (name.length <10) {
+          setErrorMessage('Nome da associação deve ter no mínimo 10 caracteres.');
+          return;
+        }
       const token = localStorage.getItem('@token');
       if (!token) {
         redirect('/');
