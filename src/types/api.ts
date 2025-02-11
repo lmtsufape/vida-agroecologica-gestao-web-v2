@@ -116,3 +116,8 @@ export interface APIErrorResponse {
     };
   };
 }
+
+export interface UserAddressEdit extends User {
+  endereco_id: number;
+  complemento: string;
+}
