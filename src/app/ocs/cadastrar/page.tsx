@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { redirect, useRouter } from 'next/navigation';
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 
 import S from './styles.module.scss';
 
@@ -42,6 +42,7 @@ export default function Home() {
   const [selectedBairro, setSelectedBairro] = React.useState(0);
 
   const [error, setError] = React.useState('');
+  const [info, setInfo] = React.useState('');
 
   const router = useRouter();
 
@@ -134,7 +135,7 @@ export default function Home() {
       );
       router.back();
     } catch (error: any) {
-      if (error.response && error.response.data) {
+      if (error?.response && error?.response?.data) {
         const apiErrors = error.response.data.errors;
         console.log('Erro retornado pela API:', apiErrors);
         setError(Object.values(apiErrors).flat().join(' | '));
@@ -142,6 +143,39 @@ export default function Home() {
         console.error('Erro inesperado:', error.message);
         setError('Erro inesperado ao criar OCS.');
       }
+    }
+  };
+
+    const fetchAddress = async (cep: string) => {
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await response.json();
+      if (!data.erro) {
+        setStreet(data.logradouro || '');
+        setComplement(data.complemento || '');
+        // Se tiver outros campos como bairro, cidade, estado, adicionar aqui
+      } else {
+        setInfo('CEP não encontrado.');
+      }
+    } catch (error) {
+      console.log(error);
+      setError('Erro ao buscar o CEP.');
+    }
+  };
+
+  const handleCEPChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const target = e.target as HTMLInputElement;
+    let cepValue = target.value.replace(/\D/g, '');
+
+    if (cepValue.length > 5) {
+      cepValue = cepValue.slice(0, 5) + '-' + cepValue.slice(5, 8);
+    }
+
+    setCEP(cepValue);
+    if (cepValue.replace('-', '').length === 8) {
+      fetchAddress(cepValue.replace('-', ''));
     }
   };
 
@@ -250,9 +284,9 @@ export default function Home() {
               <Input
                 name="cep"
                 type="text"
-                placeholder="Cep"
+                placeholder="00000-000"
                 value={cep}
-                onChange={(e) => setCEP(e.target.value)}
+                onChange={handleCEPChange}
                 mask="zipCode"
               />
             </div>
@@ -322,6 +356,12 @@ export default function Home() {
         <Alert onClose={() => setError('')} severity="error" variant="filled">
           <AlertTitle>Erro!</AlertTitle>
           {error}
+        </Alert>
+      </Snackbar>
+      <Snackbar open={info.length > 0} autoHideDuration={6000}>
+        <Alert variant="filled" severity="info">
+          <AlertTitle>Info</AlertTitle>
+          {info}
         </Alert>
       </Snackbar>
     </main>
