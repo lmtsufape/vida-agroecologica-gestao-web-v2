@@ -111,7 +111,7 @@ export async function getUserAddress(
       },
     });
     console.log(`Request endereco: ${JSON.stringify(response.data)}`);
-    return response.data[0] ?? response.data as UserAdressType;
+    return undefined as unknown as UserAdressType; // TODO precisa de outro endpoint, funcionalidade suspensa //response.data[0] ?? response.data as UserAdressType;
   } catch (error) {
     console.error('Failed to fetch user address: ', error);
     throw new Error('Failed to fetch user address');
