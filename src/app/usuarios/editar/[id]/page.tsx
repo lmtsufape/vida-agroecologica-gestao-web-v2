@@ -233,7 +233,7 @@ const Home = ({ params }: { params: { id: string } }) => {
     }
   };
 
-  if (!address || !content) {
+  if (!content) {
     return <p>Carregando...</p>;
   }
 
@@ -324,72 +324,76 @@ const Home = ({ params }: { params: { id: string } }) => {
               </MultiSelect>
             )}
           </section>
-          <h3>Endereço</h3>
-          <section>
-            <div>
-              <label htmlFor="cep">
-                Cep<span>*</span>
-              </label>
-              <Input
-                name="cep"
-                type="text"
-                placeholder={'00000-000'}
-                value={cep} //address['cep'] ?? ""}
-                onChange={handleCEPChange}
-                mask="zipCode"
-              />
-            </div>
-            <div>
-              <label htmlFor="street">
-                Rua<span>*</span>
-              </label>
-              <Input
-                name="street"
-                type="text"
-                placeholder="Rua"
-                value={street ?? ''}
-                onChange={(e) => setStreet(e.target.value)}
-              />
-            </div>
+          {address && (
+            <>
+              <h3>Endereço</h3>
+              <section>
+                <div>
+                  <label htmlFor="cep">
+                    Cep<span>*</span>
+                  </label>
+                  <Input
+                    name="cep"
+                    type="text"
+                    placeholder={'00000-000'}
+                    value={cep} //address['cep'] ?? ""}
+                    onChange={handleCEPChange}
+                    mask="zipCode"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="street">
+                    Rua<span>*</span>
+                  </label>
+                  <Input
+                    name="street"
+                    type="text"
+                    placeholder="Rua"
+                    value={street ?? ''}
+                    onChange={(e) => setStreet(e.target.value)}
+                  />
+                </div>
 
-            <div>
-              <label htmlFor="number">
-                Número<span>*</span>
-              </label>
-              <Input
-                name="number"
-                type="number"
-                placeholder="Número"
-                value={number ?? ''}
-                onChange={(e) => setNumber(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="complement">Complemento</label>
-              <Input
-                name="complement"
-                type="text"
-                placeholder="Complemento"
-                value={complement ?? ''}
-                onChange={(e) => setComplement(e.target.value)}
-              />
-            </div>
-            <MuiSelect
-              label="Bairro"
-              selectedNames={selectedBairro}
-              setSelectedNames={setSelectedBairro}
-            >
-              {bairro?.map((item: { id: number; nome: string }) => (
-                <StyledSelect
-                  key={item.id}
-                  value={item.id}
-                  sx={{ justifyContent: 'space-between' }}
+                <div>
+                  <label htmlFor="number">
+                    Número<span>*</span>
+                  </label>
+                  <Input
+                    name="number"
+                    type="number"
+                    placeholder="Número"
+                    value={number ?? ''}
+                    onChange={(e) => setNumber(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="complement">Complemento</label>
+                  <Input
+                    name="complement"
+                    type="text"
+                    placeholder="Complemento"
+                    value={complement ?? ''}
+                    onChange={(e) => setComplement(e.target.value)}
+                  />
+                </div>
+                <MuiSelect
+                  label="Bairro"
+                  selectedNames={selectedBairro}
+                  setSelectedNames={setSelectedBairro}
                 >
-                  {item.nome}
-                </StyledSelect>
-              ))}
-            </MuiSelect>
-          </section>
+                  {bairro?.map((item: { id: number; nome: string }) => (
+                    <StyledSelect
+                      key={item.id}
+                      value={item.id}
+                      sx={{ justifyContent: 'space-between' }}
+                    >
+                      {item.nome}
+                    </StyledSelect>
+                  ))}
+                </MuiSelect>
+              </section>
+            </>
+          )}
           <div className={S.wrapperButtons}>
             <Button
               onClick={() => router.back()}

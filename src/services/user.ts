@@ -110,7 +110,8 @@ export async function getUserAddress(
         authorization: `Bearer ${token}`,
       },
     });
-    return response.data[0] as UserAdressType;
+    console.log(`Request endereco: ${JSON.stringify(response.data)}`);
+    return response.data[0] ?? response.data as UserAdressType;
   } catch (error) {
     console.error('Failed to fetch user address: ', error);
     throw new Error('Failed to fetch user address');
