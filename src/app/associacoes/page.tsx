@@ -4,6 +4,8 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import React from 'react';
+import { Menu, MenuItem } from '@mui/material';
+import { IoMenu } from 'react-icons/io5';
 import { BiSolidTrashAlt, BiSolidEditAlt } from 'react-icons/bi';
 import { BsFillEyeFill, BsInfoCircle } from 'react-icons/bs';
 
@@ -37,6 +39,33 @@ export default function Home() {
   const handleClose = () => setValue(0);
   const [token, setToken] = React.useState('');
   const [infoModalOpen, setInfoModalOpen] = React.useState(false);
+  const [textResponsive, setTextResponsive] = React.useState(
+    'Adicionar Nova Associação',
+  );
+  const [textResponsiveHeader, setTextResponsiveHeader] =
+    React.useState('Data de Fundação');
+
+  React.useEffect(() => {
+    const updateText = () => {
+      setTextResponsive(
+        window.innerWidth < 821 ? 'Adicionar' : 'Adicionar Nova Associação',
+      );
+    };
+    window.addEventListener('resize', updateText);
+    updateText();
+    return () => window.removeEventListener('resize', updateText);
+  });
+
+  React.useEffect(() => {
+    const updateTextHeader = () => {
+      setTextResponsiveHeader(
+        window.innerWidth < 821 ? 'Fundação' : 'Data de Fundação',
+      );
+    };
+    window.addEventListener('resize', updateTextHeader);
+    updateTextHeader();
+    return () => window.removeEventListener('resize', updateTextHeader);
+  });
 
   React.useEffect(() => {
     const token = localStorage.getItem('@token');
@@ -84,7 +113,7 @@ export default function Home() {
       accessorKey: 'nome',
     },
     {
-      header: 'Data de Fundação',
+      header: textResponsiveHeader,
       accessorKey: 'data_fundacao',
       cell: (info: any) => {
         const value = info.getValue();
@@ -123,38 +152,97 @@ export default function Home() {
       accessorKey: 'id',
       cell: (info: any) => {
         const value = info.getValue();
+        const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(
+          null,
+        );
+        const open = Boolean(anchorEl);
+
+        const handleClickAction = (
+          event: React.MouseEvent<HTMLButtonElement>,
+        ) => {
+          setAnchorEl(event.currentTarget);
+        };
+
+        const handleCloseAction = () => {
+          setAnchorEl(null);
+        };
         return (
-          <ul className={S.action} role="list">
-            <li>
-              <Link href={'associacoes/' + value}>
-                <Tooltip title="Visualizar">
-                  <IconButton aria-label="visualizar" size="small">
-                    <BsFillEyeFill />
-                  </IconButton>
-                </Tooltip>
-              </Link>
-            </li>
-            <li>
-              <Link href={'associacoes/editar/' + value}>
-                <Tooltip title="Editar">
-                  <IconButton aria-label="editar" size="small">
-                    <BiSolidEditAlt />
-                  </IconButton>
-                </Tooltip>
-              </Link>
-            </li>
-            <li>
-              <Tooltip title="Remover">
+          <div className={S.action}>
+            {window.innerWidth > 768 ? (
+              <ul className={S.action} role="list">
+                <li>
+                  <Link href={'associacoes/' + value}>
+                    <Tooltip title="Visualizar">
+                      <IconButton aria-label="visualizar" size="small">
+                        <BsFillEyeFill />
+                      </IconButton>
+                    </Tooltip>
+                  </Link>
+                </li>
+                <li>
+                  <Link href={'associacoes/editar/' + value}>
+                    <Tooltip title="Editar">
+                      <IconButton aria-label="editar" size="small">
+                        <BiSolidEditAlt />
+                      </IconButton>
+                    </Tooltip>
+                  </Link>
+                </li>
+                <li>
+                  <Tooltip title="Remover">
+                    <IconButton
+                      onClick={() => setValue(value)}
+                      aria-label="Deletar"
+                      size="small"
+                    >
+                      <BiSolidTrashAlt />
+                    </IconButton>
+                  </Tooltip>
+                </li>
+              </ul>
+            ) : (
+              <>
                 <IconButton
-                  onClick={() => setValue(value)}
-                  aria-label="Deletar"
+                  aria-label="mais ações"
                   size="small"
+                  onClick={handleClickAction}
                 >
-                  <BiSolidTrashAlt />
+                  <IoMenu />
                 </IconButton>
-              </Tooltip>
-            </li>
-          </ul>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleCloseAction}
+                >
+                  <MenuItem onClick={handleCloseAction}>
+                    <Link
+                      href={'associacoes/' + value}
+                      style={{ textDecoration: 'none', color: 'inherit' }}
+                    >
+                      <BsFillEyeFill style={{ marginRight: 8 }} /> Visualizar
+                    </Link>
+                  </MenuItem>
+                  <MenuItem onClick={handleCloseAction}>
+                    <Link
+                      href={'associacoes/editar/' + value}
+                      style={{ textDecoration: 'none', color: 'inherit' }}
+                    >
+                      <BiSolidEditAlt style={{ marginRight: 8 }} /> Editar
+                    </Link>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      handleCloseAction();
+                      setValue(value);
+                    }}
+                  >
+                    <BiSolidTrashAlt style={{ marginRight: 8, color: 'red' }} />{' '}
+                    Remover
+                  </MenuItem>
+                </Menu>
+              </>
+            )}
+          </div>
         );
       },
     },
@@ -177,7 +265,7 @@ export default function Home() {
               <StyledLink
                 href="associacoes/cadastrar"
                 data-type="filled"
-                text="Adicionar Nova Associação"
+                text={textResponsive}
               />
             </div>
           </div>

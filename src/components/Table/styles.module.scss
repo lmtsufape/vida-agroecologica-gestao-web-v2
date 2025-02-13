@@ -12,14 +12,10 @@
 
   table {
     border-spacing: 0;
-    min-width: 100%; 
-
-    @media (max-width: 756px) {
-      min-width: 150%;
-    }
+    min-width: 100%;
+    white-space: nowrap; 
   }
   
-
   thead {
     position: sticky;
     top: 0px;
@@ -31,6 +27,17 @@
     th {
       font-weight: 400;
       font-size: clamp(.75rem, 3vw, 1rem);
+      padding: 1rem;
+      border-bottom: 1px solid #dee2e6;
+      white-space: nowrap;
+      text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 180px;
+
+      @media (max-width: 500px){
+        font-size: clamp(.5rem, 3vw, 1rem);
+      }
     }
   }
 
@@ -43,10 +50,28 @@
         padding: 1.5rem 0;
         place-self: center;
         font-size: clamp(.75rem, 3vw, 1rem);
+        border-bottom: 1px solid #dee2e6;
+        white-space: nowrap;
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 180px;
+
+        @media (max-width: 610px){
+          max-width: 150px;
+        }
+        @media (max-width: 500px){
+          max-width: 85px;
+          font-size: clamp(.5rem, 3vw, 1rem);
+        }
+        @media (max-width: 360px){
+          max-width: 80px;
+        }
       }
     }
   }
 }
+
 
 .buttons {
   display: flex;

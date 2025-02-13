@@ -39,7 +39,7 @@
   }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 500px) {
   .footer svg {
     width: 40%;
   }
@@ -52,5 +52,8 @@
   }
   .ufapeLmts {
     padding: .6rem;
+  }
+  .socialNetwork {
+    gap: 0.6rem;
   }
 }
