@@ -136,7 +136,13 @@ export default function Home() {
     },
     {
       header: () => (
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
           Ações
           <Tooltip title="Clique aqui para informações sobre os ícones">
             <IconButton
