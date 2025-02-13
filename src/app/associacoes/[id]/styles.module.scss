@@ -96,3 +96,8 @@
     margin-bottom: 1rem;
 }
 
+@media (max-width: 500px) {
+  .title {
+    font-size: 1.3rem;
+  }
+}
