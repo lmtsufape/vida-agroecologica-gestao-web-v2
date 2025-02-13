@@ -19,6 +19,11 @@ import { useQuery } from '@tanstack/react-query';
 
 export default function Home() {
   const [error, setError] = useState('');
+  /* WARN SnackBar */
+  // const [warn, setWarn] = useState('');
+  const [info, setInfo] = useState('');
+  const [confirmationMessage, setConfirmationMessage] = useState('');
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [cpf, setCpf] = useState('');
@@ -35,7 +40,6 @@ export default function Home() {
   const [selectedBairro, setSelectedBairro] = useState(1);
 
   const [selectedRole, setSelectedRole] = useState<string | string[]>([]);
-  const [confirmationMessage, setConfirmationMessage] = useState('');
 
   const router = useRouter();
 
@@ -74,7 +78,7 @@ export default function Home() {
         setComplement(data.complemento || '');
         // Se tiver outros campos como bairro, cidade, estado, adicionar aqui
       } else {
-        setError('CEP não encontrado.');
+        setInfo('CEP não encontrado.');
       }
     } catch (error) {
       console.log(error);
@@ -340,6 +344,18 @@ export default function Home() {
         <Alert variant="filled" severity="error">
           <AlertTitle>Erro!</AlertTitle>
           {error}
+        </Alert>
+      </Snackbar>
+      {/*<Snackbar open={warn.length > 0} autoHideDuration={6000}>*/}
+      {/*  <Alert variant="filled" severity="warning">*/}
+      {/*    <AlertTitle>Alerta!</AlertTitle>*/}
+      {/*    {warn}*/}
+      {/*  </Alert>*/}
+      {/*</Snackbar>*/}
+      <Snackbar open={info.length > 0} autoHideDuration={6000}>
+        <Alert variant="filled" severity="info">
+          <AlertTitle>Info</AlertTitle>
+          {info}
         </Alert>
       </Snackbar>
       <Snackbar open={confirmationMessage.length > 0} autoHideDuration={6000}>

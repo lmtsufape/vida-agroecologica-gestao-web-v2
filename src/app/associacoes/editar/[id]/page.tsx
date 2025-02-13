@@ -69,7 +69,7 @@ const Home = ({ params }: { params: { id: string } }) => {
   }, [content]);
 
   React.useEffect(() => {
-    if (content && content.endereco?.bairro_id) {
+    if (content && content?.endereco?.bairro_id) {
       setSelectedBairro(content.endereco.bairro_id);
     }
   }, [content]);
@@ -83,6 +83,10 @@ const Home = ({ params }: { params: { id: string } }) => {
   const handleEditRegister = async (e: any) => {
     e.preventDefault();
     try {
+      if (name.length <10) {
+          setError('Nome da associação deve ter no mínimo 10 caracteres.');
+          return;
+      }
       const token = localStorage.getItem('@token');
       if (!token) {
         redirect('/');
