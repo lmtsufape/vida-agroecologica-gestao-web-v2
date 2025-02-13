@@ -4,7 +4,14 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import React from 'react';
-import { BiSolidTrashAlt, BiSolidEditAlt, BiUser } from 'react-icons/bi';
+import { Menu, MenuItem } from '@mui/material';
+import { IoMenu } from 'react-icons/io5';
+import {
+  BiSolidTrashAlt,
+  BiSolidEditAlt,
+  BiUser,
+  BiSolidUser,
+} from 'react-icons/bi';
 import { BsFillEyeFill, BsInfoCircle } from 'react-icons/bs';
 
 import S from './styles.module.scss';
@@ -15,7 +22,16 @@ import Loader from '@/components/Loader';
 import TableView from '@/components/Table/Table';
 
 import { getAllOCS, removeOCS } from '@/services';
-import { Box, IconButton, Tooltip, Modal, Typography , Snackbar, Alert, AlertTitle } from '@mui/material';
+import {
+  Box,
+  IconButton,
+  Tooltip,
+  Modal,
+  Typography,
+  Snackbar,
+  Alert,
+  AlertTitle,
+} from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
 const style = {
@@ -37,6 +53,12 @@ export default function Home() {
   const handleClose = () => setValue(0);
   const [errorMessage, setErrorMessage] = React.useState('');
   const [infoModalOpen, setInfoModalOpen] = React.useState(false);
+  const [textResponsive, setTextResponsive] = React.useState(
+    'Adicionar Nova Organização',
+  );
+  const [titleResponsive, setTitleResponsive] = React.useState(
+    'Organização de Controle Social',
+  );
 
   React.useEffect(() => {
     const token = localStorage.getItem('@token');
@@ -45,6 +67,28 @@ export default function Home() {
     }
     setToken(token);
   }, []);
+
+  React.useEffect(() => {
+    const updateText = () => {
+      setTextResponsive(
+        window.innerWidth < 825 ? 'Adicionar' : 'Adicionar Nova Organização',
+      );
+    };
+    window.addEventListener('resize', updateText);
+    updateText();
+    return () => window.removeEventListener('resize', updateText);
+  });
+
+  React.useEffect(() => {
+    const updateTextTitle = () => {
+      setTitleResponsive(
+        window.innerWidth < 825 ? 'OCS' : 'Organização de Controle Social',
+      );
+    };
+    window.addEventListener('resize', updateTextTitle);
+    updateTextTitle();
+    return () => window.removeEventListener('resize', updateTextTitle);
+  });
 
   const handleOpenInfoModal = () => setInfoModalOpen(true);
   const handleCloseInfoModal = () => setInfoModalOpen(false);
@@ -69,7 +113,7 @@ export default function Home() {
           <Tooltip title="Clique nos ícones para visualizar, editar ou remover">
             <IconButton
               size="small"
-              style={{ marginLeft: '5px', color: 'white' }}
+              style={{ margin: '2px', color: 'white' }}
               onClick={handleOpenInfoModal}
             >
               <BsInfoCircle />
@@ -80,47 +124,114 @@ export default function Home() {
       accessorKey: 'id',
       cell: (info: any) => {
         const value = info.getValue();
+        const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(
+          null,
+        );
+        const open = Boolean(anchorEl);
+
+        const handleClickAction = (
+          event: React.MouseEvent<HTMLButtonElement>,
+        ) => {
+          setAnchorEl(event.currentTarget);
+        };
+
+        const handleCloseAction = () => {
+          setAnchorEl(null);
+        };
         return (
-          <ul className={S.action} role="list">
-            <li>
-              <Link href={'ocs/' + value}>
-                <Tooltip title="Visualizar">
-                  <IconButton aria-label="visualizar" size="small">
-                    <BsFillEyeFill />
-                  </IconButton>
-                </Tooltip>
-              </Link>
-            </li>
-            <li>
-              <Link href={'ocs/editar/' + value}>
-                <Tooltip title="Editar">
-                  <IconButton aria-label="editar" size="small">
-                    <BiSolidEditAlt />
-                  </IconButton>
-                </Tooltip>
-              </Link>
-            </li>
-            <li>
-              <Tooltip title="Remover">
+          <div className={S.action}>
+            {window.innerWidth > 768 ? (
+              <ul className={S.action} role="list">
+                <li>
+                  <Link href={'ocs/' + value}>
+                    <Tooltip title="Visualizar">
+                      <IconButton aria-label="visualizar" size="small">
+                        <BsFillEyeFill />
+                      </IconButton>
+                    </Tooltip>
+                  </Link>
+                </li>
+                <li>
+                  <Link href={'ocs/editar/' + value}>
+                    <Tooltip title="Editar">
+                      <IconButton aria-label="editar" size="small">
+                        <BiSolidEditAlt />
+                      </IconButton>
+                    </Tooltip>
+                  </Link>
+                </li>
+                <li>
+                  <Tooltip title="Remover">
+                    <IconButton
+                      onClick={() => setValue(value)}
+                      aria-label="Deletar"
+                      size="small"
+                    >
+                      <BiSolidTrashAlt />
+                    </IconButton>
+                  </Tooltip>
+                </li>
+                <li>
+                  <Link href={'/ocs/participantes/' + value}>
+                    <Tooltip title="Participantes">
+                      <IconButton aria-label="Participantes" size="small">
+                        <BiUser />
+                      </IconButton>
+                    </Tooltip>
+                  </Link>
+                </li>
+              </ul>
+            ) : (
+              <>
                 <IconButton
-                  onClick={() => setValue(value)}
-                  aria-label="Deletar"
+                  aria-label="mais ações"
                   size="small"
+                  onClick={handleClickAction}
                 >
-                  <BiSolidTrashAlt />
+                  <IoMenu />
                 </IconButton>
-              </Tooltip>
-            </li>
-            <li>
-              <Link href={'/ocs/participantes/' + value}>
-                <Tooltip title="Participantes">
-                  <IconButton aria-label="Participantes" size="small">
-                    <BiUser />
-                  </IconButton>
-                </Tooltip>
-              </Link>
-            </li>
-          </ul>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleCloseAction}
+                >
+                  <MenuItem onClick={handleCloseAction}>
+                    <Link
+                      href={'ocs/' + value}
+                      style={{ textDecoration: 'none', color: 'inherit' }}
+                    >
+                      <BsFillEyeFill style={{ marginRight: 8 }} /> Visualizar
+                    </Link>
+                  </MenuItem>
+                  <MenuItem onClick={handleCloseAction}>
+                    <Link
+                      href={'ocs/editar/' + value}
+                      style={{ textDecoration: 'none', color: 'inherit' }}
+                    >
+                      <BiSolidEditAlt style={{ marginRight: 8 }} /> Editar
+                    </Link>
+                  </MenuItem>
+                  <MenuItem onClick={handleCloseAction}>
+                    <Link
+                      href={'/ocs/participantes/' + value}
+                      style={{ textDecoration: 'none', color: 'inherit' }}
+                    >
+                      <BiSolidUser style={{ marginRight: 8 }} /> Participantes
+                    </Link>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      handleCloseAction();
+                      setValue(value);
+                    }}
+                  >
+                    <BiSolidTrashAlt style={{ marginRight: 8, color: 'red' }} />{' '}
+                    Remover
+                  </MenuItem>
+                </Menu>
+              </>
+            )}
+          </div>
         );
       },
     },
@@ -176,13 +287,13 @@ export default function Home() {
               </Link>
             </div>
             <div>
-              <h1 className={S.title}>Organização de Controle Social </h1>
+              <h1 className={S.title}>{titleResponsive} </h1>
             </div>
             <div className={S.addButton}>
               <StyledLink
                 href="ocs/cadastrar"
                 data-type="filled"
-                text="Adicionar Nova Organização"
+                text={textResponsive}
               />
             </div>
           </div>

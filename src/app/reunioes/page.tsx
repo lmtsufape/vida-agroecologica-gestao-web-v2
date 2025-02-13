@@ -4,6 +4,8 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import React, { useState } from 'react';
+import { Menu, MenuItem } from '@mui/material';
+import { IoMenu } from 'react-icons/io5';
 import {
   BiSolidTrashAlt,
   BiSolidEditAlt,
@@ -45,6 +47,7 @@ export default function Home() {
   const [token, setToken] = React.useState('');
   const handleClose = () => setValue(0);
   const [infoModalOpen, setInfoModalOpen] = React.useState(false);
+  const [textResponsive, setTextResponsive] = React.useState('Criar Reunião');
 
   React.useEffect(() => {
     const token = localStorage.getItem('@token');
@@ -53,6 +56,15 @@ export default function Home() {
     }
     setToken(token);
   }, []);
+
+  React.useEffect(() => {
+    const updateText = () => {
+      setTextResponsive(window.innerWidth < 825 ? 'Criar' : 'Criar Reunião');
+    };
+    window.addEventListener('resize', updateText);
+    updateText();
+    return () => window.removeEventListener('resize', updateText);
+  });
 
   const handleOpenModal = (id: number, type: string) => {
     setModalId(id);
@@ -103,60 +115,136 @@ export default function Home() {
       accessorKey: 'id',
       cell: (info: any) => {
         const value = info.getValue();
+        const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(
+          null,
+        );
+        const open = Boolean(anchorEl);
+
+        const handleClickAction = (
+          event: React.MouseEvent<HTMLButtonElement>,
+        ) => {
+          setAnchorEl(event.currentTarget);
+        };
+
+        const handleCloseAction = () => {
+          setAnchorEl(null);
+        };
         return (
-          <ul className={S.action} role="list">
-            <li>
-              <Tooltip title="Adicionar Ata">
+          <div className={S.action}>
+            {window.innerWidth > 768 ? (
+              <ul className={S.action} role="list">
+                <li>
+                  <Tooltip title="Adicionar Ata">
+                    <IconButton
+                      onClick={() => handleOpenModal(value, 'ata')}
+                      aria-label="Adicionar ata"
+                      size="small"
+                    >
+                      <MdAttachFile />
+                    </IconButton>
+                  </Tooltip>
+                </li>
+                <li>
+                  <Tooltip title="Adicionar Anexos">
+                    <IconButton
+                      onClick={() => handleOpenModal(value, 'anexos')}
+                      aria-label="Adicionar anexos"
+                      size="small"
+                    >
+                      <BiSolidFileImport />
+                    </IconButton>
+                  </Tooltip>
+                </li>
+                <li>
+                  <Link href={'reunioes/' + value}>
+                    <Tooltip title="Visualizar">
+                      <IconButton aria-label="visualizar" size="small">
+                        <BsFillEyeFill />
+                      </IconButton>
+                    </Tooltip>
+                  </Link>
+                </li>
+                <li>
+                  <Link href={'reunioes/editar/' + value}>
+                    <Tooltip title="Editar">
+                      <IconButton aria-label="editar" size="small">
+                        <BiSolidEditAlt />
+                      </IconButton>
+                    </Tooltip>
+                  </Link>
+                </li>
+                <li>
+                  <Tooltip title="Remover">
+                    <IconButton
+                      onClick={() => setValue(value)}
+                      aria-label="Deletar"
+                      size="small"
+                    >
+                      <BiSolidTrashAlt />
+                    </IconButton>
+                  </Tooltip>
+                </li>
+              </ul>
+            ) : (
+              <>
                 <IconButton
-                  onClick={() => handleOpenModal(value, 'ata')}
-                  aria-label="Adicionar ata"
+                  aria-label="mais ações"
                   size="small"
+                  onClick={handleClickAction}
                 >
-                  <MdAttachFile />
+                  <IoMenu />
                 </IconButton>
-              </Tooltip>
-            </li>
-            <li>
-              <Tooltip title="Adicionar Anexos">
-                <IconButton
-                  onClick={() => handleOpenModal(value, 'anexos')}
-                  aria-label="Adicionar anexos"
-                  size="small"
+                <Menu
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleCloseAction}
                 >
-                  <BiSolidFileImport />
-                </IconButton>
-              </Tooltip>
-            </li>
-            <li>
-              <Link href={'reunioes/' + value}>
-                <Tooltip title="Visualizar">
-                  <IconButton aria-label="visualizar" size="small">
-                    <BsFillEyeFill />
-                  </IconButton>
-                </Tooltip>
-              </Link>
-            </li>
-            <li>
-              <Link href={'reunioes/editar/' + value}>
-                <Tooltip title="Editar">
-                  <IconButton aria-label="editar" size="small">
-                    <BiSolidEditAlt />
-                  </IconButton>
-                </Tooltip>
-              </Link>
-            </li>
-            <li>
-              <Tooltip title="Remover">
-                <IconButton
-                  onClick={() => setValue(value)}
-                  aria-label="Deletar"
-                  size="small"
-                >
-                  <BiSolidTrashAlt />
-                </IconButton>
-              </Tooltip>
-            </li>
-          </ul>
+                  <MenuItem
+                    onClick={() => {
+                      handleCloseAction();
+                      handleOpenModal(value, 'ata');
+                    }}
+                  >
+                    <MdAttachFile style={{ marginRight: 8 }} /> Adicionar Ata
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      handleCloseAction();
+                      handleOpenModal(value, 'anexos');
+                    }}
+                  >
+                    <BiSolidFileImport style={{ marginRight: 8 }} /> Adicionar
+                    Anexo
+                  </MenuItem>
+                  <MenuItem onClick={handleCloseAction}>
+                    <Link
+                      href={'reunioes/' + value}
+                      style={{ textDecoration: 'none', color: 'inherit' }}
+                    >
+                      <BsFillEyeFill style={{ marginRight: 8 }} /> Visualizar
+                    </Link>
+                  </MenuItem>
+                  <MenuItem onClick={handleCloseAction}>
+                    <Link
+                      href={'reunioes/editar/' + value}
+                      style={{ textDecoration: 'none', color: 'inherit' }}
+                    >
+                      <BiSolidEditAlt style={{ marginRight: 8 }} /> Editar
+                    </Link>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      handleCloseAction();
+                      setValue(value);
+                    }}
+                  >
+                    <BiSolidTrashAlt style={{ marginRight: 8, color: 'red' }} />{' '}
+                    Remover
+                  </MenuItem>
+                </Menu>
+              </>
+            )}
+          </div>
         );
       },
     },
@@ -216,7 +304,7 @@ export default function Home() {
               <StyledLink
                 href="reunioes/cadastrar"
                 data-type="filled"
-                text="Criar Reunião"
+                text={textResponsive}
               />
             </div>
           </div>

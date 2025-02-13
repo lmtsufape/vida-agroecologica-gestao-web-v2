@@ -46,6 +46,9 @@
   display: flex;
   gap: 1rem;
   place-content: center;
+  @media (max-width: 600px) {
+    gap: 0.1rem;
+  }
 }
 
 .buttons {
