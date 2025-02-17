@@ -39,6 +39,7 @@ export default function Home() {
   const handleClose = () => setValue(0);
   const [infoModalOpen, setInfoModalOpen] = React.useState(false);
   const [textResponsive, setTextResponsive] = React.useState('Criar Usuário');
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   React.useEffect(() => {
     const updateText = () => {
@@ -112,9 +113,6 @@ export default function Home() {
       accessorKey: 'id',
       cell: (info: any) => {
         const value = info.getValue();
-        const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(
-          null,
-        );
         const open = Boolean(anchorEl);
 
         const handleClickAction = (

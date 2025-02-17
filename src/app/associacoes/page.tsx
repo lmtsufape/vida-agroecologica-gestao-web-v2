@@ -44,6 +44,7 @@ export default function Home() {
   );
   const [textResponsiveHeader, setTextResponsiveHeader] =
     React.useState('Data de Fundação');
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   React.useEffect(() => {
     const updateText = () => {
@@ -158,9 +159,6 @@ export default function Home() {
       accessorKey: 'id',
       cell: (info: any) => {
         const value = info.getValue();
-        const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(
-          null,
-        );
         const open = Boolean(anchorEl);
 
         const handleClickAction = (

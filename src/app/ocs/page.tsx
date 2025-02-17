@@ -59,6 +59,7 @@ export default function Home() {
   const [titleResponsive, setTitleResponsive] = React.useState(
     'Organização de Controle Social',
   );
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   React.useEffect(() => {
     const token = localStorage.getItem('@token');
@@ -130,9 +131,6 @@ export default function Home() {
       accessorKey: 'id',
       cell: (info: any) => {
         const value = info.getValue();
-        const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(
-          null,
-        );
         const open = Boolean(anchorEl);
 
         const handleClickAction = (
