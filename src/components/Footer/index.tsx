@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 import { GoMail } from 'react-icons/go';
 import { SiFacebook, SiInstagram } from 'react-icons/si';
@@ -28,9 +29,30 @@ const Footer = () => {
           />
         </li>
         <li className={S.socialNetwork}>
-          <GoMail className={S.email} />
-          <SiFacebook />
-          <SiInstagram />
+          <Link
+            href="mailto:lmts@ufape.edu.br"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: 'white' }}
+          >
+            <GoMail className={S.email} />
+          </Link>
+          <Link
+            href="https://www.facebook.com/LMTSUFAPE/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: 'white' }}
+          >
+            <SiFacebook />
+          </Link>
+          <Link
+            href="https://www.instagram.com/lmts_ufape"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: 'white' }}
+          >
+            <SiInstagram />
+          </Link>
         </li>
       </ul>
     </footer>
