@@ -93,4 +93,36 @@
   .roles[data-type='presidente'] {
     color: rgb(135, 82, 184);
   }
+
+  @media (max-width: 800px) {
+    .title{
+      font-size: 22px !important;
+      
+    }
+  }
   
+  @media (max-width: 620px) {
+    .title{
+      font-size: 17px !important;
+    }
+  
+    .addButton{
+      width: 35%;
+    }
+  }
+  
+  @media (max-width: 500px) {
+    .title{
+      font-size: 16px !important;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .title{
+      font-size: 13px !important;
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+  }
