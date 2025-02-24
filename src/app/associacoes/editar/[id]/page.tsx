@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { redirect, useRouter } from 'next/navigation';
@@ -15,8 +14,9 @@ import MuiSelect from '@/components/Select';
 import { getAllBairros } from '@/services';
 import { editAssociacao, getAssociacao } from '@/services/associations';
 import { getPresidents } from '@/services/user';
-import { Associacao } from '@/types/api';
+import { Associacao, Bairro, Presidente } from '@/types/api';
 import { Alert, AlertTitle, Snackbar } from '@mui/material';
+import { AxiosError } from 'axios';
 
 const Home = ({ params }: { params: { id: string } }) => {
   const [content, setContent] = React.useState<Associacao | null>(null);
@@ -29,13 +29,15 @@ const Home = ({ params }: { params: { id: string } }) => {
   const [number, setNumber] = React.useState('');
   const [complement, setComplement] = React.useState('');
 
-  const [bairro, setBairro] = React.useState([]);
-  const [selectedBairro, setSelectedBairro] = React.useState<any>();
+  const [bairro, setBairro] = React.useState<Bairro[]>([]);
+  const [selectedBairro, setSelectedBairro] = React.useState<number>(0);
 
-  const [presidents, setPresidents] = React.useState<[]>([]);
+  const [presidents, setPresidents] = React.useState<Presidente[]>([]);
   const [selectedPresidents, setSelectedPresidents] = React.useState(0);
 
   const [error, setError] = React.useState('');
+  const [successMessage, setSuccessMessage] = React.useState('');
+  const [errorMessage, setErrorMessage] = React.useState<string>('');
 
   const router = useRouter();
 
@@ -45,14 +47,14 @@ const Home = ({ params }: { params: { id: string } }) => {
       redirect('/');
     }
     getAssociacao(token, params.id)
-      .then((response: any) => setContent(response.associacao))
-      .catch((error: any) => console.log(error));
+      .then((response) => setContent(response))
+      .catch((error) => console.log(error));
     getPresidents(token)
-      .then((response: any) => setPresidents(response.users))
-      .catch((error: any) => console.log(error));
+      .then((response) => setPresidents(response))
+      .catch((error) => console.log(error));
     getAllBairros(token)
-      .then((response: any) => setBairro(response.bairros))
-      .catch((error: any) => console.log(error));
+      .then((response) => setBairro(response))
+      .catch((error) => console.log(error));
   }, [params.id]);
 
   React.useEffect(() => {
@@ -69,7 +71,7 @@ const Home = ({ params }: { params: { id: string } }) => {
   }, [content]);
 
   React.useEffect(() => {
-    if (content && content?.endereco?.bairro_id) {
+    if (content?.endereco?.bairro_id) {
       setSelectedBairro(content.endereco.bairro_id);
     }
   }, [content]);
@@ -78,14 +80,15 @@ const Home = ({ params }: { params: { id: string } }) => {
     return <Loader />;
   }
 
-  const presidentDefault = content.presidentes?.map((item: any) => item.id);
+  const presidentDefault = content.presidentes?.map((item) => Number(item.id));
 
-  const handleEditRegister = async (e: any) => {
+  const handleEditRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+    // TODO Verificar tipagem
     e.preventDefault();
     try {
-      if (name.length <10) {
-          setError('Nome da associação deve ter no mínimo 10 caracteres.');
-          return;
+      if (name.length < 10) {
+        setError('Nome da associação deve ter no mínimo 10 caracteres.');
+        return;
       }
       const token = localStorage.getItem('@token');
       if (!token) {
@@ -109,17 +112,39 @@ const Home = ({ params }: { params: { id: string } }) => {
 
       await editAssociacao(requestData, token, params.id);
       router.back();
-    } catch (error: any) {
-      console.log(error.response?.data?.message);
-      const errors = error.response?.data?.errors;
-      if (errors !== undefined && errors !== null) {
-        for (const key of Object.keys(errors)) {
-          const errorMessage = errors[key][0];
-          setTimeout(() => {
-            setError(`${errorMessage}`);
-            window.location.reload();
-          }, 3000);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.log(
+          `[editAssociacao] AxiosError: ${JSON.stringify(
+            error?.response?.data?.message,
+          )}`,
+        );
+        const errors = error?.response?.data?.errors;
+        if (errors !== undefined && errors !== null) {
+          for (const key of Object.keys(errors)) {
+            setErrorMessage(errors[key][0]);
+          }
+        } else {
+          setErrorMessage(`Erro na requisição ao editar: ${JSON.stringify(error)}`);
         }
+      } else if (error instanceof Error) {
+        console.log(`[editAssociacao] Erro genérico: ${JSON.stringify(error)}`);
+        setErrorMessage(`Erro genérico: ${JSON.stringify(error?.message)}`);
+      } else {
+        console.log(
+          `[editAssociacao] Erro desconhecido: ${JSON.stringify(error)}`,
+        );
+        setErrorMessage(`Erro desconhecido: ${JSON.stringify(error)}`);
+      }
+    } finally {
+      if (!errorMessage) {
+        console.log('Associação editada com sucesso!');
+        setSuccessMessage('Associação editada com sucesso!');
+      } else {
+        setTimeout(() => {
+          setError(`${errorMessage}`);
+          window.location.reload();
+        }, 3000);
       }
     }
   };
@@ -184,7 +209,7 @@ const Home = ({ params }: { params: { id: string } }) => {
               selectedNames={selectedPresidents}
               setSelectedNames={setSelectedPresidents}
             >
-              {presidents?.map((item: { id: number; name: string }) => (
+              {presidents?.map((item) => (
                 <StyledSelect
                   key={item.id}
                   value={item.id}
@@ -277,6 +302,12 @@ const Home = ({ params }: { params: { id: string } }) => {
           <Alert variant="filled" severity="error">
             <AlertTitle>Erro!</AlertTitle>
             {error}
+          </Alert>
+        </Snackbar>
+        <Snackbar open={successMessage.length > 0} autoHideDuration={6000}>
+          <Alert variant="filled" severity="success">
+            <AlertTitle>Sucesso!</AlertTitle>
+            {successMessage}
           </Alert>
         </Snackbar>
       </div>

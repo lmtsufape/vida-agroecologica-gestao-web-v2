@@ -4,10 +4,9 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import React from 'react';
-import { Menu, MenuItem } from '@mui/material';
-import { IoMenu } from 'react-icons/io5';
 import { BiSolidTrashAlt, BiSolidEditAlt } from 'react-icons/bi';
 import { BsFillEyeFill, BsInfoCircle } from 'react-icons/bs';
+import { IoMenu } from 'react-icons/io5';
 
 import S from './styles.module.scss';
 
@@ -18,7 +17,15 @@ import TableView from '@/components/Table/Table';
 
 import { getAllAssociacoes, removeAssociacao } from '@/services/associations';
 import { formatDate } from '@/utils/convertNumbers';
-import { Box, IconButton, Tooltip, Modal, Typography } from '@mui/material';
+import {
+  Box,
+  IconButton,
+  Tooltip,
+  Modal,
+  Typography,
+  Menu,
+  MenuItem,
+} from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
 const style = {
@@ -274,7 +281,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <TableView columns={columns} data={data} />
+        <TableView columns={columns} data={data ?? []} />
       </section>
       <div>
         <Modal

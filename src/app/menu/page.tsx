@@ -1,12 +1,14 @@
 'use client';
 
+import { FC } from 'react';
+
 import S from './styles.module.scss';
 
 import MenuOptions from '../../components/Menubuttons';
 
 import Authentication from '@/utils/session';
 
-const Home = () => {
+const Home: FC = () => {
   return (
     <main
       className={S.main}
@@ -21,4 +23,5 @@ const Home = () => {
     </main>
   );
 };
+
 export default Authentication(Home);

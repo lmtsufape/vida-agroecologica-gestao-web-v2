@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { redirect } from 'next/navigation';
 import React, { useState } from 'react';
 
@@ -44,9 +43,8 @@ export const SeeAta = ({ reuniaoId }: { reuniaoId: number }) => {
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.error('Error downloading ATA file:', error.message);
+    } catch (error) {
+      console.error(`[downloadAta] Error downloading ATA file: ${(error as Error).message}`);
     } finally {
       setLoading(false);
     }

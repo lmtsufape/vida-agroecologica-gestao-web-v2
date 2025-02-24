@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import Link from 'next/link';
@@ -24,6 +23,7 @@ import {
 import { OCS, User, Bairro } from '@/types/api';
 import { Alert, AlertTitle, Snackbar } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 
 const Home = ({ params }: { params: { id: string } }) => {
   const [name, setName] = React.useState('');
@@ -82,10 +82,10 @@ const Home = ({ params }: { params: { id: string } }) => {
     }
     getOCS(token, params.id)
       .then((response: OCSResponse) => setContent(response.ocs))
-      .catch((error: any) => console.log(error));
+      .catch((error) => console.log(error));
     getAllBairros(token)
-      .then((response: { bairros: Bairro[] }) => setBairro(response.bairros))
-      .catch((error: any) => console.log(error));
+      .then((response) => setBairro(response))
+      .catch((error) => console.log(error));
   }, [params.id]);
 
   React.useEffect(() => {
@@ -163,14 +163,26 @@ const Home = ({ params }: { params: { id: string } }) => {
       };
       await editOCS(requestData, token, params.id);
       router.back();
-    } catch (error: any) {
-      if (error.response && error.response.data) {
-        const apiErrors = error.response.data.errors;
-        console.log('Erro retornado pela API:', apiErrors);
-        setError(Object.values(apiErrors).flat().join(' | '));
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error?.response?.data) {
+          const apiErrors = error?.response?.data?.errors;
+          console.log(`[editOCS] Erro retornado pela API: ${apiErrors}`);
+          setError(Object.values(apiErrors).flat().join(' | '));
+        } else {
+          console.error(
+            `[editOCS] Erro na requisição: ${JSON.stringify(error?.message)}`,
+          );
+          setError('Erro na requisição ao editar OCS.');
+        }
+      } else if (error instanceof Error) {
+        console.error(
+          `[editOCS] Erro genérico: ${JSON.stringify(error?.message)}`,
+        );
+        setError('Erro genérico ao editar OCS.');
       } else {
-        console.error('Erro inesperado:', error.message);
-        setError('Erro inesperado ao editar OCS.');
+        console.error(`[editOCS] Erro desconhecido: ${JSON.stringify(error)}`);
+        setError('Erro desconhecido ao editar OCS.');
       }
     }
   };

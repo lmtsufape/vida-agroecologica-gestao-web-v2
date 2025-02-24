@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { redirect, useRouter } from 'next/navigation';
@@ -14,9 +13,15 @@ import MuiSelect from '@/components/Select';
 
 import { createReuniao, getAllOCS, getAllUsers } from '@/services';
 import { User } from '@/types/api';
-import { Select, FormControl, MenuItem } from '@mui/material';
-import { Snackbar, Alert, AlertTitle } from '@mui/material';
-import { TextareaAutosize } from '@mui/material';
+import {
+  Select,
+  FormControl,
+  MenuItem,
+  Snackbar,
+  Alert,
+  AlertTitle,
+  TextareaAutosize,
+} from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
 export default function Home() {
@@ -83,9 +88,9 @@ export default function Home() {
 
       const selectedParticipantIds = Array.isArray(selectedParticipantes)
         ? (selectedParticipantes
-            .map((participant) => getParticipantIdByName(participant as string))
+            .map((participant) => getParticipantIdByName(participant))
             .filter(Boolean) as number[])
-        : [getParticipantIdByName(selectedParticipantes as string) as number];
+        : [getParticipantIdByName(selectedParticipantes) as number];
 
       let organizacaoIdToSend: number | null = selectedOcs;
       if (selectedOcs === 0) {
@@ -104,8 +109,9 @@ export default function Home() {
 
       await createReuniao(requestBody, token);
       router.back();
-    } catch (error: any) {
-      console.log('Error:', error);
+    } catch (error) {
+      console.log(`[createReuniao] Error:`);
+      console.dir(error, { depth: null , colors: true });
       setErrorMessage('Erro ao criar reunião');
       setTimeout(() => {
         setErrorMessage('');
@@ -154,7 +160,7 @@ export default function Home() {
                   labelId="label"
                   id="tipo"
                   value={tipo}
-                  onChange={(e) => setTipo(e.target.value as string)}
+                  onChange={(e) => setTipo(e.target.value)}
                 >
                   <MenuItem value="ordinaria">Ordinária</MenuItem>
                   <MenuItem value="extraordinaria">Extraordinária</MenuItem>

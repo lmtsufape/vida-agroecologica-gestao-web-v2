@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import Link from 'next/link';
@@ -26,8 +25,8 @@ const Home = ({ params }: { params: { id: string } }) => {
       redirect('/');
     }
     getAssociacao(token, params.id)
-      .then((response: any) => setContent(response.associacao))
-      .catch((error: any) => console.log(error));
+    .then((response) => setContent(response))
+    .catch((error) => console.log(error));
   }, [params.id]);
 
   if (!content) {

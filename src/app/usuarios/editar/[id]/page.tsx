@@ -9,6 +9,7 @@ import Button from '@/components/Button';
 import Input from '@/components/Input';
 import MultiSelect from '@/components/Multiselect';
 import { StyledSelect } from '@/components/Multiselect/style';
+import MuiSelect from '@/components/Select';
 
 import {
   editUser,
@@ -20,7 +21,6 @@ import {
 import { APIErrorResponse, Bairro, User } from '@/types/api';
 import { Alert, AlertTitle, Snackbar } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import MuiSelect from '@/components/Select';
 
 export interface UserAdressType {
   id: number;
@@ -96,8 +96,7 @@ const Home = ({ params }: { params: { id: string } }) => {
       .catch((error) => console.log(error));
     getAllBairros(token)
       .then((response) => {
-        console.log(`Bairros: ${JSON.stringify(response.bairros)}`);
-        setBairro(response.bairros);
+        setBairro(response);
       })
       .catch((error) => console.log(error));
   }, []);

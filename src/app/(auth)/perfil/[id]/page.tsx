@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -24,8 +23,8 @@ const ProfilePage = () => {
     }
     if (typeof userId === 'string') {
       getUser(token, userId)
-        .then((response: any) => setContent(response.user))
-        .catch((error: any) => console.log(error));
+        .then((response) => setContent(response.user))
+        .catch((error) => console.log(error));
     }
   }, [userId]);
 

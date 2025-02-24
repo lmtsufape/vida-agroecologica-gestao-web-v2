@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import Link from 'next/link';
@@ -15,6 +14,7 @@ import StyledLink from '@/components/Link';
 
 import { createUser } from '@/services/user';
 import { Alert, AlertTitle, Snackbar } from '@mui/material';
+import { AxiosError } from 'axios';
 
 const RegisterForm = () => {
   const [name, setName] = React.useState('');
@@ -111,14 +111,35 @@ const RegisterForm = () => {
         setSuccessMessage('');
         router.back();
       }, 1000);
-    } catch (error: any) {
-      console.log(error.response?.data?.message);
-      const errors = error.response?.data?.errors;
-      if (errors !== undefined && errors !== null) {
-        for (const key of Object.keys(errors)) {
-          const errorMessage = errors[key][0];
-          setError(`${errorMessage}`);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.log(
+          `[registerForm] Axios error: ${error?.response?.data?.message}`,
+        );
+        const errors = error?.response?.data?.errors;
+        if (errors !== undefined && errors !== null) {
+          for (const key of Object.keys(errors)) {
+            const errorMessage = errors[key][0];
+            setError(`${errorMessage}`);
+          }
+        } else {
+          console.log(`[registerForm] Axios error: ${JSON.stringify(error?.message)}`);
+          setError(`Erro de requisição ao cadastrar`);
         }
+      } else if (error instanceof Error) {
+        console.log(
+          `[registerForm] Erro genérico: ${JSON.stringify(
+            error?.message,
+          )} | ${typeof error}`,
+        );
+        setError(`Erro genérico ao cadastrar: ${JSON.stringify(error?.message)}`);
+      } else {
+        console.log(
+          `[registerForm] Erro desconhecido: ${JSON.stringify(
+            error,
+          )} | ${typeof error}`,
+        );
+        setError(`Erro desconhecido ao cadastrar: ${JSON.stringify(error)}`);
       }
     }
   };
