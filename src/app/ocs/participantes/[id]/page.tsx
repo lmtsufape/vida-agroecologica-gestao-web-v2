@@ -11,7 +11,6 @@ import Button from '@/components/Button';
 import Loader from '@/components/Loader';
 import TableView from '@/components/Table/Table';
 
-
 import { getAllUsers } from '@/services';
 import {
   getUsersByOCS,
@@ -30,7 +29,6 @@ import {
   IconButton,
   Snackbar,
 } from '@mui/material';
-
 
 interface Column {
   header: string;
@@ -63,6 +61,36 @@ export default function OCSParticipants({
   const [modalOpen, setModalOpen] = useState(false);
   const [availableUsers, setAvailableUsers] = useState<any[]>([]);
   const [selectedUser, setSelectedUser] = useState('');
+  const [textResponsive, setTextResponsive] = React.useState(
+    'Adicionar Participante',
+  );
+  const [titleResponsive, setTitleResponsive] = React.useState(
+    'Participantes da Organização',
+  );
+
+  React.useEffect(() => {
+    const updateText = () => {
+      setTextResponsive(
+        window.innerWidth < 825 ? 'Adicionar' : 'Adicionar Participante',
+      );
+    };
+    window.addEventListener('resize', updateText);
+    updateText();
+    return () => window.removeEventListener('resize', updateText);
+  });
+
+  React.useEffect(() => {
+    const updateTextTitle = () => {
+      setTitleResponsive(
+        window.innerWidth < 825
+          ? 'Participantes'
+          : 'Participantes da Organização',
+      );
+    };
+    window.addEventListener('resize', updateTextTitle);
+    updateTextTitle();
+    return () => window.removeEventListener('resize', updateTextTitle);
+  });
 
   useEffect(() => {
     const token = localStorage.getItem('@token');
@@ -224,7 +252,7 @@ export default function OCSParticipants({
               </Link>
             </div>
             <div>
-              <h1 className={S.title}> Participantes da Organização </h1>
+              <h1 className={S.title}> {titleResponsive} </h1>
             </div>
             <div className={S.addButton}>
               <Button
@@ -232,7 +260,7 @@ export default function OCSParticipants({
                 type={'button'}
                 dataType="filled"
               >
-                Adicionar Participante
+                {textResponsive}
               </Button>
             </div>
           </div>
