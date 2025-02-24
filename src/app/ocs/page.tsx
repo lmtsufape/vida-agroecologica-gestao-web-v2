@@ -4,8 +4,6 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import React from 'react';
-import { Menu, MenuItem } from '@mui/material';
-import { IoMenu } from 'react-icons/io5';
 import {
   BiSolidTrashAlt,
   BiSolidEditAlt,
@@ -13,6 +11,7 @@ import {
   BiSolidUser,
 } from 'react-icons/bi';
 import { BsFillEyeFill, BsInfoCircle } from 'react-icons/bs';
+import { IoMenu } from 'react-icons/io5';
 
 import S from './styles.module.scss';
 
@@ -22,6 +21,7 @@ import Loader from '@/components/Loader';
 import TableView from '@/components/Table/Table';
 
 import { getAllOCS, removeOCS } from '@/services';
+import { Menu, MenuItem } from '@mui/material';
 import {
   Box,
   IconButton,
@@ -302,7 +302,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <TableView columns={columns} data={data?.ocs} />
+        <TableView columns={columns} data={data?.ocs ?? []} />
       </section>
       <div>
         <Modal

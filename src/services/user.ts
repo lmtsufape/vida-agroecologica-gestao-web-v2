@@ -1,8 +1,8 @@
 import { Role, UserAddressEdit } from '../types/api';
 import { api } from './api';
 
-import { Presidente, User } from '@/types/api';
 import { UserAdressType } from '@/app/usuarios/editar/[id]/page';
+import { Presidente, User } from '@/types/api';
 
 export async function createUser(
   {
@@ -56,14 +56,14 @@ export async function signIn(email: string, password: string) {
 
 export async function getPresidents(
   token: string,
-): Promise<{ data: Presidente[] }> {
+): Promise<Presidente[]> {
   try {
     const response = await api.get(`/api/users/presidents`, {
       headers: {
         authorization: `Bearer ${token}`,
       },
     });
-    return response.data;
+    return response?.data?.users;
   } catch (error) {
     console.error('Failed to fetch presidents: ', error);
     throw new Error('Failed to fetch presidents');

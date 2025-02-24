@@ -49,7 +49,7 @@ export default function Home() {
       redirect('/');
     }
     getAllBairros(token)
-      .then((response: { bairros: Bairro[] }) => setBairro(response.bairros))
+      .then((response) => setBairro(response))
       .catch((error: unknown) => console.log(error));
   }, []);
 

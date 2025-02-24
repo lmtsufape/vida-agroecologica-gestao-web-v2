@@ -9,6 +9,7 @@ import Button from '@/components/Button';
 import Search from '../Search';
 
 import {
+  ColumnDef,
   useReactTable,
   getCoreRowModel,
   flexRender,
@@ -17,20 +18,12 @@ import {
   getSortedRowModel,
 } from '@tanstack/react-table';
 
-type Column = {
-  header: (() => React.ReactNode) | string;
-  accessorKey: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  cell?: (info: any) => JSX.Element;
-};
+interface TableViewProps<T> {
+  data: T[];
+  columns: ColumnDef<T>[];
+}
 
-type TableViewProps = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data: any;
-  columns: Column[];
-};
-
-const TableView = ({ data, columns }: TableViewProps) => {
+const TableView = <T,>({ data, columns }: TableViewProps<T>) => {
   const [query, setQuery] = React.useState('');
 
   const table = useReactTable({

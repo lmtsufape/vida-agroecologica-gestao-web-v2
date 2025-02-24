@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { api } from './api';
 
 import { OCS, User } from '@/types/api';
+import { AxiosError } from 'axios';
 
 export async function getAllOCS(token: string): Promise<{ ocs: OCS[] }> {
   try {
@@ -131,16 +131,36 @@ export async function createOCS(
     );
     console.log(response.data);
     return response.data;
-  } catch (error: any) {
-    if (error.response) {
-      console.error('Erro retornado pela API:', error.response.data);
-      throw error;
-    } else if (error.request) {
-      console.error('Erro na requisição:', error.request);
-      throw new Error('Erro na requisição.');
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      if (error?.response) {
+        console.error(
+          `[createOCS] Erro retornado pela API: ${error?.response?.data}`,
+        );
+        throw error;
+      } else if (error?.request) {
+        console.error(`[createOCS] Erro na requisição: ${error?.request}`);
+        throw new Error('Erro na requisição.');
+      } else {
+        console.error(
+          `[createOCS] Ocorreu um erro desconhecido na requisição: ${
+            (error as Error).message
+          }`,
+        );
+        throw new Error('Ocorreu um erro desconhecido na requisição.');
+      }
+    } else if (error instanceof Error) {
+      console.error(
+        `[createOCS] Ocorreu um erro genérico: ${JSON.stringify(
+          error?.message,
+        )}`,
+      );
+      throw new Error('Ocorreu um erro genérico.');
     } else {
-      console.error('Ocorreu um erro inesperado:', error.message);
-      throw new Error('Ocorreu um erro inesperado.');
+      console.error(
+        `[createOCS] Ocorreu um erro desconhecido: ${(error as Error).message}`,
+      );
+      throw new Error('Ocorreu um erro desconhecido.');
     }
   }
 }
@@ -184,16 +204,35 @@ export async function editOCS(
     );
     console.log(response.data);
     return response.data;
-  } catch (error: any) {
-    if (error.response) {
-      console.error('Erro retornado pela API:', error.response.data);
-      throw error;
-    } else if (error.request) {
-      console.error('Erro na requisição:', error.request);
-      throw new Error('Erro na requisição.');
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      if (error?.response) {
+        console.error(
+          `[editOCS] Erro retornado pela API: ${error?.response?.data}`,
+        );
+        throw error;
+      } else if (error?.request) {
+        console.error(`[editOCS] Erro na requisição: ${error?.request}`);
+        throw new Error('Erro na requisição.');
+      } else {
+        console.error(
+          `[editOCS] Ocorreu um erro desconhecido na requisição: ${error?.message}`,
+        );
+        throw new Error('Ocorreu um erro desconhecido na requisição.');
+      }
+    } else if (error instanceof Error) {
+      console.error(
+        `[editOCS] Ocorreu um erro genérico: ${JSON.stringify(
+          error?.message,
+        )}`,
+      );
+      throw new Error('Ocorreu um erro genérico.');
     } else {
-      console.error('Ocorreu um erro inesperado:', error.message);
-      throw new Error('Ocorreu um erro inesperado.');
+      console.error(
+        '[editOCS] Ocorreu um erro desconhecido:',
+        (error as Error)?.message,
+      );
+      throw new Error('Ocorreu um erro desconhecido.');
     }
   }
 }

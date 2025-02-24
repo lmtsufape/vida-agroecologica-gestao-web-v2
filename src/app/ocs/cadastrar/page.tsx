@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import Link from 'next/link';
@@ -22,6 +21,7 @@ import {
 import { Bairro, User } from '@/types/api';
 import { Alert, AlertTitle, Snackbar } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 
 export default function Home() {
   const [name, setName] = React.useState('');
@@ -53,8 +53,8 @@ export default function Home() {
     }
 
     getAllBairros(token)
-      .then((response: { bairros: Bairro[] }) => setBairro(response.bairros))
-      .catch((error: any) => console.log(error));
+      .then((response) => setBairro(response))
+      .catch((error) => console.log(error));
   }, []);
 
   const { data: associacoes } = useQuery({
@@ -134,15 +134,24 @@ export default function Home() {
         token,
       );
       router.back();
-    } catch (error: any) {
-      if (error?.response && error?.response?.data) {
-        const apiErrors = error.response.data.errors;
-        console.log('Erro retornado pela API:', apiErrors);
-        setError(Object.values(apiErrors).flat().join(' | '));
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        if (error?.response?.data) {
+          const apiErrors = error?.response?.data?.errors;
+          console.log(`[createOCS] Erro retornado pela API: ${apiErrors}`);
+          setError(Object.values(apiErrors).flat().join(' | '));
+        } else {
+          console.error(`[createOCS] Axios Error: ${error?.message}`);
+          setError('Erro na requisição ao criar OCS.');
+        }
+      } else if (error instanceof Error) {
+        console.error(`[createOCS] Erro genérico: ${error?.message}`);
+        setError(`Erro genérico ao criar OCS. ${error?.message}`);
       } else {
-        console.error('Erro inesperado:', error.message);
-        setError('Erro inesperado ao criar OCS.');
+        console.error(`[createOCS] Erro desconhecido: ${JSON.stringify(error)}`);
+        setError(`Erro desconhecido ao criar OCS. ${JSON.stringify(error)}`);
       }
+
     }
   };
 

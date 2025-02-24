@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { redirect, useRouter } from 'next/navigation';
@@ -24,6 +23,7 @@ import { Reunioes } from '@/types/api';
 import { Select, FormControl, MenuItem } from '@mui/material';
 import { Alert, AlertTitle, Snackbar } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 
 const Home = ({ params }: { params: { id: number } }) => {
   const [date, setDate] = React.useState('');
@@ -81,8 +81,8 @@ const Home = ({ params }: { params: { id: number } }) => {
       redirect('/');
     }
     getReuniao(token, params.id)
-      .then((response: any) => setContent(response.reuniao))
-      .catch((error: any) => console.log(error));
+      .then((response) => setContent(response.reuniao))
+      .catch((error) => console.log(error));
   }, [params.id]);
 
   React.useEffect(() => {
@@ -94,7 +94,7 @@ const Home = ({ params }: { params: { id: number } }) => {
       setSelectedOcs(content.organizacao_id ?? 0);
       setSelectedParticipantes(
         content.participantes?.map((participante) =>
-          String(participante.name),
+          String((participante as { id: number; name: string })?.name),
         ) ?? [],
       );
       const formattedDate = content?.data.split(' ')[0];
@@ -124,7 +124,8 @@ const Home = ({ params }: { params: { id: number } }) => {
     organizacaoIdToSend = null;
   }
 
-  const handleEditRegister = async (e: any) => {
+  const handleEditRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+    // TODO Verificar tipagem
     e.preventDefault();
     try {
       const token = localStorage.getItem('@token');
@@ -143,27 +144,29 @@ const Home = ({ params }: { params: { id: number } }) => {
         pauta: pauta ?? content?.pauta,
         tipo: tipo ?? content?.tipo,
         data: date ?? content?.data,
-        organizacao_id: organizacaoIdToSend || organizacaoDefault,
-        participantes: [
-          ...selectedParticipantIds,
-          ...(content?.participantes.map(
-            (participante: any) => participante.id,
-          ) ?? []),
-        ],
+        organizacao_id: organizacaoIdToSend ?? organizacaoDefault,
+        participantes: selectedParticipantIds ?? [],
         associacao_id: selectedAssociacoes || associacaoDefautl,
       };
       await editReuniao(requestData, token, params.id);
       router.back();
-    } catch (error: any) {
-      console.log(error);
-      console.log(error.response?.data?.message);
-
-      const errors = error.response?.data?.errors;
-      if (errors !== undefined && errors !== null) {
-        for (const key of Object.keys(errors)) {
-          const errorMessage = errors[key][0];
+    } catch (error) {
+      console.dir(error, { depth: null, colors: true });
+      if (error instanceof AxiosError) {
+        console.log(`[editReuniao] ${JSON.stringify(error?.response?.data?.message)}`);
+        const errors = error?.response?.data?.errors;
+        if (errors !== undefined && errors !== null) {
+          for (const key of Object.keys(errors)) {
+            const errorMessage = errors[key][0];
+            setTimeout(() => {
+              setError(`${errorMessage}`);
+              window.location.reload();
+            }, 4000);
+          }
+        } else {
+          setError(`${JSON.stringify(error)}`);
           setTimeout(() => {
-            setError(`${errorMessage}`);
+            setError('');
             window.location.reload();
           }, 4000);
         }

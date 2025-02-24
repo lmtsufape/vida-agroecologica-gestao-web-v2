@@ -1,11 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { redirect } from 'next/navigation';
-import React from 'react';
+import React, { ComponentType } from 'react';
 
-export default function Authentication(Component: any) {
-  return function Authentication(props: any) {
+export default function Authentication<P extends Record<string, unknown>>(
+  Component: ComponentType<P>,
+) {
+  return function AuthenticatedComponent(props: P) {
     const [session, setSession] = React.useState<string | null>(null);
 
     React.useEffect(() => {

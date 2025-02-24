@@ -47,7 +47,7 @@ export async function createReuniao(
   }: Reunioes,
   token: string,
 ) {
-  const participantesIds = participantes.map((participante) => participante.id);
+  const participantesIds = (participantes as [{id:number, name:string}]).map((participante) => participante.id);
   const response = await api.post(
     '/api/reunioes',
     {

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { redirect, useRouter } from 'next/navigation';
@@ -14,8 +13,9 @@ import MuiSelect from '@/components/Select';
 import { getAllBairros } from '@/services';
 import { createAssociacao } from '@/services/associations';
 import { getPresidents } from '@/services/user';
-import { Bairro } from '@/types/api';
+import { Bairro, Presidente } from '@/types/api';
 import { Snackbar, Alert, AlertTitle } from '@mui/material';
+import { AxiosError } from 'axios';
 
 export default function Home() {
   const [name, setName] = useState('');
@@ -30,7 +30,7 @@ export default function Home() {
   const [bairro, setBairro] = useState<Bairro[]>([]);
   const [selectedBairro, setSelectedBairro] = useState(1);
 
-  const [presidents, setPresidents] = useState<[]>([]);
+  const [presidents, setPresidents] = useState<Presidente[]>([]);
   const [selectedPresidents, setSelectedPresidents] = useState(2);
 
   const secretarioId = [3];
@@ -53,11 +53,11 @@ export default function Home() {
     }
 
     getPresidents(token)
-      .then((response: any) => setPresidents(response.users))
-      .catch((error: any) => console.log(error));
+      .then((response) => setPresidents(response))
+      .catch((error) => console.log(error));
     getAllBairros(token)
-      .then((response: { bairros: Bairro[] }) => setBairro(response.bairros))
-      .catch((error: any) => console.log(error));
+      .then((response) => setBairro(response))
+      .catch((error) => console.log(error));
   }, []);
 
   const fetchAddress = async (cep: string) => {
@@ -95,10 +95,10 @@ export default function Home() {
   const handleRegister: (e: React.FormEvent) => Promise<void> = async (e) => {
     e.preventDefault();
     try {
-        if (name.length <10) {
-          setErrorMessage('Nome da associação deve ter no mínimo 10 caracteres.');
-          return;
-        }
+      if (name.length < 10) {
+        setErrorMessage('Nome da associação deve ter no mínimo 10 caracteres.');
+        return;
+      }
       const token = localStorage.getItem('@token');
       if (!token) {
         redirect('/');
@@ -119,13 +119,25 @@ export default function Home() {
         token,
       );
       router.back();
-    } catch (error: any) {
-      console.log(error);
-      if (error.response && error.response.status === 500) {
-        setTimeout(() => {}, 4000);
-      } else {
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.log(`[createAssociacao] AxiosError: ${JSON.stringify(error)}`);
+        if (error?.response?.status === 500) {
+          setTimeout(() => {}, 4000);
+        } else {
+          setErrorMessage(
+            'Erro ao cadastrar associação. Por favor, verifique os dados e tente novamente.',
+          );
+        }
+      } else if (error instanceof Error) {
+        console.log(`[createAssociacao] Erro genérico: ${JSON.stringify(error)}`);
         setErrorMessage(
-          'Erro ao cadastrar associação. Por favor, verifique os dados e tente novamente.',
+          `Erro genérico ao cadastrar associação. ${JSON.stringify(error?.message)}`,
+        );
+      } else {
+        console.log(`[createAssociacao] Erro desconhecido: ${JSON.stringify(error)}`);
+        setErrorMessage(
+          `Erro desconhecido ao cadastrar associação. ${JSON.stringify(error)}`,
         );
       }
     }
@@ -192,7 +204,7 @@ export default function Home() {
               selectedNames={selectedPresidents}
               setSelectedNames={setSelectedPresidents}
             >
-              {presidents?.map((item: { id: number; name: string }) => (
+              {presidents?.map((item) => (
                 <StyledSelect
                   key={item.id}
                   value={item.id}

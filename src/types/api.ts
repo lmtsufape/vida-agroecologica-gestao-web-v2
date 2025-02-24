@@ -102,7 +102,7 @@ export interface Reunioes {
   participantes: {
     name: string;
     id: number;
-  }[];
+  }[] | number[];
   associacao_id: number | null;
   organizacao_id?: number | null;
 }
