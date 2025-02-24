@@ -6,25 +6,17 @@ import { redirect } from 'next/navigation';
 import React from 'react';
 import { BiSolidTrashAlt, BiSolidEditAlt } from 'react-icons/bi';
 import { BsFillEyeFill, BsInfoCircle } from 'react-icons/bs';
-import { IoMenu } from 'react-icons/io5';
 
 import S from './styles.module.scss';
 
+import ActionsMenu from '@/components/ActionsMenu';
 import Button from '@/components/Button';
 import StyledLink from '@/components/Link';
 import Loader from '@/components/Loader';
 import TableView from '@/components/Table/Table';
 
 import { getAllUsers, removeUser } from '@/services';
-import {
-  Box,
-  IconButton,
-  Tooltip,
-  Modal,
-  Typography,
-  Menu,
-  MenuItem,
-} from '@mui/material';
+import { Box, IconButton, Tooltip, Modal, Typography } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
 const style = {
@@ -46,7 +38,6 @@ export default function Home() {
   const handleClose = () => setValue(0);
   const [infoModalOpen, setInfoModalOpen] = React.useState(false);
   const [textResponsive, setTextResponsive] = React.useState('Criar Usuário');
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   React.useEffect(() => {
     const updateText = () => {
@@ -120,17 +111,24 @@ export default function Home() {
       accessorKey: 'id',
       cell: (info: any) => {
         const value = info.getValue();
-        const open = Boolean(anchorEl);
-
-        const handleClickAction = (
-          event: React.MouseEvent<HTMLButtonElement>,
-        ) => {
-          setAnchorEl(event.currentTarget);
-        };
-
-        const handleCloseAction = () => {
-          setAnchorEl(null);
-        };
+        const usuariosActions = [
+          {
+            icon: <BsFillEyeFill style={{ marginRight: 8 }} />,
+            text: 'Visualizar',
+            href: `usuarios/${value}`,
+          },
+          {
+            icon: <BiSolidEditAlt style={{ marginRight: 8 }} />,
+            text: 'Editar',
+            href: `usuarios/editar/${value}`,
+          },
+          {
+            icon: <BiSolidTrashAlt style={{ marginRight: 8, color: 'red' }} />,
+            text: 'Remover',
+            onClick: () => setValue(value),
+            color: 'red',
+          },
+        ];
         return (
           <div className={S.action}>
             {window.innerWidth > 768 ? (
@@ -166,46 +164,7 @@ export default function Home() {
                 </li>
               </ul>
             ) : (
-              <>
-                <IconButton
-                  aria-label="mais ações"
-                  size="small"
-                  onClick={handleClickAction}
-                >
-                  <IoMenu />
-                </IconButton>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleCloseAction}
-                >
-                  <MenuItem onClick={handleCloseAction}>
-                    <Link
-                      href={'usuarios/' + value}
-                      style={{ textDecoration: 'none', color: 'inherit' }}
-                    >
-                      <BsFillEyeFill style={{ marginRight: 8 }} /> Visualizar
-                    </Link>
-                  </MenuItem>
-                  <MenuItem onClick={handleCloseAction}>
-                    <Link
-                      href={'usuarios/editar/' + value}
-                      style={{ textDecoration: 'none', color: 'inherit' }}
-                    >
-                      <BiSolidEditAlt style={{ marginRight: 8 }} /> Editar
-                    </Link>
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      handleCloseAction();
-                      setValue(value);
-                    }}
-                  >
-                    <BiSolidTrashAlt style={{ marginRight: 8, color: 'red' }} />{' '}
-                    Remover
-                  </MenuItem>
-                </Menu>
-              </>
+              <ActionsMenu actions={usuariosActions} />
             )}
           </div>
         );

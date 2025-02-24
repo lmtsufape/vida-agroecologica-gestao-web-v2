@@ -10,11 +10,11 @@ import {
   BiSolidFileImport,
 } from 'react-icons/bi';
 import { BsFillEyeFill, BsInfoCircle } from 'react-icons/bs';
-import { IoMenu } from 'react-icons/io5';
 import { MdAttachFile } from 'react-icons/md';
 
 import S from './styles.module.scss';
 
+import ActionsMenu from '@/components/ActionsMenu';
 import { AnexosForm } from '@/components/Anexos';
 import { AtaForm } from '@/components/Ata';
 import Button from '@/components/Button';
@@ -23,15 +23,7 @@ import Loader from '@/components/Loader';
 import TableView from '@/components/Table/Table';
 
 import { getAllReunioes, removeReuniao } from '@/services';
-import {
-  Box,
-  IconButton,
-  Tooltip,
-  Modal,
-  Typography,
-  Menu,
-  MenuItem,
-} from '@mui/material';
+import { Box, IconButton, Tooltip, Modal, Typography } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
 const style = {
@@ -55,7 +47,6 @@ export default function Home() {
   const handleClose = () => setValue(0);
   const [infoModalOpen, setInfoModalOpen] = React.useState(false);
   const [textResponsive, setTextResponsive] = React.useState('Criar Reunião');
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   React.useEffect(() => {
     const token = localStorage.getItem('@token');
@@ -129,17 +120,35 @@ export default function Home() {
       accessorKey: 'id',
       cell: (info: any) => {
         const value = info.getValue();
-        const open = Boolean(anchorEl);
+        const reunioesActions = [
+          {
+            icon: <MdAttachFile style={{ marginRight: 8 }} />,
+            text: 'Adicionar Ata',
+            onClick: () => handleOpenModal(value, 'ata'),
+          },
+          {
+            icon: <BiSolidFileImport style={{ marginRight: 8 }} />,
+            text: 'Adicionar Anexos',
+            onClick: () => handleOpenModal(value, 'anexos'),
+          },
+          {
+            icon: <BsFillEyeFill style={{ marginRight: 8 }} />,
+            text: 'Visualizar',
+            href: `reunioes/${value}`,
+          },
+          {
+            icon: <BiSolidEditAlt style={{ marginRight: 8 }} />,
+            text: 'Editar',
+            href: `reunioes/editar/${value}`,
+          },
+          {
+            icon: <BiSolidTrashAlt style={{ marginRight: 8, color: 'red' }} />,
+            text: 'Remover',
+            onClick: () => setValue(value),
+            color: 'red',
+          },
+        ];
 
-        const handleClickAction = (
-          event: React.MouseEvent<HTMLButtonElement>,
-        ) => {
-          setAnchorEl(event.currentTarget);
-        };
-
-        const handleCloseAction = () => {
-          setAnchorEl(null);
-        };
         return (
           <div className={S.action}>
             {window.innerWidth > 768 ? (
@@ -197,63 +206,7 @@ export default function Home() {
                 </li>
               </ul>
             ) : (
-              <>
-                <IconButton
-                  aria-label="mais ações"
-                  size="small"
-                  onClick={handleClickAction}
-                >
-                  <IoMenu />
-                </IconButton>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleCloseAction}
-                >
-                  <MenuItem
-                    onClick={() => {
-                      handleCloseAction();
-                      handleOpenModal(value, 'ata');
-                    }}
-                  >
-                    <MdAttachFile style={{ marginRight: 8 }} /> Adicionar Ata
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      handleCloseAction();
-                      handleOpenModal(value, 'anexos');
-                    }}
-                  >
-                    <BiSolidFileImport style={{ marginRight: 8 }} /> Adicionar
-                    Anexo
-                  </MenuItem>
-                  <MenuItem onClick={handleCloseAction}>
-                    <Link
-                      href={'reunioes/' + value}
-                      style={{ textDecoration: 'none', color: 'inherit' }}
-                    >
-                      <BsFillEyeFill style={{ marginRight: 8 }} /> Visualizar
-                    </Link>
-                  </MenuItem>
-                  <MenuItem onClick={handleCloseAction}>
-                    <Link
-                      href={'reunioes/editar/' + value}
-                      style={{ textDecoration: 'none', color: 'inherit' }}
-                    >
-                      <BiSolidEditAlt style={{ marginRight: 8 }} /> Editar
-                    </Link>
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      handleCloseAction();
-                      setValue(value);
-                    }}
-                  >
-                    <BiSolidTrashAlt style={{ marginRight: 8, color: 'red' }} />{' '}
-                    Remover
-                  </MenuItem>
-                </Menu>
-              </>
+              <ActionsMenu actions={reunioesActions} />
             )}
           </div>
         );
