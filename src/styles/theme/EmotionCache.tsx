@@ -67,7 +67,9 @@ export default function NextAppDirEmotionCacheProvider(
 
       if (typeof style !== 'boolean') {
         if (isGlobal) {
-          globals.push({ name, style });
+          if (typeof style === 'string') {
+            globals.push({ name, style });
+          }
         } else {
           styles += style;
           dataEmotionAttribute += ` ${name}`;

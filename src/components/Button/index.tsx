@@ -18,7 +18,7 @@ const Button = ({
   style,
   dataType,
   disabled,
-}: Props): JSX.Element => {
+}: Props) => {
   return (
     <button
       onClick={onClick}
