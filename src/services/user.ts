@@ -1,7 +1,8 @@
+import { UserAdressType } from '@/components/UsuarioEdit';
+
 import { Role, UserAddressEdit } from '../types/api';
 import { api } from './api';
 
-import { UserAdressType } from '@/app/usuarios/editar/[id]/page';
 import { Presidente, User } from '@/types/api';
 
 export async function createUser(
@@ -54,9 +55,7 @@ export async function signIn(email: string, password: string) {
   window.location.href = '/menu';
 }
 
-export async function getPresidents(
-  token: string,
-): Promise<Presidente[]> {
+export async function getPresidents(token: string): Promise<Presidente[]> {
   try {
     const response = await api.get(`/api/users/presidents`, {
       headers: {
@@ -101,9 +100,7 @@ export async function getUser(
   }
 }
 
-export async function getUserAddress(
-  token: string,
-): Promise<UserAdressType> {
+export async function getUserAddress(token: string): Promise<UserAdressType> {
   try {
     const response = await api.get(`api/users/enderecos`, {
       headers: {
@@ -160,7 +157,7 @@ export async function editUser(
   );
   console.log(`Edit User : ${responseUser.data}`);
 
-    const responseAddress = await api.patch(
+  const responseAddress = await api.patch(
     `/api/users/enderecos/${endereco_id}`,
     {
       rua,
@@ -232,4 +229,3 @@ export async function resetPassword(
     throw new Error('Failed to reset password');
   }
 }
-
