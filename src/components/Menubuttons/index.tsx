@@ -21,7 +21,7 @@ const MenuOptions = () => {
   }, []);
 
   const menuOptions: Array<{
-    icon: JSX.Element;
+    icon: React.ReactNode;
     name: string;
     route: string;
     roles: string[];
