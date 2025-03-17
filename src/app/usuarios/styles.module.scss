@@ -10,6 +10,10 @@
   }
 }
 
+.hiddenColumn {
+  display: none !important;
+}
+
 .header {
   display: flex;
   justify-content: space-between;

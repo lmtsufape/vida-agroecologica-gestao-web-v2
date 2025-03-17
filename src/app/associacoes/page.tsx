@@ -43,6 +43,7 @@ export default function Home() {
   );
   const [textResponsiveHeader, setTextResponsiveHeader] =
     React.useState('Data de Fundação');
+  const [isMobile, setIsMobile] = React.useState(false);
 
   React.useEffect(() => {
     const updateText = () => {
@@ -58,13 +59,22 @@ export default function Home() {
   React.useEffect(() => {
     const updateTextHeader = () => {
       setTextResponsiveHeader(
-        window.innerWidth < 821 ? 'Fundação' : 'Data de Fundação',
+        window.innerWidth < 821 ? '' : 'Data de Fundação',
       );
     };
     window.addEventListener('resize', updateTextHeader);
     updateTextHeader();
     return () => window.removeEventListener('resize', updateTextHeader);
   });
+
+  React.useEffect(() => {
+    const updateIsMobile = () => {
+      setIsMobile(window.innerWidth < 821);
+    };
+    window.addEventListener('resize', updateIsMobile);
+    updateIsMobile();
+    return () => window.removeEventListener('resize', updateIsMobile);
+  }, []);
 
   React.useEffect(() => {
     const token = localStorage.getItem('@token');
@@ -116,7 +126,7 @@ export default function Home() {
       accessorKey: 'data_fundacao',
       cell: (info: any) => {
         const value = info.getValue();
-        return <p>{formatDate(value)}</p>;
+        return isMobile ? null : <p>{formatDate(value)}</p>;
       },
     },
     {

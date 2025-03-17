@@ -11,6 +11,7 @@
   .loginMessage {
     text-align: center;
     font-size: .875rem;
+    margin-bottom: 20px;
     a {
       text-decoration: underline;
       color: #f5821fe5;
@@ -27,6 +28,11 @@
     place-content: center;
     gap: 0.5rem;
     font-size: 1.5rem;
+  }
+
+  h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
   }
 
   label {
