@@ -130,12 +130,16 @@ export default function Home() {
           );
         }
       } else if (error instanceof Error) {
-        console.log(`[createAssociacao] Erro genérico: ${JSON.stringify(error)}`);
+        console.log(
+          `[createAssociacao] Erro genérico: ${JSON.stringify(error)}`,
+        );
         setErrorMessage(
           `Erro genérico ao cadastrar associação. ${JSON.stringify(error?.message)}`,
         );
       } else {
-        console.log(`[createAssociacao] Erro desconhecido: ${JSON.stringify(error)}`);
+        console.log(
+          `[createAssociacao] Erro desconhecido: ${JSON.stringify(error)}`,
+        );
         setErrorMessage(
           `Erro desconhecido ao cadastrar associação. ${JSON.stringify(error)}`,
         );
@@ -172,7 +176,7 @@ export default function Home() {
                 type="email"
                 placeholder="Email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value.toLowerCase())}
               />
             </div>
             <div>

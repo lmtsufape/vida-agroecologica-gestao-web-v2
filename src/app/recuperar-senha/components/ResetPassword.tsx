@@ -33,7 +33,7 @@ export const ResetPasswordRequest = () => {
           name="email"
           type="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value.toLowerCase())}
         />
       </div>
       <div className={S['button-container']}>

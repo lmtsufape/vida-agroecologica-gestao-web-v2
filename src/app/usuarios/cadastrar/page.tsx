@@ -190,7 +190,7 @@ export default function Home() {
                 type="email"
                 placeholder="contato@email.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value.toLowerCase())}
               />
             </div>
             <div style={{ position: 'relative' }}>
