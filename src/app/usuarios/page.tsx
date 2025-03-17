@@ -39,8 +39,6 @@ export default function Home() {
   const [infoModalOpen, setInfoModalOpen] = React.useState(false);
   const [textResponsive, setTextResponsive] = React.useState('Criar Usuário');
   const [isMobile, setIsMobile] = React.useState(false);
-  const [textResponsiveHeader, setTextResponsiveHeader] =
-    React.useState('Email');
 
   React.useEffect(() => {
     const updateIsMobile = () => {
@@ -50,15 +48,6 @@ export default function Home() {
     updateIsMobile();
     return () => window.removeEventListener('resize', updateIsMobile);
   }, []);
-
-  React.useEffect(() => {
-    const updateTextHeader = () => {
-      setTextResponsiveHeader(window.innerWidth < 821 ? '' : 'Email');
-    };
-    window.addEventListener('resize', updateTextHeader);
-    updateTextHeader();
-    return () => window.removeEventListener('resize', updateTextHeader);
-  });
 
   React.useEffect(() => {
     const updateText = () => {
@@ -104,13 +93,14 @@ export default function Home() {
         );
       },
     },
-    {
-      header: textResponsiveHeader,
-      accessorKey: 'email',
-      cell: (info: any) => (
-        <p className={isMobile ? S.hiddenColumn : ''}>{info.getValue()}</p>
-      ),
-    },
+    ...(!isMobile
+      ? [
+          {
+            header: 'Email',
+            accessorKey: 'email',
+          },
+        ]
+      : []),
     {
       header: () => (
         <div

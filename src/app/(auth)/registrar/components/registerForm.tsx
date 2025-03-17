@@ -123,7 +123,9 @@ const RegisterForm = () => {
             setError(`${errorMessage}`);
           }
         } else {
-          console.log(`[registerForm] Axios error: ${JSON.stringify(error?.message)}`);
+          console.log(
+            `[registerForm] Axios error: ${JSON.stringify(error?.message)}`,
+          );
           setError(`Erro de requisição ao cadastrar`);
         }
       } else if (error instanceof Error) {
@@ -132,7 +134,9 @@ const RegisterForm = () => {
             error?.message,
           )} | ${typeof error}`,
         );
-        setError(`Erro genérico ao cadastrar: ${JSON.stringify(error?.message)}`);
+        setError(
+          `Erro genérico ao cadastrar: ${JSON.stringify(error?.message)}`,
+        );
       } else {
         console.log(
           `[registerForm] Erro desconhecido: ${JSON.stringify(
@@ -175,7 +179,7 @@ const RegisterForm = () => {
             type="email"
             placeholder="contato@email.com"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value.toLowerCase())}
           />
         </div>
         <div style={{ position: 'relative' }}>

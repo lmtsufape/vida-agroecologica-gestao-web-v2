@@ -75,7 +75,7 @@ export const LoginForm = () => {
             value={email}
             onChange={(
               e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-            ) => setEmail((e.target as HTMLInputElement).value)}
+            ) => setEmail((e.target as HTMLInputElement).value.toLowerCase())}
           />
         </div>
         <div style={{ position: 'relative' }}>

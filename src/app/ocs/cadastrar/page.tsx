@@ -148,14 +148,15 @@ export default function Home() {
         console.error(`[createOCS] Erro genérico: ${error?.message}`);
         setError(`Erro genérico ao criar OCS. ${error?.message}`);
       } else {
-        console.error(`[createOCS] Erro desconhecido: ${JSON.stringify(error)}`);
+        console.error(
+          `[createOCS] Erro desconhecido: ${JSON.stringify(error)}`,
+        );
         setError(`Erro desconhecido ao criar OCS. ${JSON.stringify(error)}`);
       }
-
     }
   };
 
-    const fetchAddress = async (cep: string) => {
+  const fetchAddress = async (cep: string) => {
     try {
       const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
       const data = await response.json();
@@ -225,7 +226,7 @@ export default function Home() {
                 type="email"
                 placeholder="contato@email.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value.toLowerCase())}
               />
             </div>
             <div>
