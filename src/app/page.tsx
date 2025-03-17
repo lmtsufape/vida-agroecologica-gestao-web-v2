@@ -18,7 +18,7 @@ export default function Home() {
             agricultores na administração de associações e Organizações de
             Controle Social (OCS), facilitando a organização de reuniões,
             elaboração de atas e o armazenamento de informações adicionais de
-            cada encontro, como fotos e documentos extras.
+            cada encontro, como fotos e documentos extras.
           </p>
         </div>
         <div className={`${S.rightContent} ${S.loginFormContainer}`}>
