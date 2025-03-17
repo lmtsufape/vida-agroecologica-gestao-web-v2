@@ -38,6 +38,27 @@ export default function Home() {
   const handleClose = () => setValue(0);
   const [infoModalOpen, setInfoModalOpen] = React.useState(false);
   const [textResponsive, setTextResponsive] = React.useState('Criar Usuário');
+  const [isMobile, setIsMobile] = React.useState(false);
+  const [textResponsiveHeader, setTextResponsiveHeader] =
+    React.useState('Email');
+
+  React.useEffect(() => {
+    const updateIsMobile = () => {
+      setIsMobile(window.innerWidth < 821);
+    };
+    window.addEventListener('resize', updateIsMobile);
+    updateIsMobile();
+    return () => window.removeEventListener('resize', updateIsMobile);
+  }, []);
+
+  React.useEffect(() => {
+    const updateTextHeader = () => {
+      setTextResponsiveHeader(window.innerWidth < 821 ? '' : 'Email');
+    };
+    window.addEventListener('resize', updateTextHeader);
+    updateTextHeader();
+    return () => window.removeEventListener('resize', updateTextHeader);
+  });
 
   React.useEffect(() => {
     const updateText = () => {
@@ -84,8 +105,11 @@ export default function Home() {
       },
     },
     {
-      header: 'E-mail',
+      header: textResponsiveHeader,
       accessorKey: 'email',
+      cell: (info: any) => (
+        <p className={isMobile ? S.hiddenColumn : ''}>{info.getValue()}</p>
+      ),
     },
     {
       header: () => (
