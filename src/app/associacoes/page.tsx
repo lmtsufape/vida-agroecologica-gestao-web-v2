@@ -41,8 +41,6 @@ export default function Home() {
   const [textResponsive, setTextResponsive] = React.useState(
     'Adicionar Nova Associação',
   );
-  const [textResponsiveHeader, setTextResponsiveHeader] =
-    React.useState('Data de Fundação');
   const [isMobile, setIsMobile] = React.useState(false);
 
   React.useEffect(() => {
@@ -54,17 +52,6 @@ export default function Home() {
     window.addEventListener('resize', updateText);
     updateText();
     return () => window.removeEventListener('resize', updateText);
-  });
-
-  React.useEffect(() => {
-    const updateTextHeader = () => {
-      setTextResponsiveHeader(
-        window.innerWidth < 821 ? '' : 'Data de Fundação',
-      );
-    };
-    window.addEventListener('resize', updateTextHeader);
-    updateTextHeader();
-    return () => window.removeEventListener('resize', updateTextHeader);
   });
 
   React.useEffect(() => {
@@ -121,14 +108,18 @@ export default function Home() {
       header: 'Nome',
       accessorKey: 'nome',
     },
-    {
-      header: textResponsiveHeader,
-      accessorKey: 'data_fundacao',
-      cell: (info: any) => {
-        const value = info.getValue();
-        return isMobile ? null : <p>{formatDate(value)}</p>;
-      },
-    },
+    ...(!isMobile
+      ? [
+          {
+            header: 'Data de Fundação',
+            accessorKey: 'data_fundacao',
+            cell: (info: any) => {
+              const value = info.getValue();
+              return <p>{formatDate(value)}</p>;
+            },
+          },
+        ]
+      : []),
     {
       header: 'Presidente',
       accessorKey: 'presidentes',

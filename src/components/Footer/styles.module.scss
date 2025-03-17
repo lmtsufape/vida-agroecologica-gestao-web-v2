@@ -14,6 +14,10 @@
     place-items: center;
     list-style: none;
     width: 90%;
+
+    @media (max-width: 600px) {
+      width: 100%;
+    }
   }
 
   li {
@@ -24,7 +28,7 @@
 .logo {
   display: flex;
   place-items: center;
-  gap: .45rem;
+  gap: .1rem;
   color: white;
 }
 
@@ -37,23 +41,8 @@
   .email {
     font-size: 20px;
   }
-}
-
-@media (max-width: 500px) {
-  .footer svg {
-    width: 40%;
-  }
-  .ufapelmtsWrapper {
-    width: 60%;
-    place-self: end;
-  }
-  .logoImg {
-    width: 20%;
-  }
-  .ufapeLmts {
-    padding: .6rem;
-  }
-  .socialNetwork {
-    gap: 0.6rem;
+  
+  @media (max-width: 600px) {
+    gap: 0.5rem !important;
   }
 }
