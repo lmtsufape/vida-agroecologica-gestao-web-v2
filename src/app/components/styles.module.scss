@@ -26,6 +26,10 @@
     justify-content: center; 
   }
 
+  .leftContent p {
+    text-align: justify;
+  }
+
   .rightContent {
     flex: 1;
     margin-left: 30px; 

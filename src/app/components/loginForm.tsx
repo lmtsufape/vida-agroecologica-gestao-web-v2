@@ -19,39 +19,44 @@ export const LoginForm = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [error, setError] = React.useState('');
 
+  const errorMessagesMap: Record<string, string> = {
+    'The provided credentials are incorrect.':
+      'As credenciais fornecidas estão incorretas.',
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await signIn(email, password);
     } catch (error) {
       if (error instanceof AxiosError) {
-        console.log(`[loginForm] AxiosError: ${JSON.stringify(error)} | ${typeof error}`);
+        console.log(
+          `[loginForm] AxiosError: ${JSON.stringify(error)} | ${typeof error}`,
+        );
         const errors = error?.response?.data?.errors;
+
         if (errors !== undefined && errors !== null) {
           for (const key of Object.keys(errors)) {
-            const errorMessage = errors[key][0];
-            setError(`${errorMessage}`);
+            let errorMessage = errors[key][0];
+
+            errorMessage = errorMessagesMap[errorMessage] || errorMessage;
+
+            setError(errorMessage);
           }
         } else {
           console.error(
-            `[loginForm] Erro na request: ${JSON.stringify(
-              error,
-            )} | ${typeof error}`,
+            `[loginForm] Erro na request: ${JSON.stringify(error)} | ${typeof error}`,
           );
           setError('Ocorreu um erro na requisição.');
         }
       } else if (error instanceof Error) {
         console.error(
-          `[loginForm] Erro generico: ${JSON.stringify(
-            error,
-          )} | ${typeof error}`,
+          `[loginForm] Erro genérico: ${JSON.stringify(error)} | ${typeof error}`,
         );
-        setError(`Erro generico: ${JSON.stringify(error?.message)}`);
+        setError(`Erro genérico: ${error?.message}`);
       } else {
         console.error(
-          `[loginForm] Erro desconhecido: ${JSON.stringify(
-            error,
-          )} | ${typeof error}`,
+          `[loginForm] Erro desconhecido: ${JSON.stringify(error)} | ${typeof error}`,
         );
         setError('Ocorreu um erro desconhecido, tente novamente mais tarde.');
       }
