@@ -157,24 +157,25 @@ export async function editUser(
   );
   console.log(`Edit User : ${responseUser.data}`);
 
-  const responseAddress = await api.patch(
-    `/api/users/enderecos/${endereco_id}`,
-    {
-      rua,
-      cep,
-      numero,
-      complemento,
-      bairro_id,
-    },
-    {
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
-    },
-  );
-  console.log(`Edit Address: ${responseAddress.data}`);
+  // const responseAddress = await api.patch(
+  //   `/api/users/enderecos/${endereco_id}`,
+  //   {
+  //     rua,
+  //     cep,
+  //     numero,
+  //     complemento,
+  //     bairro_id,
+  //   },
+  //   {
+  //     headers: {
+  //       authorization: `Bearer ${token}`,
+  //     },
+  //   },
+  // );
+  // console.log(`Edit Address: ${responseAddress.data}`);
 
-  return { ...responseUser.data, endereco: responseAddress.data };
+  // return { ...responseUser.data, endereco: responseAddress.data };
+  return { ...responseUser.data };
 }
 
 export async function removeUser(token: string, id: number) {
