@@ -1,6 +1,4 @@
-import { UserAdressType } from '@/components/UsuarioEdit';
-
-import { Role, UserAddressEdit } from '../types/api';
+import { Role } from '../types/api';
 import { api } from './api';
 
 import { Presidente, User } from '@/types/api';
@@ -100,21 +98,6 @@ export async function getUser(
   }
 }
 
-export async function getUserAddress(token: string): Promise<UserAdressType> {
-  try {
-    const response = await api.get(`api/users/enderecos`, {
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
-    });
-    console.log(`Request endereco: ${JSON.stringify(response.data)}`);
-    return undefined as unknown as UserAdressType; // TODO precisa de outro endpoint, funcionalidade suspensa //response.data[0] ?? response.data as UserAdressType;
-  } catch (error) {
-    console.error('Failed to fetch user address: ', error);
-    throw new Error('Failed to fetch user address');
-  }
-}
-
 export async function editUser(
   {
     name,
@@ -128,9 +111,7 @@ export async function editUser(
     numero,
     bairro_id,
     ativo,
-    endereco_id,
-    complemento,
-  }: UserAddressEdit,
+  }: User,
   token: string,
   id: string,
 ) {

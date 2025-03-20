@@ -99,10 +99,12 @@ export interface Reunioes {
   tipo: string;
   status?: string;
   ata?: string[];
-  participantes: {
-    name: string;
-    id: number;
-  }[] | number[];
+  participantes:
+    | {
+        name: string;
+        id: number;
+      }[]
+    | number[];
   associacao_id: number | null;
   organizacao_id?: number | null;
 }
@@ -115,9 +117,4 @@ export interface APIErrorResponse {
       };
     };
   };
-}
-
-export interface UserAddressEdit extends User {
-  endereco_id: number;
-  complemento: string;
 }

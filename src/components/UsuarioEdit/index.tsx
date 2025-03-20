@@ -1,7 +1,7 @@
 'use client';
 
 import { redirect, useRouter } from 'next/navigation';
-import React, { ChangeEvent, useState } from 'react';
+import React, { useState } from 'react';
 
 import S from './styles.module.scss';
 
@@ -9,31 +9,11 @@ import Button from '@/components/Button';
 import Input from '@/components/Input';
 import MultiSelect from '@/components/Multiselect';
 import { StyledSelect } from '@/components/Multiselect/style';
-import MuiSelect from '@/components/Select';
 
-import {
-  editUser,
-  getAllBairros,
-  getAllRoles,
-  getUser,
-  getUserAddress,
-} from '@/services';
-import { APIErrorResponse, Bairro, User } from '@/types/api';
+import { editUser, getAllRoles, getUser } from '@/services';
+import { APIErrorResponse, User } from '@/types/api';
 import { Alert, AlertTitle, Snackbar } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-
-export interface UserAdressType {
-  id: number;
-  rua: string;
-  numero: string;
-  cep: string;
-  complemento: string;
-  bairro_id: number;
-  addressable_type: string;
-  addressable_id: number;
-  created_at: string;
-  updated_at: string;
-}
 
 type UsuarioEditHomeProps = {
   id: string;
@@ -46,13 +26,6 @@ const UsuarioEditHome = ({ id }: UsuarioEditHomeProps) => {
   const [telefone, setTelefone] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [content, setContent] = React.useState<User | null>(null);
-  const [address, setAddress] = React.useState<UserAdressType>();
-  const [street, setStreet] = React.useState('');
-  const [complement, setComplement] = React.useState('');
-  const [number, setNumber] = React.useState('');
-  const [bairro, setBairro] = useState<Bairro[]>([]);
-  const [cep, setCep] = useState<string>('');
-  const [selectedBairro, setSelectedBairro] = useState(1);
 
   const [selectedRole, setSelectedRole] = React.useState<string | string[]>([]);
 
@@ -86,24 +59,6 @@ const UsuarioEditHome = ({ id }: UsuarioEditHomeProps) => {
       })
       .catch((error: unknown) => console.log(error));
   }, [id]);
-
-  React.useEffect(() => {
-    const token = localStorage.getItem('@token');
-    if (!token) {
-      redirect('/');
-    }
-    getUserAddress(token)
-      .then((response) => {
-        console.log(`Endereço: ${JSON.stringify(response)}`);
-        setAddress(response);
-      })
-      .catch((error) => console.log(error));
-    getAllBairros(token)
-      .then((response) => {
-        setBairro(response);
-      })
-      .catch((error) => console.log(error));
-  }, []);
 
   React.useEffect(() => {
     if (content && roles) {
@@ -154,13 +109,7 @@ const UsuarioEditHome = ({ id }: UsuarioEditHomeProps) => {
         password: password ?? content?.password,
         telefone: telefone ?? content?.contato?.telefone,
         roles: roleIds,
-        rua: street ?? address?.rua,
-        cep: cep ?? address?.cep,
-        numero: number ?? address?.numero,
-        bairro_id: selectedBairro,
         ativo: true,
-        endereco_id: address?.id ?? 0,
-        complemento: complement ?? address?.complemento,
       };
 
       await editUser(requestData, token, id);
@@ -175,8 +124,8 @@ const UsuarioEditHome = ({ id }: UsuarioEditHomeProps) => {
       if (errors) {
         for (const key of Object.keys(errors)) {
           const errorMessage = errors[key][0];
+          setError(`${errorMessage}`);
           setTimeout(() => {
-            setError(`${errorMessage}`);
             window.location.reload();
           }, 3000);
         }
@@ -194,47 +143,7 @@ const UsuarioEditHome = ({ id }: UsuarioEditHomeProps) => {
       setTelefone(content.contato?.telefone ?? '');
       setPassword(content.password ?? '');
     }
-    if (address) {
-      setCep(address?.cep ?? '');
-      setStreet(address?.rua ?? '');
-      setComplement(address?.complemento ?? '');
-      setNumber(address?.numero ?? '');
-      setSelectedBairro(address?.bairro_id ?? 1);
-    }
-  }, [content, address]);
-
-  const fetchAddress = async (cep: string) => {
-    try {
-      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-      const data = await response.json();
-      if (!data.erro) {
-        setStreet(data.logradouro || '');
-        setComplement(data.complemento || '');
-        // Se tiver outros campos como bairro, cidade, estado, adicionar aqui
-      } else {
-        setInfo('CEP não encontrado.');
-      }
-    } catch (error) {
-      console.log(error);
-      setError('Erro ao buscar o CEP.');
-    }
-  };
-
-  const handleCEPChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const target = e.target as HTMLInputElement;
-    let cepValue = target.value.replace(/\D/g, '');
-
-    if (cepValue.length > 5) {
-      cepValue = cepValue.slice(0, 5) + '-' + cepValue.slice(5, 8);
-    }
-
-    setCep(cepValue);
-    if (cepValue.replace('-', '').length === 8) {
-      fetchAddress(cepValue.replace('-', ''));
-    }
-  };
+  }, [content]);
 
   if (!content) {
     return <p>Carregando...</p>;
@@ -327,76 +236,6 @@ const UsuarioEditHome = ({ id }: UsuarioEditHomeProps) => {
               </MultiSelect>
             )}
           </section>
-          {address && (
-            <>
-              <h3>Endereço</h3>
-              <section>
-                <div>
-                  <label htmlFor="cep">
-                    Cep<span>*</span>
-                  </label>
-                  <Input
-                    name="cep"
-                    type="text"
-                    placeholder={'00000-000'}
-                    value={cep} //address['cep'] ?? ""}
-                    onChange={handleCEPChange}
-                    mask="zipCode"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="street">
-                    Rua<span>*</span>
-                  </label>
-                  <Input
-                    name="street"
-                    type="text"
-                    placeholder="Rua"
-                    value={street ?? ''}
-                    onChange={(e) => setStreet(e.target.value)}
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="number">
-                    Número<span>*</span>
-                  </label>
-                  <Input
-                    name="number"
-                    type="number"
-                    placeholder="Número"
-                    value={number ?? ''}
-                    onChange={(e) => setNumber(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="complement">Complemento</label>
-                  <Input
-                    name="complement"
-                    type="text"
-                    placeholder="Complemento"
-                    value={complement ?? ''}
-                    onChange={(e) => setComplement(e.target.value)}
-                  />
-                </div>
-                <MuiSelect
-                  label="Bairro"
-                  selectedNames={selectedBairro}
-                  setSelectedNames={setSelectedBairro}
-                >
-                  {bairro?.map((item: { id: number; nome: string }) => (
-                    <StyledSelect
-                      key={item.id}
-                      value={item.id}
-                      sx={{ justifyContent: 'space-between' }}
-                    >
-                      {item.nome}
-                    </StyledSelect>
-                  ))}
-                </MuiSelect>
-              </section>
-            </>
-          )}
           <div className={S.wrapperButtons}>
             <Button
               onClick={() => router.back()}
