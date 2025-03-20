@@ -283,7 +283,11 @@ const RegisterForm = () => {
         </div>
         <div className={S.wrapperButtons}>
           <StyledLink href="/" data-type="transparent" text="Voltar" />
-          <Button dataType="filled" type="submit">
+          <Button
+            dataType="filled"
+            type="submit"
+            style={{ backgroundColor: '#f5821fe5', color: '#fff' }}
+          >
             Cadastrar
           </Button>
         </div>

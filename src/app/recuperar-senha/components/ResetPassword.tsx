@@ -37,7 +37,11 @@ export const ResetPasswordRequest = () => {
         />
       </div>
       <div className={S['button-container']}>
-        <Button type="submit" dataType="filled">
+        <Button
+          type="submit"
+          dataType="filled"
+          style={{ backgroundColor: '#f5821fe5', color: '#fff' }}
+        >
           Recuperar Senha
         </Button>
       </div>

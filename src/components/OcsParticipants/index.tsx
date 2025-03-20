@@ -301,7 +301,7 @@ export default function OCSParticipants({ id }: OcsParticipantsHomeProps) {
               type="button"
               style={{
                 marginTop: '1rem',
-                backgroundColor: '005247;',
+                backgroundColor: 'f5821fe5;',
                 color: 'white',
               }}
               dataType="filled"
