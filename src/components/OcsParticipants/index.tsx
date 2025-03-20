@@ -231,7 +231,11 @@ export default function OCSParticipants({ id }: OcsParticipantsHomeProps) {
   if (isLoading) return <Loader />;
   if (errorMessage) {
     return (
-      <Snackbar open={true}>
+      <Snackbar
+        open={true}
+        autoHideDuration={6000}
+        onClose={() => setErrorMessage('')}
+      >
         <Alert variant="filled" severity="error">
           <AlertTitle>Erro!</AlertTitle>
           {errorMessage}

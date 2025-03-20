@@ -304,13 +304,21 @@ const AssociacaoEditHome = ({ id }: AssociacaoEditHomeProps) => {
             </Button>
           </div>
         </form>
-        <Snackbar open={error.length > 0} autoHideDuration={6000}>
+        <Snackbar
+          open={error.length > 0}
+          autoHideDuration={6000}
+          onClose={() => setError('')}
+        >
           <Alert variant="filled" severity="error">
             <AlertTitle>Erro!</AlertTitle>
             {error}
           </Alert>
         </Snackbar>
-        <Snackbar open={successMessage.length > 0} autoHideDuration={6000}>
+        <Snackbar
+          open={successMessage.length > 0}
+          autoHideDuration={6000}
+          onClose={() => setSuccessMessage('')}
+        >
           <Alert variant="filled" severity="success">
             <AlertTitle>Sucesso!</AlertTitle>
             {successMessage}

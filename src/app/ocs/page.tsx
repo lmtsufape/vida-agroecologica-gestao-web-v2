@@ -292,7 +292,11 @@ export default function Home() {
             </div>
           </Box>
         </Modal>
-        <Snackbar open={errorMessage.length > 0}>
+        <Snackbar
+          open={errorMessage.length > 0}
+          autoHideDuration={6000}
+          onClose={() => setErrorMessage('')}
+        >
           <Alert variant="filled" severity="error">
             <AlertTitle>Erro!</AlertTitle>
             {errorMessage}

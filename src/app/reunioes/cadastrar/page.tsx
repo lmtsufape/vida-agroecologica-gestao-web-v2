@@ -111,7 +111,7 @@ export default function Home() {
       router.back();
     } catch (error) {
       console.log(`[createReuniao] Error:`);
-      console.dir(error, { depth: null , colors: true });
+      console.dir(error, { depth: null, colors: true });
       setErrorMessage('Erro ao criar reunião');
       setTimeout(() => {
         setErrorMessage('');
@@ -243,7 +243,11 @@ export default function Home() {
           </div>
         </form>
       </div>
-      <Snackbar open={errorMessage.length > 0}>
+      <Snackbar
+        open={errorMessage.length > 0}
+        autoHideDuration={6000}
+        onClose={() => setErrorMessage('')}
+      >
         <Alert variant="filled" severity="error">
           <AlertTitle>Erro!</AlertTitle>
           {errorMessage}

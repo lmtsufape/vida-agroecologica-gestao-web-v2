@@ -321,7 +321,11 @@ const ReuniaoEditHome = ({ id }: ReuniaoEditHomeProps) => {
             </Button>
           </div>
         </form>
-        <Snackbar open={error.length > 0} autoHideDuration={6000}>
+        <Snackbar
+          open={error.length > 0}
+          autoHideDuration={6000}
+          onClose={() => setError('')}
+        >
           <Alert variant="filled" severity="error">
             <AlertTitle>Erro!</AlertTitle>
             {error}

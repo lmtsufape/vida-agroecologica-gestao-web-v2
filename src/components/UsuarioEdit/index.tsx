@@ -411,25 +411,37 @@ const UsuarioEditHome = ({ id }: UsuarioEditHomeProps) => {
           </div>
         </form>
       </div>
-      <Snackbar open={error.length > 0} autoHideDuration={6000}>
+      <Snackbar
+        open={error.length > 0}
+        autoHideDuration={6000}
+        onClose={() => setError('')}
+      >
         <Alert variant="filled" severity="error">
           <AlertTitle>Erro!</AlertTitle>
           {error}
         </Alert>
       </Snackbar>
-      {/*<Snackbar open={warn.length > 0} autoHideDuration={6000}>*/}
+      {/*<Snackbar open={warn.length > 0} autoHideDuration={6000} onClose={() => setWarn('')}>*/}
       {/*  <Alert variant="filled" severity="warning">*/}
       {/*    <AlertTitle>Alerta!</AlertTitle>*/}
       {/*    {warn}*/}
       {/*  </Alert>*/}
       {/*</Snackbar>*/}
-      <Snackbar open={info.length > 0} autoHideDuration={6000}>
+      <Snackbar
+        open={info.length > 0}
+        autoHideDuration={6000}
+        onClose={() => setInfo('')}
+      >
         <Alert variant="filled" severity="info">
           <AlertTitle>Info</AlertTitle>
           {info}
         </Alert>
       </Snackbar>
-      <Snackbar open={confirmationMessage.length > 0} autoHideDuration={6000}>
+      <Snackbar
+        open={confirmationMessage.length > 0}
+        autoHideDuration={6000}
+        onClose={() => setConfirmationMessage('')}
+      >
         <Alert variant="filled" severity="success">
           <AlertTitle>Sucesso!</AlertTitle>
           {confirmationMessage}

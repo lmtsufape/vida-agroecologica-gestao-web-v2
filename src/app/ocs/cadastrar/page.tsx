@@ -368,7 +368,11 @@ export default function Home() {
           {error}
         </Alert>
       </Snackbar>
-      <Snackbar open={info.length > 0} autoHideDuration={6000}>
+      <Snackbar
+        open={info.length > 0}
+        autoHideDuration={6000}
+        onClose={() => setInfo('')}
+      >
         <Alert variant="filled" severity="info">
           <AlertTitle>Info</AlertTitle>
           {info}
