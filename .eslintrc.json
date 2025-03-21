@@ -26,7 +26,8 @@
     "react",
     "@typescript-eslint",
     "react-hooks",
-    "eslint-plugin-import-helpers"
+    "eslint-plugin-import-helpers",
+    "prettier"
   ],
   "rules": {
     "react/react-in-jsx-scope": "off",
@@ -44,6 +45,7 @@
         ],
         "alphabetize": { "order": "asc", "ignoreCase": true }
       }
-    ]
+    ],
+    "prettier/prettier": "error"
   }
 }
