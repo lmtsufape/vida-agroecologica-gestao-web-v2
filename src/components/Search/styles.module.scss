@@ -1,19 +1,18 @@
 .searchContainer {
-    display: flex;
-    align-items: center;
-    max-width: 100%; 
-    position: relative;
-  }
-  
-  .searchIconContainer {
-    position: absolute;
-    right: 0px;;
-    background-color: orange; 
-    padding: 15px;
-    border-radius: 0 4px 4px 0;
-  }
-  
-  .searchIcon {
-    color: white; 
-  }
-  
+  display: flex;
+  align-items: center;
+  max-width: 100%;
+  position: relative;
+}
+
+.searchIconContainer {
+  position: absolute;
+  right: 0px;
+  background-color: orange;
+  padding: 15px;
+  border-radius: 0 4px 4px 0;
+}
+
+.searchIcon {
+  color: white;
+}

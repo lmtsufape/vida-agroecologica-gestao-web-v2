@@ -1,18 +1,18 @@
 .anexos {
-    display: grid;
-    grid-template-columns: 1fr;
+  display: grid;
+  grid-template-columns: 1fr;
 
-    input {
-        margin-bottom: 1rem;
-        font-size: .875rem;
-    }
+  input {
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+  }
 
-    button {
-        width: fit-content;
-    }
+  button {
+    width: fit-content;
+  }
 
-    .error {
-        font-size: .75rem;
-        color: red;
-    }
+  .error {
+    font-size: 0.75rem;
+    color: red;
+  }
 }

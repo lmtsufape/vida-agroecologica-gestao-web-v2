@@ -44,7 +44,9 @@ export const SeeAta = ({ reuniaoId }: { reuniaoId: number }) => {
       a.click();
       document.body.removeChild(a);
     } catch (error) {
-      console.error(`[downloadAta] Error downloading ATA file: ${(error as Error).message}`);
+      console.error(
+        `[downloadAta] Error downloading ATA file: ${(error as Error).message}`,
+      );
     } finally {
       setLoading(false);
     }

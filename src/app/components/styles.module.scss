@@ -6,24 +6,24 @@
   place-items: center;
 
   h1 {
-    color:  #f5821fe5; 
+    color: #f5821fe5;
     margin-bottom: 10px;
   }
-  
+
   .container {
     display: flex;
     justify-content: space-between;
-    align-items: center; 
+    align-items: center;
     width: 100%;
     max-width: 1300px;
   }
 
   .leftContent {
     flex: 1;
-    margin-right: 50px; 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: center; 
+    margin-right: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .leftContent p {
@@ -32,7 +32,7 @@
 
   .rightContent {
     flex: 1;
-    margin-left: 30px; 
+    margin-left: 30px;
   }
 
   .loginTitle {
@@ -40,21 +40,18 @@
   }
 
   .loginFormContainer {
-    border: 1px solid #ccc; 
-    border-radius: 8px; 
+    border: 1px solid #ccc;
+    border-radius: 8px;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: calc(100% - 50px); 
+    width: calc(100% - 50px);
     max-width: 500px;
   }
 
   .loginFormContent {
     margin-bottom: 10px;
   }
-
-
 }
-
 
 .loginForm {
   width: 100%;
@@ -70,7 +67,7 @@
   place-self: center;
   width: 100%;
   margin-top: 1rem;
-  border-radius: 8px; 
+  border-radius: 8px;
 }
 
 .registerMessage {
@@ -78,7 +75,7 @@
   font-size: 0.875rem;
   a {
     text-decoration: underline;
-    color:  #f5821fe5; 
+    color: #f5821fe5;
   }
 }
 
@@ -89,7 +86,7 @@
   margin-top: 10px;
 
   a {
-    color: #f5821fe5; 
+    color: #f5821fe5;
     text-decoration: underline;
   }
 }
@@ -112,9 +109,7 @@
   }
 }
 
-
-
-@media (max-width: 600px){
+@media (max-width: 600px) {
   .leftContent {
     display: none !important;
   }

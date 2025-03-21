@@ -222,9 +222,7 @@ export async function editOCS(
       }
     } else if (error instanceof Error) {
       console.error(
-        `[editOCS] Ocorreu um erro genérico: ${JSON.stringify(
-          error?.message,
-        )}`,
+        `[editOCS] Ocorreu um erro genérico: ${JSON.stringify(error?.message)}`,
       );
       throw new Error('Ocorreu um erro genérico.');
     } else {

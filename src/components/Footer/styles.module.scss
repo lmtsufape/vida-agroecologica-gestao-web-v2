@@ -7,7 +7,7 @@
   width: 100%;
 
   ul {
-    padding: .5rem 1rem;
+    padding: 0.5rem 1rem;
     display: flex;
     justify-content: space-between;
     margin: 0 auto;
@@ -28,7 +28,7 @@
 .logo {
   display: flex;
   place-items: center;
-  gap: .1rem;
+  gap: 0.1rem;
   color: white;
 }
 
@@ -41,7 +41,7 @@
   .email {
     font-size: 20px;
   }
-  
+
   @media (max-width: 600px) {
     gap: 0.5rem !important;
   }

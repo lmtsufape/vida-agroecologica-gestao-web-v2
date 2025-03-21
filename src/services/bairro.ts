@@ -2,9 +2,7 @@ import { api } from './api';
 
 import { Bairro } from '@/types/api';
 
-export async function getAllBairros(
-  token: string,
-): Promise<Bairro[]> {
+export async function getAllBairros(token: string): Promise<Bairro[]> {
   try {
     const response = await api.get('/api/bairros', {
       headers: {

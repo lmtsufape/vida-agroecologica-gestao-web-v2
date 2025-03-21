@@ -39,9 +39,9 @@
     font-size: 1.1rem;
     gap: 1rem;
     cursor: pointer;
-    
+
     svg {
-        font-size: 2rem;
+      font-size: 2rem;
     }
 
     svg:not(.associationIcon) {
@@ -51,7 +51,7 @@
     }
 
     &:hover {
-        border: 1px solid #f5821fe5;
+      border: 1px solid #f5821fe5;
     }
   }
 }

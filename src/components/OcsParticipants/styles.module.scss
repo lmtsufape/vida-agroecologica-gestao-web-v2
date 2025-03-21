@@ -1,48 +1,47 @@
 .dashboard {
-    max-width: 1280px;
-    padding: 1.5rem 1rem;
-    margin: 0 auto;
-  }
-  
-  .section {
-    input {
-      margin-bottom: 2rem;
-    }
-  }
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    margin-block: 2rem;
-  }
-  
-  .action {
-    display: flex;
-    gap: 1rem;
-    place-content: center;
-  }
-  
-  .buttons {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
-    place-content: end;
-  }
-  
-  .roles {
-    background-color: rgba(148, 148, 148, 0.097);
-    border-radius: 50px;
-    width: fit-content;
-    margin: 0 auto;
-    padding: .2rem .8rem;
-    text-transform: uppercase;
-    font-size: .75rem;
-    font-weight: bold;
-    letter-spacing: 1px;
-  }
+  max-width: 1280px;
+  padding: 1.5rem 1rem;
+  margin: 0 auto;
+}
 
-  
-.headerTitle{
+.section {
+  input {
+    margin-bottom: 2rem;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-block: 2rem;
+}
+
+.action {
+  display: flex;
+  gap: 1rem;
+  place-content: center;
+}
+
+.buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  place-content: end;
+}
+
+.roles {
+  background-color: rgba(148, 148, 148, 0.097);
+  border-radius: 50px;
+  width: fit-content;
+  margin: 0 auto;
+  padding: 0.2rem 0.8rem;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.headerTitle {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -51,78 +50,77 @@
 
 .title {
   color: #f5821fe5;
-  font-weight: bold; 
+  font-weight: bold;
   justify-content: center;
   padding: 20px;
 }
 
-.link{
+.link {
   text-decoration: none;
   appearance: none;
-  color:#f5821fe5;
+  color: #f5821fe5;
 }
 
-.back{
+.back {
   width: 25%;
 }
 
-  .addButton{
-    width: 25%;
-    display: flex;
-    justify-content: flex-end;
+.addButton {
+  width: 25%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.roles[data-type='consumidor'] {
+  color: lightcoral;
+}
+
+.roles[data-type='agricultor'] {
+  color: rgb(94, 177, 94);
+}
+
+.roles[data-type='secretario'] {
+  color: cadetblue;
+}
+
+.roles[data-type='presidente'] {
+  color: rgb(135, 82, 184);
+}
+
+@media (max-width: 800px) {
+  .title {
+    font-size: 22px !important;
   }
-    
-  .wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
-  }
-  
-  .roles[data-type='consumidor'] {
-    color: lightcoral;
-  }
-  
-  .roles[data-type='agricultor'] {
-    color: rgb(94, 177, 94);
-  }
-  
-  .roles[data-type='secretario'] {
-    color: cadetblue;
-  }
-  
-  .roles[data-type='presidente'] {
-    color: rgb(135, 82, 184);
+}
+
+@media (max-width: 620px) {
+  .title {
+    font-size: 17px !important;
   }
 
-  @media (max-width: 800px) {
-    .title{
-      font-size: 22px !important;
-      
-    }
+  .addButton {
+    width: 35%;
   }
-  
-  @media (max-width: 620px) {
-    .title{
-      font-size: 17px !important;
-    }
-  
-    .addButton{
-      width: 35%;
-    }
-  }
-  
-  @media (max-width: 500px) {
-    .title{
-      font-size: 16px !important;
-      padding-left: 10px;
-      padding-right: 10px;
-    }
-  }
+}
 
-  @media (max-width: 380px) {
-    .title{
-      font-size: 13px !important;
-      padding-left: 5px;
-      padding-right: 5px;
-    }
+@media (max-width: 500px) {
+  .title {
+    font-size: 16px !important;
+    padding-left: 10px;
+    padding-right: 10px;
   }
+}
+
+@media (max-width: 380px) {
+  .title {
+    font-size: 13px !important;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}
