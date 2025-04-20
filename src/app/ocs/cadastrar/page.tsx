@@ -19,6 +19,7 @@ import {
   getAllUsers,
 } from '@/services';
 import { Bairro, User } from '@/types/api';
+import { fetchAddressFunction, ViaCepResponseData } from '@/utils/fetchAddress';
 import { Alert, AlertTitle, Snackbar } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
@@ -156,23 +157,6 @@ export default function Home() {
     }
   };
 
-  const fetchAddress = async (cep: string) => {
-    try {
-      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-      const data = await response.json();
-      if (!data.erro) {
-        setStreet(data.logradouro || '');
-        setComplement(data.complemento || '');
-        // Se tiver outros campos como bairro, cidade, estado, adicionar aqui
-      } else {
-        setInfo('CEP não encontrado.');
-      }
-    } catch (error) {
-      console.log(error);
-      setError('Erro ao buscar o CEP.');
-    }
-  };
-
   const handleCEPChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -185,8 +169,31 @@ export default function Home() {
 
     setCEP(cepValue);
     if (cepValue.replace('-', '').length === 8) {
-      fetchAddress(cepValue.replace('-', ''));
+      fetchAddressFunction(cepValue.replace('-', ''))
+        .then((response: ViaCepResponseData) => {
+          setStreet(response.logradouro ?? '');
+          setComplement(response.complemento ?? '');
+        })
+        .catch((error) => {
+          console.debug(error);
+          if (
+            error instanceof Error &&
+            error?.message === 'CEP não encontrado.'
+          ) {
+            setInfo('CEP não encontrado.');
+            resetCEPData();
+          } else {
+            setError('Erro ao buscar o CEP.');
+            resetCEPData();
+          }
+        });
     }
+  };
+
+  const resetCEPData = () => {
+    setStreet('');
+    setComplement('');
+    setCEP('');
   };
 
   return (

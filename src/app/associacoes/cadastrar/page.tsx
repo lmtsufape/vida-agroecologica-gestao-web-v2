@@ -14,6 +14,7 @@ import { getAllBairros } from '@/services';
 import { createAssociacao } from '@/services/associations';
 import { getPresidents } from '@/services/user';
 import { Bairro, Presidente } from '@/types/api';
+import { fetchAddressFunction, ViaCepResponseData } from '@/utils/fetchAddress';
 import { Snackbar, Alert, AlertTitle } from '@mui/material';
 import { AxiosError } from 'axios';
 
@@ -35,16 +36,17 @@ export default function Home() {
 
   const secretarioId = [3];
   const router = useRouter();
-  const [errorMessage, setErrorMessage] = useState('');
+  const [error, setError] = useState('');
+  const [info, setInfo] = useState('');
 
   React.useEffect(() => {
-    if (errorMessage) {
+    if (error) {
       const timer = setTimeout(() => {
-        setErrorMessage('');
+        setError('');
       }, 4000);
       return () => clearTimeout(timer);
     }
-  }, [errorMessage]);
+  }, [error]);
 
   React.useEffect(() => {
     const token = localStorage.getItem('@token');
@@ -60,22 +62,6 @@ export default function Home() {
       .catch((error) => console.log(error));
   }, []);
 
-  const fetchAddress = async (cep: string) => {
-    try {
-      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-      const data = await response.json();
-      if (!data.erro) {
-        setStreet(data.logradouro || '');
-        setComplement(data.complemento || '');
-      } else {
-        setErrorMessage('CEP não encontrado.');
-      }
-    } catch (error) {
-      console.log(error);
-      setErrorMessage('Erro ao buscar o CEP.');
-    }
-  };
-
   const handleCEPChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -88,15 +74,38 @@ export default function Home() {
 
     setCEP(cepValue);
     if (cepValue.replace('-', '').length === 8) {
-      fetchAddress(cepValue.replace('-', ''));
+      fetchAddressFunction(cepValue.replace('-', ''))
+        .then((response: ViaCepResponseData) => {
+          setStreet(response.logradouro ?? '');
+          setComplement(response.complemento ?? '');
+        })
+        .catch((error) => {
+          console.debug(error);
+          if (
+            error instanceof Error &&
+            error?.message === 'CEP não encontrado.'
+          ) {
+            setInfo('CEP não encontrado.');
+            resetCEPData();
+          } else {
+            setError('Erro ao buscar o CEP.');
+            resetCEPData();
+          }
+        });
     }
+  };
+
+  const resetCEPData = () => {
+    setStreet('');
+    setComplement('');
+    setCEP('');
   };
 
   const handleRegister: (e: React.FormEvent) => Promise<void> = async (e) => {
     e.preventDefault();
     try {
       if (name.length < 10) {
-        setErrorMessage('Nome da associação deve ter no mínimo 10 caracteres.');
+        setError('Nome da associação deve ter no mínimo 10 caracteres.');
         return;
       }
       const token = localStorage.getItem('@token');
@@ -125,7 +134,7 @@ export default function Home() {
         if (error?.response?.status === 500) {
           setTimeout(() => {}, 4000);
         } else {
-          setErrorMessage(
+          setError(
             'Erro ao cadastrar associação. Por favor, verifique os dados e tente novamente.',
           );
         }
@@ -133,14 +142,14 @@ export default function Home() {
         console.log(
           `[createAssociacao] Erro genérico: ${JSON.stringify(error)}`,
         );
-        setErrorMessage(
+        setError(
           `Erro genérico ao cadastrar associação. ${JSON.stringify(error?.message)}`,
         );
       } else {
         console.log(
           `[createAssociacao] Erro desconhecido: ${JSON.stringify(error)}`,
         );
-        setErrorMessage(
+        setError(
           `Erro desconhecido ao cadastrar associação. ${JSON.stringify(error)}`,
         );
       }
@@ -300,13 +309,23 @@ export default function Home() {
         </form>
       </div>
       <Snackbar
-        open={errorMessage.length > 0}
+        open={error.length > 0}
         autoHideDuration={6000}
-        onClose={() => setErrorMessage('')}
+        onClose={() => setError('')}
       >
         <Alert variant="filled" severity="error">
           <AlertTitle>Erro!</AlertTitle>
-          {errorMessage}
+          {error}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={info.length > 0}
+        autoHideDuration={6000}
+        onClose={() => setInfo('')}
+      >
+        <Alert variant="filled" severity="info">
+          <AlertTitle>Info</AlertTitle>
+          {info}
         </Alert>
       </Snackbar>
     </main>

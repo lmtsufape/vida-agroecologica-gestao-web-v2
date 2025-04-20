@@ -13,6 +13,7 @@ import Input from '@/components/Input';
 import StyledLink from '@/components/Link';
 
 import { createUser } from '@/services/user';
+import { fetchAddressFunction, ViaCepResponseData } from '@/utils/fetchAddress';
 import { Alert, AlertTitle, Snackbar } from '@mui/material';
 import { AxiosError } from 'axios';
 
@@ -29,6 +30,7 @@ const RegisterForm = () => {
   const [number, setNumber] = React.useState('');
   const [successMessage, setSuccessMessage] = React.useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [info, setInfo] = React.useState('');
 
   const selectedBairro = 1;
 
@@ -68,23 +70,29 @@ const RegisterForm = () => {
 
     setCEP(cepValue);
     if (cepValue.replace('-', '').length === 8) {
-      fetchAddress(cepValue.replace('-', ''));
+      fetchAddressFunction(cepValue.replace('-', ''))
+        .then((response: ViaCepResponseData) => {
+          setStreet(response.logradouro ?? '');
+        })
+        .catch((error) => {
+          console.debug(error);
+          if (
+            error instanceof Error &&
+            error?.message === 'CEP não encontrado.'
+          ) {
+            setInfo('CEP não encontrado.');
+            resetCEPData();
+          } else {
+            setError('Erro ao buscar o CEP.');
+            resetCEPData();
+          }
+        });
     }
   };
 
-  const fetchAddress = async (cep: string) => {
-    try {
-      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-      const data = await response.json();
-      if (!data.erro) {
-        setStreet(data.logradouro || '');
-      } else {
-        setErrorMessage('CEP não encontrado.');
-      }
-    } catch (error) {
-      console.log(error);
-      setErrorMessage('Erro ao buscar o CEP.');
-    }
+  const resetCEPData = () => {
+    setStreet('');
+    setCEP('');
   };
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -310,6 +318,16 @@ const RegisterForm = () => {
         <Alert variant="filled" severity="error">
           <AlertTitle>Erro!</AlertTitle>
           {error}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={info.length > 0}
+        autoHideDuration={6000}
+        onClose={() => setInfo('')}
+      >
+        <Alert variant="filled" severity="info">
+          <AlertTitle>Info</AlertTitle>
+          {info}
         </Alert>
       </Snackbar>
     </div>
