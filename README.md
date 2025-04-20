@@ -9,7 +9,7 @@
 <sample><strong>./env</strong></sample>
 
 ```python
-REACT_API_URL=
+NEXT_PUBLIC_API_URL=
 ```
 
 ### ○ Acesse a Aplicação

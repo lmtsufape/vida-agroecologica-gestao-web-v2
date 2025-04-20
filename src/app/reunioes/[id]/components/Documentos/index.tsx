@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 
 import Button from '@/components/Button';
 
+import { BASE_URL } from '@/services/api';
+
 export const SeeAnexos = ({ reuniaoId }: { reuniaoId: number }) => {
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState('');
@@ -19,7 +21,7 @@ export const SeeAnexos = ({ reuniaoId }: { reuniaoId: number }) => {
     try {
       setLoading(true);
       const response = await fetch(
-        `http://127.0.0.1:8000/api/reunioes/${reuniaoId}/anexos/download-all`,
+        `${BASE_URL}/api/reunioes/${reuniaoId}/anexos/download-all`,
         {
           method: 'GET',
           headers: {

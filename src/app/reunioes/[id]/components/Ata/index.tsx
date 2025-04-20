@@ -5,6 +5,8 @@ import S from './styles.module.scss';
 
 import Button from '@/components/Button';
 
+import { BASE_URL } from '@/services/api';
+
 export const SeeAta = ({ reuniaoId }: { reuniaoId: number }) => {
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState('');
@@ -22,7 +24,7 @@ export const SeeAta = ({ reuniaoId }: { reuniaoId: number }) => {
       setLoading(true);
 
       const response = await fetch(
-        `http://127.0.0.1:8000/api/reunioes/${reuniaoId}/ata`,
+        `${BASE_URL}/api/reunioes/${reuniaoId}/ata`,
         {
           method: 'GET',
           headers: {
