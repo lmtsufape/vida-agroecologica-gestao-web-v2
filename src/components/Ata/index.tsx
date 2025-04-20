@@ -67,8 +67,10 @@ export const AtaForm = ({ reuniaoId }: { reuniaoId: number }) => {
     >
       <label htmlFor={'ata'}>
         Selecione o arquivo da <strong>ata</strong>:
+        <br />
       </label>
       <input type="file" name="ata" onChange={handleFileChange} />
+      <p>Arquivos aceitos (jpeg, png, pdf)</p>
 
       <Button type="submit" disabled={isLoading} dataType="filled">
         {isLoading ? 'Anexando...' : 'Anexar ata'}
