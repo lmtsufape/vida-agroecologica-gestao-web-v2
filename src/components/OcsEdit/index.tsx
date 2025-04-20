@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { redirect, useRouter } from 'next/navigation';
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 
 import S from './styles.module.scss';
 
@@ -21,6 +21,7 @@ import {
   getAllUsers,
 } from '@/services';
 import { OCS, User, Bairro } from '@/types/api';
+import { fetchAddressFunction, ViaCepResponseData } from '@/utils/fetchAddress';
 import { Alert, AlertTitle, Snackbar } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
@@ -50,6 +51,7 @@ const OcsEditHome = ({ id }: OcsEditHomeProps) => {
 
   const [content, setContent] = React.useState<OCS | null>(null);
   const [error, setError] = React.useState('');
+  const [info, setInfo] = React.useState('');
 
   const router = useRouter();
 
@@ -191,6 +193,45 @@ const OcsEditHome = ({ id }: OcsEditHomeProps) => {
     }
   };
 
+  const handleCEPChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const target = e.target as HTMLInputElement;
+    let cepValue = target.value.replace(/\D/g, '');
+
+    if (cepValue.length > 5) {
+      cepValue = cepValue.slice(0, 5) + '-' + cepValue.slice(5, 8);
+    }
+
+    setCEP(cepValue);
+    if (cepValue.replace('-', '').length === 8) {
+      fetchAddressFunction(cepValue.replace('-', ''))
+        .then((response: ViaCepResponseData) => {
+          setStreet(response.logradouro ?? '');
+          setComplement(response.complemento ?? '');
+        })
+        .catch((error) => {
+          console.debug(error);
+          if (
+            error instanceof Error &&
+            error?.message === 'CEP não encontrado.'
+          ) {
+            setInfo('CEP não encontrado.');
+            resetCEPData();
+          } else {
+            setError('Erro ao buscar o CEP.');
+            resetCEPData();
+          }
+        });
+    }
+  };
+
+  const resetCEPData = () => {
+    setStreet('');
+    setComplement('');
+    setCEP('');
+  };
+
   return (
     <main style={{ marginTop: '5rem' }}>
       <div className={S.container}>
@@ -319,7 +360,7 @@ const OcsEditHome = ({ id }: OcsEditHomeProps) => {
                 type="text"
                 placeholder={content.endereco?.cep ?? ''}
                 value={cep}
-                onChange={(e) => setCEP(e.target.value)}
+                onChange={handleCEPChange}
                 mask="zipCode"
               />
             </div>
@@ -382,6 +423,16 @@ const OcsEditHome = ({ id }: OcsEditHomeProps) => {
           <Alert onClose={() => setError('')} severity="error" variant="filled">
             <AlertTitle>Erro!</AlertTitle>
             {error}
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={info.length > 0}
+          autoHideDuration={6000}
+          onClose={() => setInfo('')}
+        >
+          <Alert variant="filled" severity="info">
+            <AlertTitle>Info</AlertTitle>
+            {info}
           </Alert>
         </Snackbar>
       </div>
