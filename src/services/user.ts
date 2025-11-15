@@ -115,27 +115,27 @@ export async function editUser(
   token: string,
   id: string,
 ) {
-  const responseUser = await api.patch(
-    `/api/users/${id}`,
-    {
-      name,
-      email,
-      password,
-      telefone,
-      cpf,
-      roles,
-      rua,
-      cep,
-      numero,
-      bairro_id,
-      ativo,
+  const editUser: User = {
+    name,
+    email,
+    password,
+    telefone,
+    cpf,
+    roles,
+    rua,
+    cep,
+    numero,
+    bairro_id,
+    ativo,
+  };
+  if (!password) {
+    delete editUser.password;
+  }
+  const responseUser = await api.patch(`/api/users/${id}`, editUser, {
+    headers: {
+      authorization: `Bearer ${token}`,
     },
-    {
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
-    },
-  );
+  });
   console.log(`Edit User : ${responseUser.data}`);
 
   // const responseAddress = await api.patch(

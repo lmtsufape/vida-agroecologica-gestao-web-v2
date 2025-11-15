@@ -25,7 +25,9 @@ const UsuarioEditHome = ({ id }: UsuarioEditHomeProps) => {
   const [cpf, setCpf] = React.useState('');
   const [telefone, setTelefone] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [confirmPassword, setConfirmPassword] = React.useState('');
   const [content, setContent] = React.useState<User | null>(null);
+  const passwordMinLength = 8;
 
   const [selectedRole, setSelectedRole] = React.useState<string | string[]>([]);
 
@@ -34,6 +36,7 @@ const UsuarioEditHome = ({ id }: UsuarioEditHomeProps) => {
   // const [warn, setWarn] = useState('');
   const [info, setInfo] = useState('');
   const [confirmationMessage, setConfirmationMessage] = useState('');
+  const [fullEditMode, setFullEditMode] = useState(false);
 
   const router = useRouter();
 
@@ -52,6 +55,16 @@ const UsuarioEditHome = ({ id }: UsuarioEditHomeProps) => {
     const token = localStorage.getItem('@token');
     if (!token) {
       redirect('/');
+    }
+    const roles = localStorage.getItem('@roles');
+    const userId = localStorage.getItem('userId');
+    if (roles) {
+      const parsedRoles = JSON.parse(roles);
+      setFullEditMode(
+        parsedRoles?.some(
+          (role: { nome: string }) => role.nome === 'administrador',
+        ) && id !== userId,
+      );
     }
     getUser(token, id)
       .then((response: { user: User }) => {
@@ -111,6 +124,16 @@ const UsuarioEditHome = ({ id }: UsuarioEditHomeProps) => {
         roles: roleIds,
         ativo: true,
       };
+
+      if (
+        password !== confirmPassword ||
+        (password && password.length < passwordMinLength)
+      ) {
+        setError('As senhas não coincidem ou são inválidas.');
+        setConfirmPassword('');
+        setPassword('');
+        return;
+      }
 
       await editUser(requestData, token, id);
       setConfirmationMessage('Usuário editado com sucesso!');
@@ -180,8 +203,8 @@ const UsuarioEditHome = ({ id }: UsuarioEditHomeProps) => {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            {/*  <div>
-              <label htmlFor="cnpj">
+            {/* <div>
+              <label htmlFor="password">
                 Senha<span>*</span>
               </label>
               <Input
@@ -234,6 +257,72 @@ const UsuarioEditHome = ({ id }: UsuarioEditHomeProps) => {
                   </StyledSelect>
                 ))}
               </MultiSelect>
+            )}
+            {fullEditMode && (
+              <>
+                <h3>Redefinir Senha</h3>
+                <div>
+                  <label htmlFor="password">
+                    Senha<span>*</span>
+                  </label>
+                  <Input
+                    name="password"
+                    type="password"
+                    placeholder={content?.password ?? ''}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </div>
+                <small
+                  style={{
+                    color:
+                      password.length < passwordMinLength ? 'red' : 'green',
+                    display: password.length == 0 ? 'none' : 'flex',
+                  }}
+                >
+                  {password.length < passwordMinLength
+                    ? `A senha deve ter pelo menos ${passwordMinLength} caracteres.`
+                    : 'Senha válida.'}
+                </small>
+                <div>
+                  <label htmlFor="confirm-password">
+                    Confirmar Senha<span>*</span>
+                  </label>
+                  <Input
+                    name="confirm-password"
+                    type="password"
+                    placeholder={content?.password ?? ''}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
+                </div>
+                <small
+                  style={{
+                    color:
+                      confirmPassword.length < passwordMinLength
+                        ? 'red'
+                        : 'green',
+                    display: confirmPassword.length == 0 ? 'none' : 'flex',
+                  }}
+                >
+                  {confirmPassword.length < passwordMinLength
+                    ? `A senha deve ter pelo menos ${passwordMinLength} caracteres.`
+                    : 'Senha válida.'}
+                </small>
+                <small
+                  style={{
+                    color: confirmPassword !== password ? 'red' : 'green',
+                    display:
+                      confirmPassword.length == 0 && password.length == 0
+                        ? 'none'
+                        : 'flex',
+                  }}
+                >
+                  {password !== confirmPassword
+                    ? 'As senhas não coincidem.'
+                    : 'As senhas coincidem.'}
+                </small>
+              </>
             )}
           </section>
           <div className={S.wrapperButtons}>
