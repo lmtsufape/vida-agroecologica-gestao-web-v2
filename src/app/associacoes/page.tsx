@@ -17,7 +17,16 @@ import TableView from '@/components/Table/Table';
 
 import { getAllAssociacoes, removeAssociacao } from '@/services/associations';
 import { formatDate } from '@/utils/convertNumbers';
-import { Box, IconButton, Tooltip, Modal, Typography } from '@mui/material';
+import {
+  Box,
+  IconButton,
+  Tooltip,
+  Modal,
+  Typography,
+  Snackbar,
+  Alert,
+  AlertTitle,
+} from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
 const style = {
@@ -42,6 +51,7 @@ export default function Home() {
     'Adicionar Nova Associação',
   );
   const [isMobile, setIsMobile] = React.useState(false);
+  const [errorSnack, setErrorSnack] = React.useState('');
 
   React.useEffect(() => {
     const updateText = () => {
@@ -84,6 +94,11 @@ export default function Home() {
     onSuccess: () => {
       refetch();
       handleClose();
+    },
+    onError: (error) => {
+      void error;
+      handleClose();
+      setErrorSnack('Erro ao remover associação');
     },
   });
 
@@ -319,6 +334,16 @@ export default function Home() {
             </Button>
           </Box>
         </Modal>
+        <Snackbar
+          open={errorSnack.length > 0}
+          autoHideDuration={6000}
+          onClose={() => setErrorSnack('')}
+        >
+          <Alert variant="filled" severity="error">
+            <AlertTitle>Erro!</AlertTitle>
+            {errorSnack}
+          </Alert>
+        </Snackbar>
       </div>
     </div>
   );

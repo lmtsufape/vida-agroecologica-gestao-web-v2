@@ -114,10 +114,15 @@ export async function editAssociacao(
 }
 
 export async function removeAssociacao(token: string, id: number) {
-  const response = await api.delete(`/api/associacoes/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data;
+  try {
+    const response = await api.delete(`/api/associacoes/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao remover associação: ', error);
+    throw new Error('Erro ao remover associação.');
+  }
 }
